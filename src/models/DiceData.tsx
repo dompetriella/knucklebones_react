@@ -2,12 +2,21 @@ export class DiceData {
   id: number;
   numberValue: number;
 
-  constructor(id: number, numberValue: number = 0) {
+  constructor({ id, numberValue = 0 }: { id: number; numberValue?: number }) {
     this.id = id;
     this.numberValue = numberValue;
   }
 
-  copyWith(id?: number, numberValue?: number): DiceData {
-    return new DiceData(id ?? this.id, numberValue ?? this.numberValue);
+  copyWith({
+    id,
+    numberValue,
+  }: {
+    id?: number;
+    numberValue?: number;
+  }): DiceData {
+    return new DiceData({
+      id: id ?? this.id,
+      numberValue: numberValue ?? this.numberValue,
+    });
   }
 }

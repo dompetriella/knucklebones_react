@@ -1,16 +1,30 @@
 import { DiceData } from "../../models/DiceData";
-import DiceDot from "./DiceDot";
+import { PlayerColor } from "../../models/PlayerColor";
+import { PlayerColorEnum } from "../../models/PlayerColorEnum";
 import DotArray from "./DotArray";
 
-function DiceSlot({ diceData }: { diceData: DiceData | null }) {
+function DiceSlot({
+  diceData,
+  playerColor,
+}: {
+  diceData: DiceData | null;
+  playerColor: PlayerColor;
+}) {
   return (
     <>
       <div
-        className={`h-20 w-20  ml-2 mr-2 mt-2 rounded-lg border-onSurface border-4 ${
-          diceData != null ? "bg-primary" : "bg-transparent opacity-5"
+        style={{
+          backgroundColor:
+            diceData != null ? playerColor.primary : "transparent",
+        }}
+        className={`h-14 w-14  ml-2 mr-2 mt-2 rounded-lg border-onSurface border-4 ${
+          diceData != null ? "" : "opacity-5"
         } `}
       >
-        <DotArray numberValue={diceData?.numberValue} />
+        <DotArray
+          numberValue={diceData?.numberValue}
+          playerColor={playerColor}
+        />
       </div>
     </>
   );

@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
+import useGameState from "../state/gameState";
 import DiceSlot from "../components/dice/DiceSlot";
 import { DiceData } from "../models/DiceData";
-import useGameState from "../state/gameState";
-import { DiceGridBody } from "../components/dice/DiceGridBody";
+import { PlayerArea } from "../components/PlayerArea";
+import { PlayerColorEnum } from "../models/PlayerColorEnum";
+import { getColorByEnum } from "../logic/colorLogic";
 
 function GamePage() {
   const navigator = useNavigate();
@@ -12,16 +14,31 @@ function GamePage() {
   const awayPlayer = useGameState((state) => state.awayPlayer);
 
   return (
-    <div className="flex size-full flex-col justify-start items-center bg-surface">
-      <button onClick={() => navigator({ pathname: AppRoutes.Start })}>
+    <div className="flex size-full flex-col justify-evenly items-center bg-surface">
+      {/* <button onClick={() => navigator({ pathname: AppRoutes.Start })}>
         Return Home
-      </button>
-      <DiceGridBody player={homePlayer} />
-      <div className="h-20 w-full flex justify-around items-center">
-        <div className="h-2 w-16 bg-onSurface"></div>
-        <div className="h-2 w-16 bg-onSurface"></div>
+      </button> */}
+
+      <PlayerArea player={awayPlayer} />
+
+      <div className="flex w-full justify-between">
+        <div className="w-full bg-surface"></div>
+
+        <div className="w-ful px-4 pb-4 pt-2 flex justify-center items-center">
+          <DiceSlot
+            diceData={new DiceData({ id: 0, numberValue: 5 })}
+            playerColor={
+              homePlayer?.isActivePlayer
+                ? getColorByEnum(homePlayer.color ?? null)
+                : getColorByEnum(awayPlayer?.color ?? null)
+            }
+          />
+        </div>
+
+        <div className="w-full bg-surface"></div>
       </div>
-      <DiceGridBody player={awayPlayer} />
+
+      <PlayerArea player={homePlayer} />
     </div>
   );
 }

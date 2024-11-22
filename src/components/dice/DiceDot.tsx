@@ -1,10 +1,18 @@
-function DiceDot({ hasDot }: { hasDot: boolean }) {
+import { PlayerColor } from "../../models/PlayerColor";
+
+function DiceDot({
+  hasDot,
+  playerColor,
+}: {
+  hasDot: boolean;
+  playerColor: PlayerColor;
+}) {
   return (
     <>
       <div
-        className={`h-[14px] w-[14px] rounded-full ${
-          hasDot ? "bg-onPrimary" : "bg-transparent"
-        } `}
+        className={
+          "h-2 w-2 rounded-full " + (hasDot ? `bg-onPrimary` : "bg-transparent")
+        }
       ></div>
     </>
   );
