@@ -2,7 +2,7 @@ import { DiceData } from "../../models/DiceData";
 import DiceDot from "./DiceDot";
 import DotArray from "./DotArray";
 
-function DiceSlot({ diceData }: { diceData?: DiceData }) {
+function DiceSlot({ diceData }: { diceData: DiceData | null }) {
   return (
     <>
       <div
