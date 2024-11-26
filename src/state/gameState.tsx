@@ -2,15 +2,17 @@ import { create } from "zustand";
 import { Player } from "../models/Player";
 import { DiceData } from "../models/DiceData";
 import { PlayerColorEnum } from "../models/PlayerColorEnum";
+import { generateRandomInt } from "../logic/utility";
 
 interface GameState {
   homePlayer: Player | null;
   awayPlayer: Player | null;
-  addDiceToPlayerColumn: (
-    player: Player,
-    diceToAdd: DiceData,
-    columnIndex: number
-  ) => void;
+  swapActivePlayer: () => void;
+
+  //
+  usableDie: DiceData | null;
+  addUsableDieToPlayerColumn: (player: Player, columnIndex: number) => void;
+  rollNewUsableDie: () => void;
 }
 
 const useGameState = create<GameState>((set, get) => ({
@@ -19,11 +21,6 @@ const useGameState = create<GameState>((set, get) => ({
     score: 50,
     isActivePlayer: true,
     color: PlayerColorEnum.Red,
-    diceGrid: [
-      [new DiceData({ id: 0, numberValue: 5 }), null, null],
-      [new DiceData({ id: 0, numberValue: 5 }), null, null],
-      [new DiceData({ id: 0, numberValue: 5 }), null, null],
-    ],
   }),
   awayPlayer: new Player({
     id: 1,
@@ -31,12 +28,23 @@ const useGameState = create<GameState>((set, get) => ({
     isActivePlayer: false,
     color: PlayerColorEnum.Orange,
   }),
+  swapActivePlayer() {
+    const homePlayerState = get().homePlayer;
+    const awayPlayerState = get().awayPlayer;
+    set({
+      homePlayer: homePlayerState?.copyWith({
+        isActivePlayer: !homePlayerState?.isActivePlayer,
+      }),
+      awayPlayer: awayPlayerState?.copyWith({
+        isActivePlayer: !awayPlayerState?.isActivePlayer,
+      }),
+    });
+  },
 
-  addDiceToPlayerColumn(
-    player: Player,
-    diceToAdd: DiceData,
-    columnIndex: number
-  ) {
+  usableDie: null,
+
+  // methods
+  addUsableDieToPlayerColumn(player: Player, columnIndex: number) {
     const selectedPlayer: Player = player;
     let mutablePlayerDiceGrid: (DiceData | null)[][] = selectedPlayer.diceGrid;
     console.log(selectedPlayer);
@@ -46,23 +54,45 @@ const useGameState = create<GameState>((set, get) => ({
     console.log(mutablePlayerDiceColumn);
     console.log(mutablePlayerDiceColumn);
 
+    let diceWasAdded = false;
+
     for (let index = 0; index < mutablePlayerDiceColumn.length; index++) {
       if (mutablePlayerDiceColumn[index] === null) {
-        mutablePlayerDiceColumn[index] = diceToAdd;
+        mutablePlayerDiceColumn[index] = get().usableDie;
         console.log(`Added dice at index ${index}`);
+        diceWasAdded = true;
         break;
       }
     }
 
-    mutablePlayerDiceGrid[columnIndex] = mutablePlayerDiceColumn;
-    const updatedPlayer: Player = selectedPlayer.copyWith({
-      diceGrid: mutablePlayerDiceGrid,
-    });
-    if (player === get().homePlayer) {
-      set({ homePlayer: updatedPlayer });
-    } else {
-      set({ awayPlayer: updatedPlayer });
+    if (diceWasAdded) {
+      mutablePlayerDiceGrid[columnIndex] = mutablePlayerDiceColumn;
+      const updatedPlayerScore = 0;
+      const updatedPlayer: Player = selectedPlayer.copyWith({
+        diceGrid: mutablePlayerDiceGrid,
+      });
+      if (player === get().homePlayer) {
+        set({
+          homePlayer: updatedPlayer,
+        });
+      } else {
+        set({
+          awayPlayer: updatedPlayer,
+        });
+      }
+
+      // start next turn
+      // this should probably be its own function
+
+      set({ usableDie: null });
+      get().swapActivePlayer();
+      get().rollNewUsableDie();
     }
+  },
+
+  rollNewUsableDie() {
+    const newDieValue = generateRandomInt({ min: 1, max: 6 });
+    set({ usableDie: new DiceData({ id: 0, numberValue: newDieValue }) });
   },
 }));
 

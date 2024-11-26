@@ -6,12 +6,17 @@ import useGameState from "../state/gameState";
 import DiceSlot from "./dice/DiceSlot";
 
 export function PlayerArea({ player }: { player: Player | null }) {
-  const homePlayer = useGameState((state) => state.homePlayer);
-  const addDiceToPlayerColumnAction = useGameState(
-    (state) => state.addDiceToPlayerColumn
+  const homePlayerState = useGameState((state) => state.homePlayer);
+  const awayPlayerState = useGameState((state) => state.awayPlayer);
+  const addUsableDieToPlayerColumnAction = useGameState(
+    (state) => state.addUsableDieToPlayerColumn
   );
 
   const playerColor: PlayerColor = getColorByEnum(player?.color ?? null);
+
+  const currentActivePlayer = useGameState((state) =>
+    state.homePlayer?.isActivePlayer ? homePlayerState : awayPlayerState
+  );
 
   return (
     <div
@@ -25,12 +30,7 @@ export function PlayerArea({ player }: { player: Player | null }) {
         {player?.diceGrid.map((_, i) => (
           <button
             onClick={() => {
-              console.log("here");
-              addDiceToPlayerColumnAction(
-                homePlayer!,
-                new DiceData({ id: 5, numberValue: 1 }),
-                i
-              );
+              addUsableDieToPlayerColumnAction(currentActivePlayer!, i);
             }}
             className="flex flex-col bg-surface m-1 pb-2 rounded-lg"
           >
