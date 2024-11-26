@@ -34,12 +34,19 @@ export function PlayerArea({ player }: { player: Player | null }) {
             }}
             className="flex flex-col bg-surface m-1 pb-2 rounded-lg"
           >
-            {player?.diceGrid[i]
-              .slice()
-              .reverse()
-              .map((dice) => (
-                <DiceSlot diceData={dice ?? null} playerColor={playerColor} />
-              ))}
+            {player === awayPlayerState
+              ? player?.diceGrid[i]
+                  .slice()
+                  .reverse()
+                  .map((dice) => (
+                    <DiceSlot
+                      diceData={dice ?? null}
+                      playerColor={playerColor}
+                    />
+                  ))
+              : player?.diceGrid[i].map((dice) => (
+                  <DiceSlot diceData={dice ?? null} playerColor={playerColor} />
+                ))}
           </button>
         ))}
       </div>

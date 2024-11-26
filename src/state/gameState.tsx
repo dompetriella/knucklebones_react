@@ -4,13 +4,27 @@ import { DiceData } from "../models/DiceData";
 import { PlayerColorEnum } from "../models/PlayerColorEnum";
 import { generateRandomInt } from "../logic/utility";
 import { calculatePlayerScore } from "../logic/scoring";
+import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
+
+const emptyDiceArray: (DiceData | null)[][] = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
 
 interface GameState {
   homePlayer: Player | null;
   awayPlayer: Player | null;
+  isHumanGame: boolean;
+
   swapActivePlayer: () => void;
   updateGameScore: () => void;
   endPlayerTurn: () => void;
+
+  //
+  gameHasEnded: boolean;
+  startGame: (opponentType: PlayerTypeEnum) => void;
+  endGame: () => void;
 
   //
   usableDie: DiceData | null;
@@ -24,8 +38,6 @@ interface GameState {
 }
 
 const useGameState = create<GameState>((set, get) => ({
-  usableDie: null,
-
   homePlayer: new Player({
     id: 0,
     isActivePlayer: true,
@@ -36,6 +48,11 @@ const useGameState = create<GameState>((set, get) => ({
     isActivePlayer: false,
     color: PlayerColorEnum.Orange,
   }),
+
+  usableDie: null,
+
+  isHumanGame: false,
+  gameHasEnded: false,
 
   updateGameScore() {
     const homePlayerState = get().homePlayer;
@@ -68,6 +85,39 @@ const useGameState = create<GameState>((set, get) => ({
     set({ usableDie: null });
     get().swapActivePlayer();
     get().rollNewUsableDie();
+  },
+
+  startGame(opponentType: PlayerTypeEnum) {
+    const coinFlip = generateRandomInt({ max: 1 });
+
+    set({
+      gameHasEnded: false,
+      homePlayer: get().homePlayer?.copyWith({
+        isActivePlayer: coinFlip === 0 ? true : false,
+        diceGrid: emptyDiceArray,
+      }),
+      awayPlayer: get().awayPlayer?.copyWith({
+        isActivePlayer: coinFlip === 1 ? true : false,
+        diceGrid: emptyDiceArray,
+      }),
+      isHumanGame: opponentType === PlayerTypeEnum.Human,
+    });
+
+    get().rollNewUsableDie();
+  },
+
+  endGame() {
+    set({
+      gameHasEnded: true,
+      homePlayer: get().homePlayer?.copyWith({
+        isActivePlayer: false,
+        diceGrid: emptyDiceArray,
+      }),
+      awayPlayer: get().awayPlayer?.copyWith({
+        isActivePlayer: false,
+        diceGrid: emptyDiceArray,
+      }),
+    });
   },
 
   addUsableDieToPlayerColumn(player: Player, columnIndex: number) {

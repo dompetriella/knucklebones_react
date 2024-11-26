@@ -4,6 +4,7 @@ import StartPage from "./pages/StartPage";
 import ExamplePage from "./pages/ExamplePage";
 import { AppRoutes } from "./router/AppRoutes";
 import GamePage from "./pages/GamePage";
+import CpuDifficultyPage from "./pages/CpuDifficultyPage";
 
 function App() {
   return (
@@ -11,6 +12,10 @@ function App() {
       <Routes>
         <Route path={AppRoutes.Start} element={<StartPage />}></Route>
         <Route path={AppRoutes.Example} element={<ExamplePage />}></Route>
+        <Route
+          path={AppRoutes.CpuDifficulty}
+          element={<CpuDifficultyPage />}
+        ></Route>
         <Route path={AppRoutes.Game} element={<GamePage />}></Route>
       </Routes>
     </BrowserRouter>
