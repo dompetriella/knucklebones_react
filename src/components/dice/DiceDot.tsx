@@ -10,8 +10,9 @@ function DiceDot({
   return (
     <>
       <div
+      style={{backgroundColor: hasDot ? playerColor.onPrimary : ""}}
         className={
-          "h-2 w-2 rounded-full " + (hasDot ? `bg-onPrimary` : "bg-transparent")
+          "h-2 w-2 rounded-full"
         }
       ></div>
     </>

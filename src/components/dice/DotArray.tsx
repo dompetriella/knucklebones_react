@@ -8,7 +8,7 @@ function DotArray({
   numberValue?: number;
   playerColor: PlayerColor;
 }) {
-  return (
+  if (numberValue != null ) return (
     <>
       <div className="size-full flex flex-col justify-between p-2">
         <div className="flex justify-between ">

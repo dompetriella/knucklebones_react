@@ -17,7 +17,7 @@ export function StatusBar() {
           }}
           className="w-6 h-6 mr-4"
         ></div>
-        <div className="text-xl">{homePlayerState?.score}</div>
+        <div className="w-6 text-xl">{homePlayerState?.score}</div>
       </div>
       <div className="w-ful px-4 pb-4 pt-2 flex justify-center items-center">
         <DiceSlot
@@ -30,7 +30,7 @@ export function StatusBar() {
         />
       </div>
       <div className="flex justify-start items-center">
-        <div className="text-xl">{awayPlayerState?.score}</div>
+        <div className="w-6 text-xl">{awayPlayerState?.score}</div>
         <div
           style={{
             backgroundColor: getColorByEnum(awayPlayerState?.color!).primary,
