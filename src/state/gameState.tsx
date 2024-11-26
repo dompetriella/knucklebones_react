@@ -5,6 +5,7 @@ import { PlayerColorEnum } from "../models/PlayerColorEnum";
 import { generateRandomInt } from "../logic/utility";
 import { calculatePlayerScore } from "../logic/scoring";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
+import { runCpuTurn } from "../logic/cpuLogic";
 
 const emptyDiceArray: (DiceData | null)[][] = [
   [null, null, null],
@@ -15,15 +16,16 @@ const emptyDiceArray: (DiceData | null)[][] = [
 interface GameState {
   homePlayer: Player | null;
   awayPlayer: Player | null;
-  isHumanGame: boolean;
+  playerType: PlayerTypeEnum;
 
+  setPlayerType: (playerType: PlayerTypeEnum) => void;
   swapActivePlayer: () => void;
   updateGameScore: () => void;
   endPlayerTurn: () => void;
 
   //
   gameHasEnded: boolean;
-  startGame: (opponentType: PlayerTypeEnum) => void;
+  startGame: () => void;
   endGame: () => void;
 
   //
@@ -40,18 +42,20 @@ interface GameState {
 const useGameState = create<GameState>((set, get) => ({
   homePlayer: new Player({
     id: 0,
+    playerName: "",
     isActivePlayer: true,
     color: PlayerColorEnum.Red,
   }),
   awayPlayer: new Player({
     id: 1,
+    playerName: "",
     isActivePlayer: false,
     color: PlayerColorEnum.Orange,
   }),
 
   usableDie: null,
 
-  isHumanGame: false,
+  playerType: PlayerTypeEnum.Easy,
   gameHasEnded: false,
 
   updateGameScore() {
@@ -68,6 +72,10 @@ const useGameState = create<GameState>((set, get) => ({
     });
   },
 
+  setPlayerType(playerType: PlayerTypeEnum) {
+    set({ playerType: playerType });
+  },
+
   swapActivePlayer() {
     const homePlayerState = get().homePlayer;
     const awayPlayerState = get().awayPlayer;
@@ -79,6 +87,12 @@ const useGameState = create<GameState>((set, get) => ({
         isActivePlayer: !awayPlayerState?.isActivePlayer,
       }),
     });
+
+    if (
+      awayPlayerState?.isActivePlayer &&
+      get().playerType !== PlayerTypeEnum.Human
+    ) {
+    }
   },
 
   endPlayerTurn() {
@@ -87,23 +101,34 @@ const useGameState = create<GameState>((set, get) => ({
     get().rollNewUsableDie();
   },
 
-  startGame(opponentType: PlayerTypeEnum) {
+  startGame() {
     const coinFlip = generateRandomInt({ max: 1 });
+    const cpuActive =
+      get().playerType !== PlayerTypeEnum.Human && coinFlip === 1;
 
     set({
       gameHasEnded: false,
       homePlayer: get().homePlayer?.copyWith({
         isActivePlayer: coinFlip === 0 ? true : false,
         diceGrid: emptyDiceArray,
+        // temporary until player can pick
+        playerName: "Player",
       }),
       awayPlayer: get().awayPlayer?.copyWith({
         isActivePlayer: coinFlip === 1 ? true : false,
         diceGrid: emptyDiceArray,
+        // temporary until player can pick
+        playerName: "CPU",
       }),
-      isHumanGame: opponentType === PlayerTypeEnum.Human,
     });
 
     get().rollNewUsableDie();
+
+    // CPU was chosen to go first
+
+    if (cpuActive) {
+      runCpuTurn();
+    }
   },
 
   endGame() {

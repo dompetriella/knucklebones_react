@@ -1,5 +1,4 @@
 import { getColorByEnum } from "../logic/colorLogic";
-import { DiceData } from "../models/DiceData";
 import { Player } from "../models/Player";
 import { PlayerColor } from "../models/PlayerColor";
 import useGameState from "../state/gameState";
@@ -21,8 +20,13 @@ export function PlayerArea({ player }: { player: Player | null }) {
   return (
     <div
       style={{ backgroundColor: playerColor.primary }}
-      className="flex justify-center items-center size-full"
+      className="flex flex-col justify-center items-center size-full"
     >
+      {player === awayPlayerState ? (
+        <h1 style={{ color: playerColor.onPrimary }}>
+          {player?.playerName.toUpperCase()}
+        </h1>
+      ) : null}
       <div
         style={{ backgroundColor: playerColor.secondary }}
         className="flex border-4 border-onSurface p-2 shadow-md rounded-lg"
@@ -50,6 +54,11 @@ export function PlayerArea({ player }: { player: Player | null }) {
           </button>
         ))}
       </div>
+      {player === homePlayerState ? (
+        <h1 style={{ color: playerColor.onPrimary }}>
+          {player?.playerName.toUpperCase()}
+        </h1>
+      ) : null}
     </div>
   );
 }

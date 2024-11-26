@@ -7,6 +7,7 @@ import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 function CpuDifficultyPage() {
   const navigator = useNavigate();
   const startGameStateAction = useGameState((state) => state.startGame);
+  const setPlayerTypeAction = useGameState((state) => state.setPlayerType);
   return (
     <>
       <div className="flex size-full flex-col justify-start items-center bg-surface">
@@ -17,24 +18,23 @@ function CpuDifficultyPage() {
           <MenuButton
             text={"Easy"}
             onPressed={() => {
-              startGameStateAction(PlayerTypeEnum.Easy);
+              setPlayerTypeAction(PlayerTypeEnum.Easy);
+              startGameStateAction();
               navigator({ pathname: AppRoutes.Game });
             }}
           />
-          <MenuButton
+          {/* <MenuButton
             text={"Medium"}
             onPressed={() => {
-              startGameStateAction(PlayerTypeEnum.Medium);
-              navigator({ pathname: AppRoutes.Game });
+              null;
             }}
           />
           <MenuButton
             text={"Hard"}
             onPressed={() => {
-              startGameStateAction(PlayerTypeEnum.Hard);
-              navigator({ pathname: AppRoutes.Game });
+              null;
             }}
-          />
+          /> */}
         </div>
       </div>
     </>
