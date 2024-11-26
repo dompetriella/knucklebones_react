@@ -3,6 +3,7 @@ import { Player } from "../models/Player";
 import { DiceData } from "../models/DiceData";
 import { PlayerColorEnum } from "../models/PlayerColorEnum";
 import { generateRandomInt } from "../logic/utility";
+import { calculatePlayerScore } from "../logic/scoring";
 
 interface GameState {
   homePlayer: Player | null;
@@ -18,13 +19,11 @@ interface GameState {
 const useGameState = create<GameState>((set, get) => ({
   homePlayer: new Player({
     id: 0,
-    score: 50,
     isActivePlayer: true,
     color: PlayerColorEnum.Red,
   }),
   awayPlayer: new Player({
     id: 1,
-    score: 25,
     isActivePlayer: false,
     color: PlayerColorEnum.Orange,
   }),
@@ -67,9 +66,10 @@ const useGameState = create<GameState>((set, get) => ({
 
     if (diceWasAdded) {
       mutablePlayerDiceGrid[columnIndex] = mutablePlayerDiceColumn;
-      const updatedPlayerScore = 0;
+      const updatedPlayerScore = calculatePlayerScore(player);
       const updatedPlayer: Player = selectedPlayer.copyWith({
         diceGrid: mutablePlayerDiceGrid,
+        score: updatedPlayerScore
       });
       if (player === get().homePlayer) {
         set({

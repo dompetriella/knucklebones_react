@@ -10,7 +10,7 @@ export class Player {
 
   constructor({
     id,
-    score,
+    score = 0,
     diceGrid = [
       [null, null, null],
       [null, null, null],
@@ -20,7 +20,7 @@ export class Player {
     color = PlayerColorEnum.Red,
   }: {
     id: number;
-    score: number;
+    score?: number;
     diceGrid?: (DiceData | null)[][];
     isActivePlayer?: boolean;
     color?: PlayerColorEnum;
