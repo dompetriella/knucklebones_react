@@ -9,14 +9,23 @@ interface GameState {
   homePlayer: Player | null;
   awayPlayer: Player | null;
   swapActivePlayer: () => void;
+  updateGameScore: () => void;
+  endPlayerTurn: () => void;
 
   //
   usableDie: DiceData | null;
   addUsableDieToPlayerColumn: (player: Player, columnIndex: number) => void;
+  removeMatchingDiceFromOtherPlayer: (
+    playerOfOrigin: Player,
+    diceValue: number,
+    columnIndex: number
+  ) => void;
   rollNewUsableDie: () => void;
 }
 
 const useGameState = create<GameState>((set, get) => ({
+  usableDie: null,
+
   homePlayer: new Player({
     id: 0,
     isActivePlayer: true,
@@ -27,6 +36,21 @@ const useGameState = create<GameState>((set, get) => ({
     isActivePlayer: false,
     color: PlayerColorEnum.Orange,
   }),
+
+  updateGameScore() {
+    const homePlayerState = get().homePlayer;
+    const awayPlayerState = get().awayPlayer;
+
+    set({
+      homePlayer: homePlayerState?.copyWith({
+        score: calculatePlayerScore(homePlayerState),
+      }),
+      awayPlayer: awayPlayerState?.copyWith({
+        score: calculatePlayerScore(awayPlayerState),
+      }),
+    });
+  },
+
   swapActivePlayer() {
     const homePlayerState = get().homePlayer;
     const awayPlayerState = get().awayPlayer;
@@ -40,11 +64,16 @@ const useGameState = create<GameState>((set, get) => ({
     });
   },
 
-  usableDie: null,
+  endPlayerTurn() {
+    set({ usableDie: null });
+    get().swapActivePlayer();
+    get().rollNewUsableDie();
+  },
 
-  // methods
   addUsableDieToPlayerColumn(player: Player, columnIndex: number) {
     const selectedPlayer: Player = player;
+    const usableDie = get().usableDie;
+
     let mutablePlayerDiceGrid: (DiceData | null)[][] = selectedPlayer.diceGrid;
     console.log(selectedPlayer);
     let mutablePlayerDiceColumn: (DiceData | null)[] =
@@ -57,7 +86,7 @@ const useGameState = create<GameState>((set, get) => ({
 
     for (let index = 0; index < mutablePlayerDiceColumn.length; index++) {
       if (mutablePlayerDiceColumn[index] === null) {
-        mutablePlayerDiceColumn[index] = get().usableDie;
+        mutablePlayerDiceColumn[index] = usableDie;
         console.log(`Added dice at index ${index}`);
         diceWasAdded = true;
         break;
@@ -66,10 +95,8 @@ const useGameState = create<GameState>((set, get) => ({
 
     if (diceWasAdded) {
       mutablePlayerDiceGrid[columnIndex] = mutablePlayerDiceColumn;
-      const updatedPlayerScore = calculatePlayerScore(player);
       const updatedPlayer: Player = selectedPlayer.copyWith({
         diceGrid: mutablePlayerDiceGrid,
-        score: updatedPlayerScore
       });
       if (player === get().homePlayer) {
         set({
@@ -81,12 +108,84 @@ const useGameState = create<GameState>((set, get) => ({
         });
       }
 
-      // start next turn
-      // this should probably be its own function
+      // after die is added
+      get().removeMatchingDiceFromOtherPlayer(
+        updatedPlayer,
+        usableDie!.numberValue,
+        columnIndex
+      );
+      get().updateGameScore();
+      get().endPlayerTurn();
+    }
+  },
 
-      set({ usableDie: null });
-      get().swapActivePlayer();
-      get().rollNewUsableDie();
+  removeMatchingDiceFromOtherPlayer(
+    playerOfOrigin: Player,
+    diceValue: number,
+    columnIndex: number
+  ) {
+    let otherPlayer: Player | null;
+    if (playerOfOrigin.id == get().homePlayer!.id) {
+      otherPlayer = get().awayPlayer;
+    } else {
+      otherPlayer = get().homePlayer;
+    }
+
+    if (otherPlayer == null) {
+      return;
+    }
+
+    let mutableOtherPlayerDiceGrid: (DiceData | null)[][] =
+      otherPlayer!.diceGrid;
+    let mutableUpdatedOtherPlayerDiceGridColumn: (DiceData | null)[] =
+      mutableOtherPlayerDiceGrid[columnIndex].map((diceData) => {
+        if (diceData?.numberValue == diceValue) {
+          return null;
+        } else {
+          return diceData;
+        }
+      });
+
+    const moveDiceDown = () => {
+      let moved = false;
+
+      for (
+        let i = 0;
+        i < mutableUpdatedOtherPlayerDiceGridColumn.length - 1;
+        i++
+      ) {
+        if (
+          mutableUpdatedOtherPlayerDiceGridColumn[i] === null &&
+          mutableUpdatedOtherPlayerDiceGridColumn[i + 1] !== null
+        ) {
+          // Move the dice up
+          mutableUpdatedOtherPlayerDiceGridColumn[i] =
+            mutableUpdatedOtherPlayerDiceGridColumn[i + 1];
+          mutableUpdatedOtherPlayerDiceGridColumn[i + 1] = null;
+
+          // Set flag to indicate movement happened
+          moved = true;
+        }
+      }
+
+      // If any dice were moved, call the function recursively
+      if (moved) {
+        moveDiceDown();
+      }
+    };
+
+    moveDiceDown();
+
+    mutableOtherPlayerDiceGrid[columnIndex] =
+      mutableUpdatedOtherPlayerDiceGridColumn;
+
+    const updatedPlayer = otherPlayer.copyWith({
+      diceGrid: mutableOtherPlayerDiceGrid,
+    });
+    if (otherPlayer.id == get().homePlayer!.id) {
+      set({ homePlayer: updatedPlayer });
+    } else {
+      set({ awayPlayer: updatedPlayer });
     }
   },
 
