@@ -14,6 +14,7 @@ const emptyDiceArray: (DiceData | null)[][] = [
 ];
 
 interface GameState {
+  // Player
   homePlayer: Player | null;
   awayPlayer: Player | null;
   playerType: PlayerTypeEnum;
@@ -23,12 +24,12 @@ interface GameState {
   updateGameScore: () => void;
   endPlayerTurn: () => void;
 
-  //
+  // Game Flow
   gameHasEnded: boolean;
   startGame: () => void;
   endGame: () => void;
 
-  //
+  // Dice
   usableDie: DiceData | null;
   addUsableDieToPlayerColumn: (player: Player, columnIndex: number) => void;
   removeMatchingDiceFromOtherPlayer: (
@@ -76,11 +77,11 @@ const useGameState = create<GameState>((set, get) => ({
     set({ playerType: playerType });
   },
 
-  swapActivePlayer() {
+  async swapActivePlayer() {
     const homePlayerState = get().homePlayer;
     const awayPlayerState = get().awayPlayer;
 
-    const cpuActive = get().playerType !== PlayerTypeEnum.Human
+    const cpuActive = get().playerType !== PlayerTypeEnum.Human;
 
     set({
       homePlayer: homePlayerState?.copyWith({
@@ -97,15 +98,19 @@ const useGameState = create<GameState>((set, get) => ({
       const addDiceToColumnStateAction = (player: Player, column: number) => {
         get().addUsableDieToPlayerColumn(player, column);
       };
-          runCpuTurn({cpuPlayerState: cpuPlayerState!, cpuDifficultyState: cpuDifficultyState,  addDiceToColumn: addDiceToColumnStateAction});
+      await runCpuTurn({
+        cpuPlayerState: cpuPlayerState!,
+        cpuDifficultyState: cpuDifficultyState,
+        addDiceToColumn: addDiceToColumnStateAction,
+      });
     }
   },
 
   endPlayerTurn() {
-    console.log(`Ending player turn\n\n ///////////`)
+    console.log(`Ending player turn\n\n ///////////`);
     set({ usableDie: null });
     get().rollNewUsableDie();
-    console.log('swapping player');
+    console.log("swapping player");
     get().swapActivePlayer();
   },
 
@@ -142,7 +147,11 @@ const useGameState = create<GameState>((set, get) => ({
       const addDiceToColumnStateAction = (player: Player, column: number) => {
         get().addUsableDieToPlayerColumn(player, column);
       };
-          runCpuTurn({cpuPlayerState: cpuPlayerState!, cpuDifficultyState: cpuDifficultyState,  addDiceToColumn: addDiceToColumnStateAction});
+      runCpuTurn({
+        cpuPlayerState: cpuPlayerState!,
+        cpuDifficultyState: cpuDifficultyState,
+        addDiceToColumn: addDiceToColumnStateAction,
+      });
     }
   },
 
@@ -171,7 +180,7 @@ const useGameState = create<GameState>((set, get) => ({
 
     let diceWasAdded = false;
 
-    console.log(`attempted to add a dice at column index ${columnIndex}`)
+    console.log(`attempted to add a dice at column index ${columnIndex}`);
     for (let index = 0; index < mutablePlayerDiceColumn.length; index++) {
       if (mutablePlayerDiceColumn[index] === null) {
         mutablePlayerDiceColumn[index] = usableDie;
@@ -204,8 +213,8 @@ const useGameState = create<GameState>((set, get) => ({
           if (die === null) {
             playerEndedGame = false;
           }
-        })
-      })
+        });
+      });
 
       if (playerEndedGame) {
         get().endGame();
@@ -213,19 +222,18 @@ const useGameState = create<GameState>((set, get) => ({
       }
       // after die is added
 
-      console.log('started removing')
+      console.log("started removing");
       get().removeMatchingDiceFromOtherPlayer(
         updatedPlayer,
         usableDie!.numberValue,
         columnIndex
       );
-      console.log('started updating')
+      console.log("started updating");
       get().updateGameScore();
-      console.log('starting to end player turn');
+      console.log("starting to end player turn");
       get().endPlayerTurn();
-    }
-    else {
-      console.log('no dice added.  SAD')
+    } else {
+      console.log("no dice added.  SAD");
     }
   },
 
