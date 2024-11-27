@@ -21,7 +21,6 @@ export function calculatePlayerScore(player: Player): number {
     });
 
     if (frequencyMap.size > 0) {
-      console.log(frequencyMap)
       frequencyMap.forEach((value, key) => {
         sum += ((key * value) * value)
       });

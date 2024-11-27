@@ -1,15 +1,14 @@
-import { getColorByEnum } from "../logic/colorLogic";
-import { PlayerColorEnum } from "../models/PlayerColorEnum";
-import useGameState from "../state/gameState";
-import DiceSlot from "./dice/DiceSlot";
+import { getColorByEnum } from "../../logic/colorLogic";
+import useGameState from "../../state/gameState";
+import DiceSlot from "../dice/DiceSlot";
 
-export function StatusBar() {
+export function Scoreboard() {
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
   const usableDieState = useGameState((state) => state.usableDie);
 
   return (
-    <div className="flex w-full items-center justify-evenly bg-surface">
+      <div className="flex w-full items-center justify-evenly bg-surface">
       <div className="flex-col">
         <h1>{homePlayerState?.playerName.toUpperCase()}</h1>
         <div
@@ -49,5 +48,6 @@ export function StatusBar() {
         </div>
       </div>
     </div>
+    
   );
 }

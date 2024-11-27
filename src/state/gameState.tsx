@@ -79,6 +79,9 @@ const useGameState = create<GameState>((set, get) => ({
   swapActivePlayer() {
     const homePlayerState = get().homePlayer;
     const awayPlayerState = get().awayPlayer;
+
+    const cpuActive = get().playerType !== PlayerTypeEnum.Human
+
     set({
       homePlayer: homePlayerState?.copyWith({
         isActivePlayer: !homePlayerState?.isActivePlayer,
@@ -88,17 +91,22 @@ const useGameState = create<GameState>((set, get) => ({
       }),
     });
 
-    if (
-      awayPlayerState?.isActivePlayer &&
-      get().playerType !== PlayerTypeEnum.Human
-    ) {
+    if (cpuActive) {
+      const cpuPlayerState = get().awayPlayer;
+      const cpuDifficultyState = get().playerType;
+      const addDiceToColumnStateAction = (player: Player, column: number) => {
+        get().addUsableDieToPlayerColumn(player, column);
+      };
+          runCpuTurn({cpuPlayerState: cpuPlayerState!, cpuDifficultyState: cpuDifficultyState,  addDiceToColumn: addDiceToColumnStateAction});
     }
   },
 
   endPlayerTurn() {
+    console.log(`Ending player turn\n\n ///////////`)
     set({ usableDie: null });
-    get().swapActivePlayer();
     get().rollNewUsableDie();
+    console.log('swapping player');
+    get().swapActivePlayer();
   },
 
   startGame() {
@@ -109,12 +117,14 @@ const useGameState = create<GameState>((set, get) => ({
     set({
       gameHasEnded: false,
       homePlayer: get().homePlayer?.copyWith({
+        score: 0,
         isActivePlayer: coinFlip === 0 ? true : false,
         diceGrid: emptyDiceArray,
         // temporary until player can pick
         playerName: "Player",
       }),
       awayPlayer: get().awayPlayer?.copyWith({
+        score: 0,
         isActivePlayer: coinFlip === 1 ? true : false,
         diceGrid: emptyDiceArray,
         // temporary until player can pick
@@ -127,13 +137,19 @@ const useGameState = create<GameState>((set, get) => ({
     // CPU was chosen to go first
 
     if (cpuActive) {
-      runCpuTurn();
+      const cpuPlayerState = get().awayPlayer;
+      const cpuDifficultyState = get().playerType;
+      const addDiceToColumnStateAction = (player: Player, column: number) => {
+        get().addUsableDieToPlayerColumn(player, column);
+      };
+          runCpuTurn({cpuPlayerState: cpuPlayerState!, cpuDifficultyState: cpuDifficultyState,  addDiceToColumn: addDiceToColumnStateAction});
     }
   },
 
   endGame() {
     set({
       gameHasEnded: true,
+      usableDie: null,
       homePlayer: get().homePlayer?.copyWith({
         isActivePlayer: false,
         diceGrid: emptyDiceArray,
@@ -150,15 +166,12 @@ const useGameState = create<GameState>((set, get) => ({
     const usableDie = get().usableDie;
 
     let mutablePlayerDiceGrid: (DiceData | null)[][] = selectedPlayer.diceGrid;
-    console.log(selectedPlayer);
     let mutablePlayerDiceColumn: (DiceData | null)[] =
       selectedPlayer.diceGrid[columnIndex];
 
-    console.log(mutablePlayerDiceColumn);
-    console.log(mutablePlayerDiceColumn);
-
     let diceWasAdded = false;
 
+    console.log(`attempted to add a dice at column index ${columnIndex}`)
     for (let index = 0; index < mutablePlayerDiceColumn.length; index++) {
       if (mutablePlayerDiceColumn[index] === null) {
         mutablePlayerDiceColumn[index] = usableDie;
@@ -183,14 +196,36 @@ const useGameState = create<GameState>((set, get) => ({
         });
       }
 
+      // check to see if this die ended the game
+      let playerEndedGame = true;
+
+      player.diceGrid.forEach((column) => {
+        column.forEach((die) => {
+          if (die === null) {
+            playerEndedGame = false;
+          }
+        })
+      })
+
+      if (playerEndedGame) {
+        get().endGame();
+        return;
+      }
       // after die is added
+
+      console.log('started removing')
       get().removeMatchingDiceFromOtherPlayer(
         updatedPlayer,
         usableDie!.numberValue,
         columnIndex
       );
+      console.log('started updating')
       get().updateGameScore();
+      console.log('starting to end player turn');
       get().endPlayerTurn();
+    }
+    else {
+      console.log('no dice added.  SAD')
     }
   },
 

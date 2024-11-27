@@ -1,41 +1,38 @@
-import { forEach } from "lodash";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
-import useGameState from "../state/gameState";
 import { generateRandomInt } from "./utility";
+import { Player } from "../models/Player";
 
-export function runCpuTurn() {
-  const cpuDifficultyState = useGameState((state) => state.playerType);
+export function runCpuTurn({cpuPlayerState, cpuDifficultyState, addDiceToColumn}: 
+  {cpuPlayerState: Player, cpuDifficultyState: PlayerTypeEnum, addDiceToColumn: (player: Player, column: number) => void;}) {
 
-  switch (cpuDifficultyState) {
-    case PlayerTypeEnum.Easy:
-      easyCPULogic();
-      break;
-
-    default:
-      easyCPULogic();
-  }
-}
-
-function easyCPULogic() {
-  const awayPlayerState = useGameState((state) => state.awayPlayer);
-  const addDiceToColumnAction = useGameState(
-    (state) => state.addUsableDieToPlayerColumn
-  );
-
-  const availableColumns = [];
-  for (let i = 0; i < awayPlayerState?.diceGrid.length!; i++) {
-    let columnIsAvailable = false;
-    awayPlayerState?.diceGrid[i].forEach((die) => {
-      if (die === null) {
-        columnIsAvailable = true;
+    if (cpuPlayerState.isActivePlayer) {
+      console.log('cpu is active turn');
+      switch (cpuDifficultyState) {
+        case PlayerTypeEnum.Easy:
+          const availableColumns = [];
+          for (let i = 0; i < cpuPlayerState.diceGrid.length!; i++) {
+            let columnIsAvailable = false;
+            cpuPlayerState.diceGrid[i].forEach((die) => {
+              if (die === null) {
+                columnIsAvailable = true;
+              }
+            });
+            if (columnIsAvailable) {
+              availableColumns.push(i);
+            }
+          }
+        
+          console.log(`cpu is choosing from column ${availableColumns}`)
+          const randomColumn = availableColumns[ generateRandomInt({ max: availableColumns.length - 1 })];
+          console.log( `cpu chose column ${randomColumn}`)
+        
+          addDiceToColumn(cpuPlayerState, randomColumn);
+          break;
+    
+        default:
+          console.log('oops')
+          break;
       }
-    });
-    if (columnIsAvailable) {
-      availableColumns.push(i);
     }
-  }
-
-  const randomColumn = generateRandomInt({ max: availableColumns.length - 1 });
-
-  addDiceToColumnAction(awayPlayerState!, randomColumn);
+  
 }
