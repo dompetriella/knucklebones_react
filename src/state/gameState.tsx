@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Player } from "../models/Player";
 import { DiceData } from "../models/DiceData";
 import { PlayerColorEnum } from "../models/PlayerColorEnum";
-import { generateRandomInt } from "../logic/utility";
+import { generateRandomInt, waitRandomDelay } from "../logic/utility";
 import { calculatePlayerScore } from "../logic/scoring";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { runCpuTurn } from "../logic/cpuLogic";
@@ -170,7 +170,7 @@ const useGameState = create<GameState>((set, get) => ({
     });
   },
 
-  addUsableDieToPlayerColumn(player: Player, columnIndex: number) {
+  async addUsableDieToPlayerColumn(player: Player, columnIndex: number) {
     const selectedPlayer: Player = player;
     const usableDie = get().usableDie;
 
@@ -217,6 +217,7 @@ const useGameState = create<GameState>((set, get) => ({
       });
 
       if (playerEndedGame) {
+        await waitRandomDelay(1000, 1000);
         get().endGame();
         return;
       }

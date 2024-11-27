@@ -34,10 +34,9 @@ export function PlayerArea({ player }: { player: Player | null }) {
         {player?.diceGrid.map((_, i) => (
           <button
             onClick={() => {
-              if (player === homePlayerState) {
+              if (player === homePlayerState && player.isActivePlayer) {
                 addUsableDieToPlayerColumnAction(currentActivePlayer!, i);
               }
-              
             }}
             className="flex flex-col bg-surface m-1 pb-2 rounded-lg"
           >
