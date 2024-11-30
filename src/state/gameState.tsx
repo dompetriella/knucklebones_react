@@ -100,7 +100,9 @@ const useGameState = create<GameState>((set, get) => ({
       };
       await runCpuTurn({
         cpuPlayerState: cpuPlayerState!,
+        humanPlayerState: homePlayerState!,
         cpuDifficultyState: cpuDifficultyState,
+        usableDiceState: get().usableDie!,
         addDiceToColumn: addDiceToColumnStateAction,
       });
     }
@@ -149,7 +151,9 @@ const useGameState = create<GameState>((set, get) => ({
       };
       runCpuTurn({
         cpuPlayerState: cpuPlayerState!,
+        humanPlayerState: get().homePlayer!,
         cpuDifficultyState: cpuDifficultyState,
+        usableDiceState: this.usableDie!,
         addDiceToColumn: addDiceToColumnStateAction,
       });
     }

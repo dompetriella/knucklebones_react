@@ -23,18 +23,22 @@ function CpuDifficultyPage() {
               navigator({ pathname: AppRoutes.Game });
             }}
           />
-          {/* <MenuButton
+          <MenuButton
             text={"Medium"}
             onPressed={() => {
-              null;
+              setPlayerTypeAction(PlayerTypeEnum.Medium);
+              startGameStateAction();
+              navigator({ pathname: AppRoutes.Game });
             }}
           />
           <MenuButton
             text={"Hard"}
             onPressed={() => {
-              null;
+              setPlayerTypeAction(PlayerTypeEnum.Hard);
+              startGameStateAction();
+              navigator({ pathname: AppRoutes.Game });
             }}
-          /> */}
+          />
         </div>
       </div>
     </>
