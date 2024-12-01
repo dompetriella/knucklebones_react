@@ -11,43 +11,40 @@ function CpuDifficultyPage() {
   const setPlayerTypeAction = useGameState((state) => state.setPlayerType);
   return (
     <>
-<div className="relative flex size-full flex-col justify-start items-center bg-surface">
-<BackButton />
+      <div className="relative flex size-full flex-col justify-start items-center bg-surface">
+        <BackButton route={AppRoutes.Start} />
+        <div className="bg-secondary h-1/3 w-full flex justify-center items-center">
+          <h1 className="text-3xl">CPU Difficulty</h1>
+        </div>
 
-  {/* Header */}
-  <div className="bg-secondary h-1/3 w-full flex justify-center items-center">
-    <h1 className="text-3xl">CPU Difficulty</h1>
-  </div>
-
-  {/* Menu Buttons */}
-  <div className="flex size-full flex-col justify-center items-center">
-    <MenuButton
-      text={"Easy"}
-      onPressed={() => {
-        setPlayerTypeAction(PlayerTypeEnum.Easy);
-        startGameStateAction();
-        navigator({ pathname: AppRoutes.Game });
-      }}
-    />
-    <MenuButton
-      text={"Medium"}
-      onPressed={() => {
-        setPlayerTypeAction(PlayerTypeEnum.Medium);
-        startGameStateAction();
-        navigator({ pathname: AppRoutes.Game });
-      }}
-    />
-    <MenuButton
-      text={"Hard"}
-      onPressed={() => {
-        setPlayerTypeAction(PlayerTypeEnum.Hard);
-        startGameStateAction();
-        navigator({ pathname: AppRoutes.Game });
-      }}
-    />
-  </div>
-</div>
-
+        {/* Menu Buttons */}
+        <div className="flex size-full flex-col justify-center items-center">
+          <MenuButton
+            text={"Easy"}
+            onPressed={() => {
+              setPlayerTypeAction(PlayerTypeEnum.Easy);
+              startGameStateAction();
+              navigator({ pathname: AppRoutes.Game });
+            }}
+          />
+          <MenuButton
+            text={"Medium"}
+            onPressed={() => {
+              setPlayerTypeAction(PlayerTypeEnum.Medium);
+              startGameStateAction();
+              navigator({ pathname: AppRoutes.Game });
+            }}
+          />
+          <MenuButton
+            text={"Hard"}
+            onPressed={() => {
+              setPlayerTypeAction(PlayerTypeEnum.Hard);
+              startGameStateAction();
+              navigator({ pathname: AppRoutes.Game });
+            }}
+          />
+        </div>
+      </div>
     </>
   );
 }
