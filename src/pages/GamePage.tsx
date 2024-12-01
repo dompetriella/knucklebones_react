@@ -14,7 +14,7 @@ function GamePage() {
 
   return (
     <div className="relative flex size-full flex-col justify-evenly items-center bg-surface">
-      <button onClick={() => navigator(AppRoutes.CpuDifficulty)}  className="absolute top-4 left-4"><div>
+      <button onClick={() => navigator(AppRoutes.Start)}  className="absolute top-4 left-4"><div>
         <CloseIcon  className="text-onSurface filter hover:brightness-125" />
         </div></button>
       {gameHasEndedState ? null : <PlayerArea player={awayPlayerState} />}

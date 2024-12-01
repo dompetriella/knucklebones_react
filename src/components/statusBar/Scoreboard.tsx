@@ -8,7 +8,7 @@ export function Scoreboard() {
   const usableDieState = useGameState((state) => state.usableDie);
 
   return (
-      <div className="flex w-full items-center justify-evenly bg-surface">
+    <div className="flex w-full items-center justify-evenly bg-surface">
       <div className="flex-col">
         <h1>{homePlayerState?.playerName.toUpperCase()}</h1>
         <div
@@ -23,15 +23,16 @@ export function Scoreboard() {
         </div>
       </div>
 
-      <div className="w-ful px-4 pb-4 pt-2 flex justify-center items-center">
-        <DiceSlot
-          diceData={usableDieState}
-          playerColor={
-            homePlayerState?.isActivePlayer
-              ? getColorByEnum(homePlayerState.color ?? null)
-              : getColorByEnum(awayPlayerState?.color ?? null)
-          }
-        />
+      <div className="flex py-4">
+          <DiceSlot
+            diceData={homePlayerState?.isActivePlayer ? usableDieState : null}
+            playerColor={getColorByEnum(homePlayerState?.color ?? null)}
+          />
+
+          <DiceSlot
+            diceData={awayPlayerState?.isActivePlayer ? usableDieState : null}
+            playerColor={getColorByEnum(awayPlayerState?.color ?? null)}
+          />
       </div>
 
       <div className="flex-col">
@@ -48,6 +49,5 @@ export function Scoreboard() {
         </div>
       </div>
     </div>
-    
   );
 }

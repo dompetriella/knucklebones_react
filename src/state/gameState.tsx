@@ -146,6 +146,7 @@ const useGameState = create<GameState>((set, get) => ({
     if (cpuActive) {
       const cpuPlayerState = get().awayPlayer;
       const cpuDifficultyState = get().playerType;
+      const usableDie = get().usableDie
       const addDiceToColumnStateAction = (player: Player, column: number) => {
         get().addUsableDieToPlayerColumn(player, column);
       };
@@ -153,7 +154,7 @@ const useGameState = create<GameState>((set, get) => ({
         cpuPlayerState: cpuPlayerState!,
         humanPlayerState: get().homePlayer!,
         cpuDifficultyState: cpuDifficultyState,
-        usableDiceState: this.usableDie!,
+        usableDiceState: usableDie!,
         addDiceToColumn: addDiceToColumnStateAction,
       });
     }
