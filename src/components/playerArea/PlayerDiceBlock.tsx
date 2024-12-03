@@ -1,10 +1,11 @@
-import { getColorByEnum } from "../logic/colorLogic";
-import { Player } from "../models/Player";
-import { PlayerColor } from "../models/PlayerColor";
-import useGameState from "../state/gameState";
-import DiceSlot from "./dice/DiceSlot";
+import { getColorByEnum } from "../../logic/colorLogic";
+import { calculateDiceDataColumn } from "../../logic/scoring";
+import { Player } from "../../models/Player";
+import { PlayerColor } from "../../models/PlayerColor";
+import useGameState from "../../state/gameState";
+import DiceSlot from "../dice/DiceSlot";
 
-export function PlayerArea({ player }: { player: Player | null }) {
+export function PlayerDiceBlock({ player }: { player: Player }) {
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
   const addUsableDieToPlayerColumnAction = useGameState(
@@ -16,17 +17,14 @@ export function PlayerArea({ player }: { player: Player | null }) {
   const currentActivePlayer = useGameState((state) =>
     state.homePlayer?.isActivePlayer ? homePlayerState : awayPlayerState
   );
-
   return (
-    <div
-      style={{ backgroundColor: playerColor.primary }}
-      className="flex flex-col justify-center items-center size-full"
-    >
-      {player === awayPlayerState ? (
-        <h1 style={{ color: playerColor.onPrimary }}>
-          {player?.playerName.toUpperCase()}
-        </h1>
-      ) : null}
+    <div className="flex-col">
+        <div className="flex justify-evenly font-bold text-2xl">
+        <h3 className=" w-4">{calculateDiceDataColumn(player.diceGrid[0])}</h3>
+        <h3 className="w-8 text-center">{calculateDiceDataColumn(player.diceGrid[1])}</h3>
+        <h3 className="w-4">{calculateDiceDataColumn(player.diceGrid[2])}</h3>
+        </div>
+        
       <div
         style={{ backgroundColor: playerColor.secondary }}
         className="flex border-4 border-onSurface p-2 shadow-md rounded-lg"
@@ -56,11 +54,6 @@ export function PlayerArea({ player }: { player: Player | null }) {
           </button>
         ))}
       </div>
-      {player === homePlayerState ? (
-        <h1 style={{ color: playerColor.onPrimary }}>
-          {player?.playerName.toUpperCase()}
-        </h1>
-      ) : null}
     </div>
   );
 }

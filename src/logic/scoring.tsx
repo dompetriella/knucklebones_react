@@ -12,19 +12,41 @@ export function calculatePlayerScore(player: Player): number {
         if (frequencyMap.has(diceData.numberValue)) {
           const currentFrequency = frequencyMap.get(diceData.numberValue);
           frequencyMap.set(diceData.numberValue, currentFrequency! + 1);
-        }
-        else {
+        } else {
           frequencyMap.set(diceData.numberValue, 1);
-        }  
+        }
       }
-      
     });
 
     if (frequencyMap.size > 0) {
       frequencyMap.forEach((value, key) => {
-        sum += ((key * value) * value)
+        sum += key * value * value;
       });
     }
   });
+  return sum;
+}
+
+export function calculateDiceDataColumn(column: (DiceData | null)[]): number {
+  let sum: number = 0;
+
+  let frequencyMap: Map<number, number> = new Map<number, number>();
+
+  column.forEach((diceData: DiceData | null) => {
+    if (diceData != null) {
+      if (frequencyMap.has(diceData.numberValue)) {
+        const currentFrequency = frequencyMap.get(diceData.numberValue);
+        frequencyMap.set(diceData.numberValue, currentFrequency! + 1);
+      } else {
+        frequencyMap.set(diceData.numberValue, 1);
+      }
+    }
+  });
+
+  if (frequencyMap.size > 0) {
+    frequencyMap.forEach((value, key) => {
+      sum += key * value * value;
+    });
+  }
   return sum;
 }

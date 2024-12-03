@@ -1,5 +1,5 @@
 import useGameState from "../state/gameState";
-import { PlayerArea } from "../components/PlayerArea";
+import { PlayerArea } from "../components/playerArea/PlayerArea";
 import { StatusBar } from "../components/statusBar/StatusBar";
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router-dom";
