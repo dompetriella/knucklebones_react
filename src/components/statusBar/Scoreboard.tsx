@@ -35,11 +35,17 @@ export function Scoreboard({
         <DiceSlot
           diceData={homePlayerState?.isActivePlayer ? usableDieState : null}
           player={homePlayerState}
+          initialXDistance={-64}
+          initialYDistance={-64}
+          initialRotation={360}
         />
 
         <DiceSlot
           diceData={awayPlayerState?.isActivePlayer ? usableDieState : null}
           player={awayPlayerState}
+          initialXDistance={64}
+          initialYDistance={-64}
+          initialRotation={-360}
         />
       </div>
 

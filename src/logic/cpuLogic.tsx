@@ -20,7 +20,7 @@ export async function runCpuTurn({
     console.log("cpu is active turn");
 
     // cpu thinking
-    await waitRandomDelay(1000, 3000);
+    await waitRandomDelay(2000, 3000);
     const availableColumns = getCpuAvailableColumns(cpuPlayerState);
 
     const randomColumn =

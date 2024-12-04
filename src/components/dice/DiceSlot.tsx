@@ -4,24 +4,28 @@ import { DiceData } from "../../models/DiceData";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";
 import DotArray from "./DotArray";
-import { duration } from "@mui/material";
 
 function DiceSlot({
   diceData,
   player,
   columnIndex = null,
-  intialYDistance = 0,
+  initialYDistance = 0,
+  initialXDistance = 0,
   initialScaling = 1,
+  initialRotation = 0,
 }: {
   diceData: DiceData | null;
   player: Player;
   columnIndex?: number | null;
-  intialYDistance?: number;
+  initialYDistance?: number;
+  initialXDistance?: number;
   initialScaling?: number;
+  initialRotation?: number;
 }) {
   const playerColor: PlayerColor = getColorByEnum(player.color);
 
   let matchingDiceCount: number = 0;
+  const dataIsNull: boolean = diceData === null ? true : false;
 
   if (columnIndex != null) {
     console.log(player.diceGrid[columnIndex]);
@@ -49,13 +53,23 @@ function DiceSlot({
     <>
       <motion.div
         key={diceData?.id ?? null}
-        initial={{ opacity: 0, scale: initialScaling, y: intialYDistance }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
+        initial={{
+          opacity: 0,
+          scale: diceData !== null ? initialScaling : 0,
+          x: diceData !== null ? initialXDistance : 0,
+          y: diceData !== null ? initialYDistance : 0,
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          x: 0,
+          y: 0,
+          rotate: diceData !== null ? initialRotation : 0,
+        }}
         transition={{
           type: "spring",
           stiffness: 400, // Increase for a snappier motion
           damping: 28, // Increase to reduce bounce
-          duration: 1.0, // Optional, limits the total duration
         }}
       >
         <div

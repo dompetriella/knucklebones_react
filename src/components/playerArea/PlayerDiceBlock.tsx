@@ -59,8 +59,8 @@ export function PlayerDiceBlock({
                       diceData={dice ?? null}
                       player={player}
                       columnIndex={i}
-                      intialYDistance={-160}
-                      initialScaling={3}
+                      initialYDistance={-192}
+                      initialScaling={2.5}
                     />
                   ))
               : player?.diceGrid[i].map((dice) => (
@@ -68,7 +68,7 @@ export function PlayerDiceBlock({
                     diceData={dice ?? null}
                     player={player}
                     columnIndex={i}
-                    intialYDistance={160}
+                    initialYDistance={192}
                     initialScaling={3}
                   />
                 ))}

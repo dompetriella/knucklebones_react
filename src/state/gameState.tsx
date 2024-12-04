@@ -112,15 +112,16 @@ const useGameState = create<GameState>((set, get) => ({
     }
   },
 
-  endPlayerTurn() {
+  async endPlayerTurn() {
     console.log(`Ending player turn\n\n ///////////`);
     set({ usableDie: null });
+    await waitRandomDelay(1000, 1000);
     get().rollNewUsableDie();
     console.log("swapping player");
     get().swapActivePlayer();
   },
 
-  startGame() {
+  async startGame() {
     const coinFlip = generateRandomInt({ max: 1 });
     const cpuActive =
       get().playerType !== PlayerTypeEnum.Human && coinFlip === 1;
@@ -143,7 +144,7 @@ const useGameState = create<GameState>((set, get) => ({
       }),
     });
 
-    get().rollNewUsableDie();
+    await get().rollNewUsableDie();
 
     // CPU was chosen to go first
 
@@ -242,7 +243,7 @@ const useGameState = create<GameState>((set, get) => ({
       console.log("started updating");
       get().updateGameScore();
       console.log("starting to end player turn");
-      get().endPlayerTurn();
+      await get().endPlayerTurn();
     } else {
       console.log("no dice added.  SAD");
     }
@@ -318,7 +319,7 @@ const useGameState = create<GameState>((set, get) => ({
     }
   },
 
-  rollNewUsableDie() {
+  async rollNewUsableDie() {
     const newDieValue = generateRandomInt({ min: 1, max: 6 });
     const newDieId = uuidv4();
     set({

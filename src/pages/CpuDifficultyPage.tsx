@@ -21,6 +21,7 @@ function CpuDifficultyPage() {
         <div className="flex size-full flex-col justify-center items-center">
           <MenuButton
             text={"Easy"}
+            width={300}
             onPressed={() => {
               setPlayerTypeAction(PlayerTypeEnum.Easy);
               startGameStateAction();
@@ -29,6 +30,7 @@ function CpuDifficultyPage() {
           />
           <MenuButton
             text={"Medium"}
+            width={300}
             onPressed={() => {
               setPlayerTypeAction(PlayerTypeEnum.Medium);
               startGameStateAction();
@@ -37,6 +39,7 @@ function CpuDifficultyPage() {
           />
           <MenuButton
             text={"Hard"}
+            width={300}
             onPressed={() => {
               setPlayerTypeAction(PlayerTypeEnum.Hard);
               startGameStateAction();
