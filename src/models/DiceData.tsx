@@ -1,8 +1,8 @@
 export class DiceData {
-  id: number;
+  id: string; // Changed from number to string
   numberValue: number;
 
-  constructor({ id, numberValue = 0 }: { id: number; numberValue?: number }) {
+  constructor({ id, numberValue = 0 }: { id: string; numberValue?: number }) {
     this.id = id;
     this.numberValue = numberValue;
   }
@@ -11,7 +11,7 @@ export class DiceData {
     id,
     numberValue,
   }: {
-    id?: number;
+    id?: string; // Updated type here
     numberValue?: number;
   }): DiceData {
     return new DiceData({

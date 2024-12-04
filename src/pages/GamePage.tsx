@@ -17,20 +17,26 @@ function GamePage() {
     ? homePlayerState
     : awayPlayerState;
 
+  const activePlayerColor = getColorByEnum(homePlayerState?.color!);
+
   return (
     <div className="relative flex size-full flex-col justify-evenly items-center bg-surface">
       <button
         onClick={() => navigator(AppRoutes.Start)}
-        className="absolute top-4 left-4"
+        style={{
+          backgroundColor: activePlayerColor.secondary,
+        }}
+        className="absolute p-2 text-xs bottom-4 right-4 rounded-md"
       >
-        <div>
-          <CloseIcon className="text-onSurface filter hover:brightness-125" />
-        </div>
+        Surrender
       </button>
-      {gameHasEndedState ? null : <PlayerArea player={awayPlayerState} />}
+      {gameHasEndedState ? null : (
+        <PlayerArea player={awayPlayerState} isHomePlayer={false} />
+      )}
       <StatusBar />
-      {gameHasEndedState ? null : <PlayerArea player={homePlayerState} />}
-      
+      {gameHasEndedState ? null : (
+        <PlayerArea player={homePlayerState} isHomePlayer={true} />
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ export async function runCpuTurn({
   addDiceToColumn,
 }: {
   cpuPlayerState: Player;
-  humanPlayerState: Player,
+  humanPlayerState: Player;
   cpuDifficultyState: PlayerTypeEnum;
   usableDiceState: DiceData;
   addDiceToColumn: (player: Player, column: number) => void;
@@ -38,50 +38,90 @@ export async function runCpuTurn({
         if (randomChance < maxProportionChance / 2) {
           return addDiceToColumn(cpuPlayerState, randomColumn);
         }
-        
-        const doubleDiceColumn = getDoubleDiceColumnIndexes(cpuPlayerState, usableDiceState);
-        
+
+        const doubleDiceColumn = getDoubleDiceColumnIndexes(
+          cpuPlayerState,
+          usableDiceState
+        );
+
         if (doubleDiceColumn.length > 0) {
-          const availableDoubleDiceColumns = availableColumns.filter(index => doubleDiceColumn.includes(index));
+          const availableDoubleDiceColumns = availableColumns.filter((index) =>
+            doubleDiceColumn.includes(index)
+          );
           if (availableDoubleDiceColumns.length > 0) {
             return addDiceToColumn(
               cpuPlayerState,
-              availableDoubleDiceColumns[generateRandomInt({ max: doubleDiceColumn.length - 1 })]
+              availableDoubleDiceColumns[
+                generateRandomInt({ max: doubleDiceColumn.length - 1 })
+              ]
             );
           }
         }
-        
+
         return addDiceToColumn(cpuPlayerState, randomColumn);
 
       case PlayerTypeEnum.Hard:
         if (randomChance < maxProportionChance / maxProportionChance) {
           return addDiceToColumn(cpuPlayerState, randomColumn);
         }
-        
-        const doubleDiceColumnHard = getDoubleDiceColumnIndexes(cpuPlayerState, usableDiceState);
-        const negatableColumnIndexes = getHumanPlayerNegatableColumnIndexes(humanPlayerState, usableDiceState);
 
-        const availableDoubleDiceColumns = availableColumns.filter(index => doubleDiceColumnHard.includes(index));
-        const availableNegatableColumns = availableColumns.filter(index => negatableColumnIndexes.includes(index));
+        const doubleDiceColumnHard = getDoubleDiceColumnIndexes(
+          cpuPlayerState,
+          usableDiceState
+        );
+        const negatableColumnIndexes = getHumanPlayerNegatableColumnIndexes(
+          humanPlayerState,
+          usableDiceState
+        );
 
-        if (availableDoubleDiceColumns.length > 0 && availableNegatableColumns.length > 0 ) {
+        const availableDoubleDiceColumns = availableColumns.filter((index) =>
+          doubleDiceColumnHard.includes(index)
+        );
+        const availableNegatableColumns = availableColumns.filter((index) =>
+          negatableColumnIndexes.includes(index)
+        );
+
+        if (
+          availableDoubleDiceColumns.length > 0 &&
+          availableNegatableColumns.length > 0
+        ) {
           if (humanPlayerState.score > cpuPlayerState.score) {
-            return addDiceToColumn(cpuPlayerState, availableNegatableColumns[generateRandomInt({ max: availableNegatableColumns.length - 1 })]);
-          }
-          else {
-            return addDiceToColumn(cpuPlayerState, availableDoubleDiceColumns[generateRandomInt({ max: availableDoubleDiceColumns.length - 1 })]);
+            return addDiceToColumn(
+              cpuPlayerState,
+              availableNegatableColumns[
+                generateRandomInt({ max: availableNegatableColumns.length - 1 })
+              ]
+            );
+          } else {
+            return addDiceToColumn(
+              cpuPlayerState,
+              availableDoubleDiceColumns[
+                generateRandomInt({
+                  max: availableDoubleDiceColumns.length - 1,
+                })
+              ]
+            );
           }
         }
 
         if (availableDoubleDiceColumns.length > 0) {
-          return addDiceToColumn(cpuPlayerState, availableDoubleDiceColumns[generateRandomInt({ max: availableDoubleDiceColumns.length - 1 })]);
+          return addDiceToColumn(
+            cpuPlayerState,
+            availableDoubleDiceColumns[
+              generateRandomInt({ max: availableDoubleDiceColumns.length - 1 })
+            ]
+          );
         }
 
         if (availableNegatableColumns.length > 0) {
-          return addDiceToColumn(cpuPlayerState, availableNegatableColumns[generateRandomInt({ max: availableNegatableColumns.length - 1 })]);
+          return addDiceToColumn(
+            cpuPlayerState,
+            availableNegatableColumns[
+              generateRandomInt({ max: availableNegatableColumns.length - 1 })
+            ]
+          );
         }
 
-        
         return addDiceToColumn(cpuPlayerState, randomColumn);
 
       default:
@@ -90,24 +130,30 @@ export async function runCpuTurn({
     }
   }
 }
-function getHumanPlayerNegatableColumnIndexes(humanPlayerState: Player, usableDiceState: DiceData): number[] {
-  let existingDieColumns: number[] = []
+function getHumanPlayerNegatableColumnIndexes(
+  humanPlayerState: Player,
+  usableDiceState: DiceData
+): number[] {
+  let existingDieColumns: number[] = [];
   for (let i = 0; i < humanPlayerState.diceGrid.length; i++) {
     for (const die of humanPlayerState.diceGrid[i]) {
       if (die?.numberValue === usableDiceState.numberValue) {
-        existingDieColumns.push(i)
+        existingDieColumns.push(i);
       }
     }
   }
   return existingDieColumns;
 }
 
-function getDoubleDiceColumnIndexes(cpuPlayerState: Player, usableDiceState: DiceData): number[] {
+function getDoubleDiceColumnIndexes(
+  cpuPlayerState: Player,
+  usableDiceState: DiceData
+): number[] {
   let doubleDiceColumn = [];
   for (let i = 0; i < cpuPlayerState.diceGrid.length; i++) {
     for (const die of cpuPlayerState.diceGrid[i]) {
       if (die?.numberValue === usableDiceState.numberValue) {
-        doubleDiceColumn.push(i)
+        doubleDiceColumn.push(i);
       }
     }
   }
@@ -124,6 +170,7 @@ function getCpuAvailableColumns(cpuPlayerState: Player): number[] {
       }
     });
     if (columnIsAvailable) {
+      console.log(`pushing column to available ${i}`);
       availableColumns.push(i);
     }
   }

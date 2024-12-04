@@ -2,7 +2,7 @@ import { DiceData } from "./DiceData";
 import { PlayerColorEnum } from "./PlayerColorEnum";
 
 export class Player {
-  id: number;
+  id: string; // Changed from number to string
   playerName: string;
   score: number;
   diceGrid: (DiceData | null)[][];
@@ -21,7 +21,7 @@ export class Player {
     isActivePlayer = false,
     color = PlayerColorEnum.Red,
   }: {
-    id: number;
+    id: string; // Updated type here
     playerName: string;
     score?: number;
     diceGrid?: (DiceData | null)[][];
@@ -44,7 +44,7 @@ export class Player {
     isActivePlayer,
     color,
   }: {
-    id?: number;
+    id?: string; // Updated type here
     playerName?: string;
     score?: number;
     diceGrid?: (DiceData | null)[][];

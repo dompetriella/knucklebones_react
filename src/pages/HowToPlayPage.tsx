@@ -11,12 +11,16 @@ import { getColorByEnum } from "../logic/colorLogic";
 import { PlayerArea } from "../components/playerArea/PlayerArea";
 import { PlayerDiceBlock } from "../components/playerArea/PlayerDiceBlock";
 import { Scoreboard } from "../components/statusBar/Scoreboard";
+import { v4 as uuidv4 } from "uuid";
 
 function HowToPlayPage() {
   const navigator = useNavigate();
+  const playerId = uuidv4();
+  const awayPlayerId = uuidv4();
+  const dieId = uuidv4();
   return (
     <>
-      <div className="relative flex size-fit flex-col justify-start items-center bg-surface">
+      <div className="relative flex w-full flex-col justify-start items-center bg-surface">
         <BackButton route={AppRoutes.Start} />
         <div className="bg-secondary h-48 w-full flex flex-col justify-center items-center border-b-4 border-onSurface ">
           <h1 className="text-3xl">How To Play</h1>
@@ -30,7 +34,7 @@ function HowToPlayPage() {
           <Scoreboard
             homePlayerState={
               new Player({
-                id: 0,
+                id: "player",
                 playerName: "Player",
                 score: 42,
                 diceGrid: [[null], [null], [null]],
@@ -40,7 +44,7 @@ function HowToPlayPage() {
             }
             awayPlayerState={
               new Player({
-                id: 1,
+                id: "cpu",
                 playerName: "CPU",
                 score: 20,
                 diceGrid: [[null], [null], [null]],
@@ -48,7 +52,7 @@ function HowToPlayPage() {
                 color: PlayerColorEnum.Orange,
               })
             }
-            usableDieState={new DiceData({ id: 0, numberValue: 4 })}
+            usableDieState={new DiceData({ id: dieId, numberValue: 4 })}
           />
           <div className="py-4"></div>
 
@@ -60,29 +64,35 @@ function HowToPlayPage() {
           </p>
           <div className="flex flex-col items-center">
             <h3 className="p-4 text-xl font-bold justify-evenly">Example</h3>
+            <div className="flex justify-evenly pt-1 font-bold text-2xl">
+              <h3 className="w-4">3</h3>
+              <h3 className="w-36 text-center">12</h3>
+              <h3 className="w-4">27</h3>
+            </div>
             <PlayerDiceBlock
               player={
                 new Player({
-                  id: 0,
+                  id: playerId,
                   playerName: "Player",
                   score: 0,
                   isActivePlayer: false,
                   color: PlayerColorEnum.Red,
                   diceGrid: [
-                    [null, null, new DiceData({ id: 0, numberValue: 3 })],
+                    [null, null, new DiceData({ id: dieId, numberValue: 3 })],
                     [
                       null,
-                      new DiceData({ id: 0, numberValue: 3 }),
-                      new DiceData({ id: 0, numberValue: 3 }),
+                      new DiceData({ id: dieId, numberValue: 3 }),
+                      new DiceData({ id: dieId, numberValue: 3 }),
                     ],
                     [
-                      new DiceData({ id: 0, numberValue: 3 }),
-                      new DiceData({ id: 0, numberValue: 3 }),
-                      new DiceData({ id: 0, numberValue: 3 }),
+                      new DiceData({ id: dieId, numberValue: 3 }),
+                      new DiceData({ id: dieId, numberValue: 3 }),
+                      new DiceData({ id: dieId, numberValue: 3 }),
                     ],
                   ],
                 })
               }
+              isHomePlayer={true}
             />
           </div>
           <div className="py-4"></div>

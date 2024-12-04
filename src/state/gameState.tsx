@@ -6,12 +6,16 @@ import { generateRandomInt, waitRandomDelay } from "../logic/utility";
 import { calculatePlayerScore } from "../logic/scoring";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { runCpuTurn } from "../logic/cpuLogic";
+import { v4 as uuidv4 } from "uuid";
 
 const emptyDiceArray: (DiceData | null)[][] = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
 ];
+
+const homePlayerId = uuidv4();
+const awayPlayerId = uuidv4();
 
 interface GameState {
   // Player
@@ -42,13 +46,13 @@ interface GameState {
 
 const useGameState = create<GameState>((set, get) => ({
   homePlayer: new Player({
-    id: 0,
+    id: homePlayerId,
     playerName: "",
     isActivePlayer: true,
     color: PlayerColorEnum.Red,
   }),
   awayPlayer: new Player({
-    id: 1,
+    id: awayPlayerId,
     playerName: "",
     isActivePlayer: false,
     color: PlayerColorEnum.Orange,
@@ -146,7 +150,7 @@ const useGameState = create<GameState>((set, get) => ({
     if (cpuActive) {
       const cpuPlayerState = get().awayPlayer;
       const cpuDifficultyState = get().playerType;
-      const usableDie = get().usableDie
+      const usableDie = get().usableDie;
       const addDiceToColumnStateAction = (player: Player, column: number) => {
         get().addUsableDieToPlayerColumn(player, column);
       };
@@ -188,7 +192,7 @@ const useGameState = create<GameState>((set, get) => ({
     console.log(`attempted to add a dice at column index ${columnIndex}`);
     for (let index = 0; index < mutablePlayerDiceColumn.length; index++) {
       if (mutablePlayerDiceColumn[index] === null) {
-        mutablePlayerDiceColumn[index] = usableDie;
+        mutablePlayerDiceColumn[index] = usableDie?.copyWith({ id: uuidv4() })!;
         console.log(`Added dice at index ${index}`);
         diceWasAdded = true;
         break;
@@ -222,6 +226,7 @@ const useGameState = create<GameState>((set, get) => ({
       });
 
       if (playerEndedGame) {
+        get().updateGameScore();
         await waitRandomDelay(1000, 1000);
         get().endGame();
         return;
@@ -229,7 +234,7 @@ const useGameState = create<GameState>((set, get) => ({
       // after die is added
 
       console.log("started removing");
-      get().removeMatchingDiceFromOtherPlayer(
+      await get().removeMatchingDiceFromOtherPlayer(
         updatedPlayer,
         usableDie!.numberValue,
         columnIndex
@@ -243,7 +248,7 @@ const useGameState = create<GameState>((set, get) => ({
     }
   },
 
-  removeMatchingDiceFromOtherPlayer(
+  async removeMatchingDiceFromOtherPlayer(
     playerOfOrigin: Player,
     diceValue: number,
     columnIndex: number
@@ -270,7 +275,7 @@ const useGameState = create<GameState>((set, get) => ({
         }
       });
 
-    const moveDiceDown = () => {
+    const moveDiceDown = async () => {
       let moved = false;
 
       for (
@@ -315,7 +320,10 @@ const useGameState = create<GameState>((set, get) => ({
 
   rollNewUsableDie() {
     const newDieValue = generateRandomInt({ min: 1, max: 6 });
-    set({ usableDie: new DiceData({ id: 0, numberValue: newDieValue }) });
+    const newDieId = uuidv4();
+    set({
+      usableDie: new DiceData({ id: newDieId, numberValue: newDieValue }),
+    });
   },
 }));
 
