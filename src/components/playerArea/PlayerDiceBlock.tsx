@@ -14,16 +14,17 @@ export function PlayerDiceBlock({ player }: { player: Player }) {
 
   const playerColor: PlayerColor = getColorByEnum(player?.color ?? null);
 
-  const currentActivePlayer = useGameState((state) =>
-    state.homePlayer?.isActivePlayer ? homePlayerState : awayPlayerState
-  );
+  const currentActivePlayer = 
+    homePlayerState?.isActivePlayer ? homePlayerState : awayPlayerState
+  
   return (
     <div className="flex-col">
-        <div className="flex justify-evenly font-bold text-2xl">
-        <h3 className=" w-4">{calculateDiceDataColumn(player.diceGrid[0])}</h3>
-        <h3 className="w-8 text-center">{calculateDiceDataColumn(player.diceGrid[1])}</h3>
-        <h3 className="w-4">{calculateDiceDataColumn(player.diceGrid[2])}</h3>
-        </div>
+        { player === awayPlayerState ? <div className="flex justify-evenly pt-1 font-bold text-2xl">
+            
+        <h3 style={{color: playerColor.onPrimary}} className=" w-4">{calculateDiceDataColumn(player.diceGrid[0])}</h3>
+        <h3 style={{color: playerColor.onPrimary}} className="w-16 text-center">{calculateDiceDataColumn(player.diceGrid[1])}</h3>
+        <h3 style={{color: playerColor.onPrimary}} className="w-4">{calculateDiceDataColumn(player.diceGrid[2])}</h3>
+        </div> : null}
         
       <div
         style={{ backgroundColor: playerColor.secondary }}
@@ -54,6 +55,12 @@ export function PlayerDiceBlock({ player }: { player: Player }) {
           </button>
         ))}
       </div>
+      { player === homePlayerState ? <div className="flex pt-1 justify-evenly font-bold text-2xl">
+            
+            <h3 style={{color: playerColor.onPrimary}} className=" w-4">{calculateDiceDataColumn(player.diceGrid[0])}</h3>
+            <h3 style={{color: playerColor.onPrimary}} className="w-16 text-center">{calculateDiceDataColumn(player.diceGrid[1])}</h3>
+            <h3 style={{color: playerColor.onPrimary}} className="w-4">{calculateDiceDataColumn(player.diceGrid[2])}</h3>
+            </div> : null}
     </div>
   );
 }

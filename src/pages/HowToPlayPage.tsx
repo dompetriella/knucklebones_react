@@ -27,14 +27,36 @@ function HowToPlayPage() {
           <p>
             Score more points than your opponent by putting dice in your columns
           </p>
-          <Scoreboard />
+          <Scoreboard
+            homePlayerState={
+              new Player({
+                id: 0,
+                playerName: "Player",
+                score: 42,
+                diceGrid: [[null], [null], [null]],
+                isActivePlayer: true,
+                color: PlayerColorEnum.Red,
+              })
+            }
+            awayPlayerState={
+              new Player({
+                id: 1,
+                playerName: "CPU",
+                score: 20,
+                diceGrid: [[null], [null], [null]],
+                isActivePlayer: false,
+                color: PlayerColorEnum.Orange,
+              })
+            }
+            usableDieState={new DiceData({ id: 0, numberValue: 4 })}
+          />
           <div className="py-4"></div>
-          
-          <h2 className="text-xl font-bold">How-To</h2>
+
+          <h2 className="text-xl font-bold">How To Score</h2>
           <p>
             When it's your turn, click a column to add the rolled dice to it.
-            Dice of the same number in the same column increase the amount
-            scored by a factor dice matched.
+            Dice of the same value in the same column increase the amount scored
+            by a factor of dice matched.
           </p>
           <div className="flex flex-col items-center">
             <h3 className="p-4 text-xl font-bold justify-evenly">Example</h3>
@@ -42,7 +64,7 @@ function HowToPlayPage() {
               player={
                 new Player({
                   id: 0,
-                  playerName: "Jeff",
+                  playerName: "Player",
                   score: 0,
                   isActivePlayer: false,
                   color: PlayerColorEnum.Red,
@@ -64,18 +86,17 @@ function HowToPlayPage() {
             />
           </div>
           <div className="py-4"></div>
-          <h2 className="text-xl font-bold">Objective</h2>
+          <h2 className="text-xl font-bold">En Guarde!</h2>
           <p>
-            Score more points than your opponent by putting dice in your columns
+            When a player places the same value die in your column, it will
+            remove all die of the same number in your column.
+          </p>
+          <br></br>
+          <p>
+            Both you and your opponent can use this to their advantage to clear
+            a column in a fell swoop, so use it wisely!
           </p>
           <div className="py-4"></div>
-          
-          <h2 className="text-xl font-bold">How-To</h2>
-          <p>
-            When it's your turn, click a column to add the rolled dice to it.
-            Dice of the same number in the same column increase the amount
-            scored by a factor dice matched.
-          </p>
         </section>
       </div>
     </>

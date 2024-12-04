@@ -1,16 +1,15 @@
 import { getColorByEnum } from "../../logic/colorLogic";
+import { DiceData } from "../../models/DiceData";
+import { Player } from "../../models/Player";
 import useGameState from "../../state/gameState";
 import DiceSlot from "../dice/DiceSlot";
 
-export function Scoreboard() {
-  const homePlayerState = useGameState((state) => state.homePlayer);
-  const awayPlayerState = useGameState((state) => state.awayPlayer);
-  const usableDieState = useGameState((state) => state.usableDie);
+export function Scoreboard({homePlayerState, awayPlayerState, usableDieState}: {homePlayerState: Player, awayPlayerState: Player, usableDieState: DiceData | null}) {
 
   return (
     <div className="flex w-full items-center justify-evenly bg-surface">
-      <div className="flex-col">
-        <h1>{homePlayerState?.playerName.toUpperCase()}</h1>
+      <div className="flex-col items-center justify-center">
+        <h1 className="text-center">{homePlayerState?.playerName.toUpperCase()}</h1>
         <div
           style={{
             backgroundColor: getColorByEnum(homePlayerState?.color!).primary,
@@ -35,8 +34,8 @@ export function Scoreboard() {
           />
       </div>
 
-      <div className="flex-col">
-        <h1>{awayPlayerState?.playerName.toUpperCase()}</h1>
+      <div className="flex-col items-center justify-center">
+        <h1 className="text-center">{awayPlayerState?.playerName.toUpperCase()}</h1>
         <div
           style={{
             backgroundColor: getColorByEnum(awayPlayerState?.color!).primary,

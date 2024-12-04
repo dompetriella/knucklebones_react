@@ -10,6 +10,7 @@ export function StatusBar() {
   const startGameStateAction = useGameState((state) => state.startGame);
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
+  const usableDieState = useGameState((state) => state.usableDie)
   const setPlayerTypeAction = useGameState((state) => state.setPlayerType);
   const gameHasEnded = useGameState((state) => state.gameHasEnded);
 
@@ -22,7 +23,7 @@ export function StatusBar() {
             : awayPlayerState?.playerName) + " Wins!"}
         </h1>
       ) : null}
-      <Scoreboard />
+      <Scoreboard homePlayerState={homePlayerState!} awayPlayerState={awayPlayerState!} usableDieState={usableDieState}/>
       {gameHasEnded ? (
         <div className="flex flex-col items-center">
           <MenuButton

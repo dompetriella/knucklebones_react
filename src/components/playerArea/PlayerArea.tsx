@@ -14,26 +14,32 @@ export function PlayerArea({ player }: { player: Player | null }) {
 
   const playerColor: PlayerColor = getColorByEnum(player?.color ?? null);
 
-  const currentActivePlayer = useGameState((state) =>
-    state.homePlayer?.isActivePlayer ? homePlayerState : awayPlayerState
-  );
-
   return (
     <div
       style={{ backgroundColor: playerColor.primary }}
-      className="flex flex-col justify-center items-center size-full"
+      className="flex flex-col justify-evenly items-center size-full"
     >
-      {player === awayPlayerState ? (
-        <h1 style={{ color: playerColor.onPrimary }}>
-          {player?.playerName.toUpperCase()}
-        </h1>
-      ) : null}
-      <PlayerDiceBlock player={player!}/>
-      {player === homePlayerState ? (
-        <h1 style={{ color: playerColor.onPrimary }}>
-          {player?.playerName.toUpperCase()}
-        </h1>
-      ) : null}
+
+      {/* These can be added in once I add characters */}
+
+      {/* {player === homePlayerState ? (
+        <h1
+          style={{ color: playerColor.onPrimary }}
+          className="w-full text-2xl font-bold"
+        >{`${homePlayerState?.playerName.toUpperCase()} - ${
+          homePlayerState?.score
+        }`}</h1>
+      ) : null} */}
+
+      <PlayerDiceBlock player={player!} />
+      {/* {player === awayPlayerState ? (
+        <h1
+          style={{ color: playerColor.onPrimary }}
+          className="w-full text-2xl font-bold"
+        >{`${awayPlayerState?.playerName.toUpperCase()} - ${
+          awayPlayerState?.score
+        }`}</h1>
+      ) : null} */}
     </div>
   );
 }
