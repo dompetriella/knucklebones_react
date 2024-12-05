@@ -1,22 +1,14 @@
-import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 import { BackButton } from "../components/utility/BackButton";
 import { DiceData } from "../models/DiceData";
-import DiceSlot from "../components/dice/DiceSlot";
-import { AppColors } from "../AppColors";
 import { PlayerColorEnum } from "../models/PlayerColorEnum";
-import { PlayerColor } from "../models/PlayerColor";
 import { Player } from "../models/Player";
-import { getColorByEnum } from "../logic/colorLogic";
-import { PlayerArea } from "../components/playerArea/PlayerArea";
 import { PlayerDiceBlock } from "../components/playerArea/PlayerDiceBlock";
 import { Scoreboard } from "../components/statusBar/Scoreboard";
 import { v4 as uuidv4 } from "uuid";
 
 function HowToPlayPage() {
-  const navigator = useNavigate();
   const playerId = uuidv4();
-  const awayPlayerId = uuidv4();
   const dieId = uuidv4();
   return (
     <>
@@ -26,6 +18,12 @@ function HowToPlayPage() {
           <h1 className="text-3xl">How To Play</h1>
           <h1 className="text-3xl">KnuckleBones</h1>
         </div>
+        
+        <p className="text-sm p-4 italic">
+          All credit goes to MassiveMonster's Cult of the Lamb for gameplay and
+          rules. If you enjoyed this game, please support them by going to their <a href="https://www.cultofthelamb.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600">website</a> and purchasing the game
+        </p>
+
         <section className="p-8 text-left">
           <h2 className="text-xl font-bold">Objective</h2>
           <p>
