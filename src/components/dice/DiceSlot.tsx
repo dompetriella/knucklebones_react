@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { getColorByEnum } from "../../logic/colorLogic";
 import { DiceData } from "../../models/DiceData";
 import { Player } from "../../models/Player";
@@ -25,7 +25,6 @@ function DiceSlot({
   const playerColor: PlayerColor = getColorByEnum(player.color);
 
   let matchingDiceCount: number = 0;
-  const dataIsNull: boolean = diceData === null ? true : false;
 
   if (columnIndex != null) {
     console.log(player.diceGrid[columnIndex]);

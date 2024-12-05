@@ -1,7 +1,6 @@
 import { getColorByEnum } from "../../logic/colorLogic";
 import { DiceData } from "../../models/DiceData";
 import { Player } from "../../models/Player";
-import useGameState from "../../state/gameState";
 import DiceSlot from "../dice/DiceSlot";
 
 export function Scoreboard({

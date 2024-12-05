@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 import { MenuButton } from "../components/utility/MenuButton";
 import useGameState from "../state/gameState";
-import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { getColorByEnum } from "../logic/colorLogic";
 
 function PlayerWonPage() {

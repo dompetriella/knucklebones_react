@@ -1,9 +1,6 @@
 import { getColorByEnum } from "../../logic/colorLogic";
-import { alterHexColorOpacity } from "../../logic/utility";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";
-import useGameState from "../../state/gameState";
-import DiceSlot from "../dice/DiceSlot";
 import { PlayerDiceBlock } from "./PlayerDiceBlock";
 
 export function PlayerArea({
