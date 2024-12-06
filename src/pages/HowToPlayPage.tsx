@@ -18,10 +18,19 @@ function HowToPlayPage() {
           <h1 className="text-3xl">How To Play</h1>
           <h1 className="text-3xl">KnuckleBones</h1>
         </div>
-        
+
         <p className="text-sm p-4 italic">
           All credit goes to MassiveMonster's Cult of the Lamb for gameplay and
-          rules. If you enjoyed this game, please support them by going to their <a href="https://www.cultofthelamb.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600">website</a> and purchasing the game
+          rules. If you enjoyed this game, please support them by going to their{" "}
+          <a
+            href="https://www.cultofthelamb.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600"
+          >
+            website
+          </a>{" "}
+          and purchasing the game
         </p>
 
         <section className="p-8 text-left">

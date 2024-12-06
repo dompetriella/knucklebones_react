@@ -31,6 +31,7 @@ interface GameState {
   // Game Flow
   gameHasEnded: boolean;
   startGame: () => void;
+  beginFirstTurn: () => void;
   endGame: () => void;
 
   // Dice
@@ -62,6 +63,50 @@ const useGameState = create<GameState>((set, get) => ({
 
   playerType: PlayerTypeEnum.Easy,
   gameHasEnded: false,
+
+  async startGame() {
+    const coinFlip = generateRandomInt({ max: 1 });
+
+    set({
+      gameHasEnded: false,
+      homePlayer: get().homePlayer?.copyWith({
+        score: 0,
+        isActivePlayer: coinFlip === 0 ? true : false,
+        diceGrid: emptyDiceArray,
+        // temporary until player can pick
+        playerName: "Player",
+      }),
+      awayPlayer: get().awayPlayer?.copyWith({
+        score: 0,
+        isActivePlayer: coinFlip === 1 ? true : false,
+        diceGrid: emptyDiceArray,
+        // temporary until player can pick
+        playerName: "CPU",
+      }),
+    });
+  },
+
+  beginFirstTurn() {
+    get().rollNewUsableDie();
+    const cpuPlayerState = get().awayPlayer;
+    // CPU was chosen to go first
+
+    if (cpuPlayerState?.isActivePlayer) {
+      const cpuPlayerState = get().awayPlayer;
+      const cpuDifficultyState = get().playerType;
+      const usableDie = get().usableDie;
+      const addDiceToColumnStateAction = (player: Player, column: number) => {
+        get().addUsableDieToPlayerColumn(player, column);
+      };
+      runCpuTurn({
+        cpuPlayerState: cpuPlayerState!,
+        humanPlayerState: get().homePlayer!,
+        cpuDifficultyState: cpuDifficultyState,
+        usableDiceState: usableDie!,
+        addDiceToColumn: addDiceToColumnStateAction,
+      });
+    }
+  },
 
   updateGameScore() {
     const homePlayerState = get().homePlayer;
@@ -119,50 +164,6 @@ const useGameState = create<GameState>((set, get) => ({
     get().rollNewUsableDie();
     console.log("swapping player");
     get().swapActivePlayer();
-  },
-
-  async startGame() {
-    const coinFlip = generateRandomInt({ max: 1 });
-    const cpuActive =
-      get().playerType !== PlayerTypeEnum.Human && coinFlip === 1;
-
-    set({
-      gameHasEnded: false,
-      homePlayer: get().homePlayer?.copyWith({
-        score: 0,
-        isActivePlayer: coinFlip === 0 ? true : false,
-        diceGrid: emptyDiceArray,
-        // temporary until player can pick
-        playerName: "Player",
-      }),
-      awayPlayer: get().awayPlayer?.copyWith({
-        score: 0,
-        isActivePlayer: coinFlip === 1 ? true : false,
-        diceGrid: emptyDiceArray,
-        // temporary until player can pick
-        playerName: "CPU",
-      }),
-    });
-
-    await get().rollNewUsableDie();
-
-    // CPU was chosen to go first
-
-    if (cpuActive) {
-      const cpuPlayerState = get().awayPlayer;
-      const cpuDifficultyState = get().playerType;
-      const usableDie = get().usableDie;
-      const addDiceToColumnStateAction = (player: Player, column: number) => {
-        get().addUsableDieToPlayerColumn(player, column);
-      };
-      runCpuTurn({
-        cpuPlayerState: cpuPlayerState!,
-        humanPlayerState: get().homePlayer!,
-        cpuDifficultyState: cpuDifficultyState,
-        usableDiceState: usableDie!,
-        addDiceToColumn: addDiceToColumnStateAction,
-      });
-    }
   },
 
   endGame() {

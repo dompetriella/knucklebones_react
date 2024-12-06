@@ -25,7 +25,7 @@ function CpuDifficultyPage() {
             onPressed={() => {
               setPlayerTypeAction(PlayerTypeEnum.Easy);
               startGameStateAction();
-              navigator({ pathname: AppRoutes.Game });
+              navigator({ pathname: AppRoutes.CoinFlip });
             }}
           />
           <MenuButton
@@ -34,7 +34,7 @@ function CpuDifficultyPage() {
             onPressed={() => {
               setPlayerTypeAction(PlayerTypeEnum.Medium);
               startGameStateAction();
-              navigator({ pathname: AppRoutes.Game });
+              navigator({ pathname: AppRoutes.CoinFlip });
             }}
           />
           <MenuButton
@@ -43,7 +43,7 @@ function CpuDifficultyPage() {
             onPressed={() => {
               setPlayerTypeAction(PlayerTypeEnum.Hard);
               startGameStateAction();
-              navigator({ pathname: AppRoutes.Game });
+              navigator({ pathname: AppRoutes.CoinFlip });
             }}
           />
         </div>

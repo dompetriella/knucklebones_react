@@ -9,6 +9,7 @@ function PlayerWonPage() {
   const startGameStateAction = useGameState((state) => state.startGame);
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
+  const beginFirstTurnAction = useGameState((state) => state.beginFirstTurn);
 
   const winningPlayer =
     homePlayerState!.score > awayPlayerState!.score
@@ -44,7 +45,7 @@ function PlayerWonPage() {
           text={"Play Again"}
           onPressed={() => {
             startGameStateAction();
-            navigator({ pathname: AppRoutes.Game });
+            navigator({ pathname: AppRoutes.CoinFlip });
           }}
         />
         <MenuButton

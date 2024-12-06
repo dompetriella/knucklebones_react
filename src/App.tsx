@@ -7,6 +7,7 @@ import GamePage from "./pages/GamePage";
 import CpuDifficultyPage from "./pages/CpuDifficultyPage";
 import HowToPlayPage from "./pages/HowToPlayPage";
 import PlayerWonPage from "./pages/PlayerWonPage";
+import CoinFlipPage from "./pages/CoinFlipPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path={AppRoutes.Game} element={<GamePage />}></Route>
         <Route path={AppRoutes.HowToPlay} element={<HowToPlayPage />}></Route>
         <Route path={AppRoutes.PlayerWon} element={<PlayerWonPage />}></Route>
+        <Route path={AppRoutes.CoinFlip} element={<CoinFlipPage />}></Route>
       </Routes>
     </BrowserRouter>
   );
