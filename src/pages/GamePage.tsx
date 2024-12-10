@@ -15,7 +15,7 @@ function GamePage() {
   const awayPlayerState = useGameState((state) => state.awayPlayer);
   const gameHasEndedState = useGameState((state) => state.gameHasEnded);
 
-  const activePlayerColor = getColorByEnum(homePlayerState?.color!);
+  const activePlayerColor = homePlayerState?.character?.color;
 
   const gameHasEnded = useGameState((state) => state.gameHasEnded);
 
@@ -30,7 +30,7 @@ function GamePage() {
       <button
         onClick={() => navigator(AppRoutes.Start)}
         style={{
-          backgroundColor: activePlayerColor.secondary,
+          backgroundColor: activePlayerColor?.secondary,
         }}
         className="absolute p-2 text-xs bottom-4 right-4 rounded-md"
       >

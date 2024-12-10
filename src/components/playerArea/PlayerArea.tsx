@@ -1,6 +1,7 @@
 import { getColorByEnum } from "../../logic/colorLogic";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";
+import useGameState from "../../state/gameState";
 import { PlayerDiceBlock } from "./PlayerDiceBlock";
 
 export function PlayerArea({
@@ -10,7 +11,10 @@ export function PlayerArea({
   player: Player | null;
   isHomePlayer: boolean;
 }) {
-  const playerColor: PlayerColor = getColorByEnum(player?.color ?? null);
+  const homePlayerState = useGameState((state) => state.homePlayer);
+  const awayPlayerState = useGameState((state) => state.awayPlayer);
+
+  const playerColor: PlayerColor = player?.character?.color!;
 
   return (
     <div
@@ -19,26 +23,24 @@ export function PlayerArea({
       }}
       className="flex flex-col justify-evenly items-center size-full"
     >
-      {/* These can be added in once I add characters */}
-
-      {/* {player === homePlayerState ? (
+      {player === homePlayerState ? (
         <h1
           style={{ color: playerColor.onPrimary }}
           className="w-full text-2xl font-bold"
-        >{`${homePlayerState?.playerName.toUpperCase()} - ${
+        >{`${homePlayerState?.character?.characterName.toUpperCase()} - ${
           homePlayerState?.score
         }`}</h1>
-      ) : null} */}
+      ) : null}
 
       <PlayerDiceBlock player={player!} isHomePlayer={isHomePlayer} />
-      {/* {player === awayPlayerState ? (
+      {player === awayPlayerState ? (
         <h1
           style={{ color: playerColor.onPrimary }}
           className="w-full text-2xl font-bold"
-        >{`${awayPlayerState?.playerName.toUpperCase()} - ${
+        >{`${awayPlayerState?.character?.characterName.toUpperCase()} - ${
           awayPlayerState?.score
         }`}</h1>
-      ) : null} */}
+      ) : null}
     </div>
   );
 }

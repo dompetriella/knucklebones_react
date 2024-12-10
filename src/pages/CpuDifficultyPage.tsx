@@ -12,7 +12,7 @@ function CpuDifficultyPage() {
   return (
     <>
       <div className="relative flex size-full flex-col justify-start items-center bg-surface">
-        <BackButton route={AppRoutes.Start} />
+        <BackButton route={AppRoutes.ChooseCharacter} />
         <div className="bg-secondary h-1/3 w-full flex justify-center items-center border-b-4 border-onSurface ">
           <h1 className="text-3xl">CPU Difficulty</h1>
         </div>

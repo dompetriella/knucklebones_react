@@ -1,13 +1,15 @@
+import Character from "./Character";
 import { DiceData } from "./DiceData";
 import { PlayerColorEnum } from "./PlayerColorEnum";
 
 export class Player {
-  id: string; // Changed from number to string
+  id: string;
   playerName: string;
   score: number;
   diceGrid: (DiceData | null)[][];
   isActivePlayer: boolean;
   color: PlayerColorEnum;
+  character: Character | null;
 
   constructor({
     id,
@@ -20,13 +22,15 @@ export class Player {
     ],
     isActivePlayer = false,
     color = PlayerColorEnum.Red,
+    character = null,
   }: {
-    id: string; // Updated type here
+    id: string;
     playerName: string;
     score?: number;
     diceGrid?: (DiceData | null)[][];
     isActivePlayer?: boolean;
     color?: PlayerColorEnum;
+    character?: Character | null;
   }) {
     this.id = id;
     this.playerName = playerName;
@@ -34,6 +38,7 @@ export class Player {
     this.diceGrid = diceGrid;
     this.isActivePlayer = isActivePlayer;
     this.color = color;
+    this.character = character;
   }
 
   copyWith({
@@ -43,23 +48,26 @@ export class Player {
     diceGrid,
     isActivePlayer,
     color,
+    character,
   }: {
-    id?: string; // Updated type here
+    id?: string;
     playerName?: string;
     score?: number;
     diceGrid?: (DiceData | null)[][];
     isActivePlayer?: boolean;
     color?: PlayerColorEnum;
+    character?: Character | null;
   }): Player {
     return new Player({
       id: id ?? this.id,
       playerName: playerName ?? this.playerName,
       score: score ?? this.score,
       diceGrid: diceGrid
-        ? diceGrid.map((row) => row.map((cell) => cell))
-        : this.diceGrid.map((row) => row.map((cell) => cell)),
+        ? diceGrid.map((row) => [...row])
+        : this.diceGrid.map((row) => [...row]),
       isActivePlayer: isActivePlayer ?? this.isActivePlayer,
       color: color ?? this.color,
+      character: character ?? this.character,
     });
   }
 }

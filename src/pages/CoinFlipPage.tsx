@@ -19,14 +19,14 @@ function CoinFlipPage() {
     <>
       <div className="bg-surface flex flex-col size-full justify-evenly items-center">
         <div className="flex flex-col justify-center items-center">
-          <div
-            style={{
-              backgroundColor: getColorByEnum(startingPlayer.color).primary,
-            }}
-            className="w-32 h-32"
-          ></div>
+          <img
+            src={startingPlayer.character?.characterImagePath}
+            alt={startingPlayer.character?.characterImageAlt}
+            height={250}
+            width={250}
+          />
           <h1 className="text-[3em]">
-            {startingPlayer?.playerName + " "}
+            {startingPlayer?.character?.characterName + " "}
             Rolls First!
           </h1>
         </div>

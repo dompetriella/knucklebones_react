@@ -12,30 +12,21 @@ function PlayerWonPage() {
   const beginFirstTurnAction = useGameState((state) => state.beginFirstTurn);
 
   const winningPlayer =
-    homePlayerState!.score > awayPlayerState!.score
+    homePlayerState!.score >= awayPlayerState!.score
       ? homePlayerState
       : awayPlayerState;
 
   return (
     <div className="size-full flex flex-col justify-around bg-surface">
-      <h1 className="text-[4em] font-bold">{`${winningPlayer?.playerName} Won!`}</h1>
-      <div className="flex justify-evenly">
-        <div className="flex flex-col">
-          <div
-            style={{
-              backgroundColor: getColorByEnum(homePlayerState!.color).primary,
-            }}
-            className="w-24 h-20"
-          ></div>
-          <h2 className="text-4xl font-bold">{`${homePlayerState?.score}`}</h2>
-        </div>
+      <h1 className="text-[4em] font-bold">{`${winningPlayer?.character?.characterName} Won!`}</h1>
+      <div className="flex flex-col justify-evenly">
         <div className="flex flex-col self-center">
-          <div
-            style={{
-              backgroundColor: getColorByEnum(awayPlayerState!.color).primary,
-            }}
-            className="w-24 h-20"
-          ></div>
+          <img
+            src={winningPlayer?.character?.characterImagePath}
+            alt={winningPlayer?.character?.characterImageAlt}
+            width={256}
+            height={256}
+          />
           <h2 className="text-4xl font-bold">{`${awayPlayerState?.score}`}</h2>
         </div>
       </div>

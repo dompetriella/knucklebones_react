@@ -1,9 +1,7 @@
-
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 import { MenuButton } from "../components/utility/MenuButton";
 import { AppColors } from "../AppColors";
-import Axton from '../assets/Axton.svg';
 
 function StartPage() {
   const navigator = useNavigate();
@@ -23,7 +21,7 @@ function StartPage() {
           />
           <MenuButton
             text={"Play VS CPU"}
-            onPressed={() => navigator(AppRoutes.CpuDifficulty)}
+            onPressed={() => navigator(AppRoutes.ChooseCharacter)}
           />
         </div>
       </div>

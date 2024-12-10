@@ -6,4 +6,5 @@ export class AppRoutes {
   static readonly HowToPlay = "/howToPlay";
   static readonly PlayerWon = "/playerWon";
   static readonly CoinFlip = "/coinFlip";
+  static readonly ChooseCharacter = "/chooseCharacter";
 }

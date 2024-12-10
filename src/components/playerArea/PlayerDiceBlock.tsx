@@ -16,10 +16,10 @@ export function PlayerDiceBlock({
     (state) => state.addUsableDieToPlayerColumn
   );
 
-  const playerColor: PlayerColor = getColorByEnum(player?.color ?? null);
+  const playerColor: PlayerColor = player.character?.color!;
 
   return (
-    <div className="flex-col">
+    <div className="flex-col overflow-y-hidden overflow-x-hidden">
       {!isHomePlayer ? (
         <div className="flex justify-evenly pt-1 font-bold text-2xl">
           <h3 style={{ color: playerColor.onPrimary }} className=" w-4">
@@ -39,7 +39,7 @@ export function PlayerDiceBlock({
 
       <div
         style={{ backgroundColor: playerColor.secondary }}
-        className="flex border-4 border-onSurface p-2 shadow-md rounded-lg"
+        className="flex border-4 border-onSurface p-2 shadow-md rounded-lg overflow-y-hidden overflow-x-hidden"
       >
         {player?.diceGrid.map((_, i) => (
           <button

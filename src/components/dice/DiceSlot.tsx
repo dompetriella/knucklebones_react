@@ -22,7 +22,7 @@ function DiceSlot({
   initialScaling?: number;
   initialRotation?: number;
 }) {
-  const playerColor: PlayerColor = getColorByEnum(player.color);
+  const playerColor: PlayerColor = player.character?.color!;
 
   let matchingDiceCount: number = 0;
 

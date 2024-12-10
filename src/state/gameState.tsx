@@ -7,6 +7,7 @@ import { calculatePlayerScore } from "../logic/scoring";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { runCpuTurn } from "../logic/cpuLogic";
 import { v4 as uuidv4 } from "uuid";
+import Character from "../models/Character";
 
 const emptyDiceArray: (DiceData | null)[][] = [
   [null, null, null],
@@ -24,6 +25,7 @@ interface GameState {
   playerType: PlayerTypeEnum;
 
   setPlayerType: (playerType: PlayerTypeEnum) => void;
+  setPlayerCharacter: (character: Character | null, playerId: string) => void;
   swapActivePlayer: () => void;
   updateGameScore: () => void;
   endPlayerTurn: () => void;
@@ -154,6 +156,25 @@ const useGameState = create<GameState>((set, get) => ({
         usableDiceState: get().usableDie!,
         addDiceToColumn: addDiceToColumnStateAction,
       });
+    }
+  },
+
+  setPlayerCharacter(character: Character | null, playerId: string) {
+    const homePlayer: Player | null = get().homePlayer;
+    const awayPlayer: Player | null = get().awayPlayer;
+
+    const selectedPlayer = homePlayer?.id == playerId ? homePlayer : awayPlayer;
+
+    if (selectedPlayer === null) {
+      return;
+    }
+
+    const updatedPlayer = selectedPlayer.copyWith({ character: character });
+
+    if (updatedPlayer.id === homePlayer?.id) {
+      set({ homePlayer: updatedPlayer });
+    } else {
+      set({ awayPlayer: updatedPlayer });
     }
   },
 
