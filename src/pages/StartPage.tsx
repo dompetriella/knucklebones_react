@@ -1,7 +1,9 @@
+
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 import { MenuButton } from "../components/utility/MenuButton";
 import { AppColors } from "../AppColors";
+import Axton from '../assets/Axton.svg';
 
 function StartPage() {
   const navigator = useNavigate();
