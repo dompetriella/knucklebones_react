@@ -21,7 +21,6 @@ export function CharacterSelect({
   const gameTypeState = useGameState((state) => state.playerType);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
 
-  const navigator = useNavigate();
   const isSelected = player.character === character;
 
   return (
@@ -29,7 +28,15 @@ export function CharacterSelect({
       onClick={async () => {
         setPlayerCharacterAction(character, player.id);
         if (gameTypeState !== PlayerTypeEnum.Human) {
-          setPlayerCharacterAction(characterDataList[3], awayPlayerState?.id!);
+          const remainingCharacters: Character[] = characterDataList.filter(
+            (c) => c !== character
+          );
+          setPlayerCharacterAction(
+            remainingCharacters[
+              Math.floor(Math.random() * remainingCharacters.length)
+            ],
+            awayPlayerState?.id!
+          );
         } else {
           //TODO: This will need to be worked out for online
         }

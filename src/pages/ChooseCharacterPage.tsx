@@ -1,24 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
-import Axton from "../assets/Axton.svg";
+
 import { CharacterSelect } from "../components/character/CharacterSelect";
 import { characterDataList } from "../global/characterData";
 import { BackButton } from "../components/utility/BackButton";
 import useGameState from "../state/gameState";
 import { MenuButton } from "../components/utility/MenuButton";
-import { useEffect } from "react";
 
 function ChooseCharacterPage() {
   const navigator = useNavigate();
 
   const homePlayerState = useGameState((state) => state.homePlayer);
-  const setPlayerCharacterAction = useGameState(
-    (state) => state.setPlayerCharacter
-  );
-
-  useEffect(() => {
-    setPlayerCharacterAction(null, homePlayerState?.id!);
-  }, []);
 
   return (
     <div className="flex size-full flex-col justify-start items-center relative bg-surface">

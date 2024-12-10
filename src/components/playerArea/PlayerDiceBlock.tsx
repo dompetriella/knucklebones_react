@@ -38,7 +38,7 @@ export function PlayerDiceBlock({
       ) : null}
 
       <div
-        style={{ backgroundColor: playerColor.secondary }}
+        style={{ backgroundColor: player.character?.color.secondary }}
         className="flex border-4 border-onSurface p-2 shadow-md rounded-lg overflow-y-hidden overflow-x-hidden"
       >
         {player?.diceGrid.map((_, i) => (

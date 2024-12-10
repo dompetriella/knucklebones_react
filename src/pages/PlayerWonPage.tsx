@@ -27,7 +27,7 @@ function PlayerWonPage() {
             width={256}
             height={256}
           />
-          <h2 className="text-4xl font-bold">{`${awayPlayerState?.score}`}</h2>
+          <h2 className="text-4xl font-bold">{`${winningPlayer?.score}`}</h2>
         </div>
       </div>
 

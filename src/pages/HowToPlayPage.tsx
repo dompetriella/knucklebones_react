@@ -6,6 +6,7 @@ import { Player } from "../models/Player";
 import { PlayerDiceBlock } from "../components/playerArea/PlayerDiceBlock";
 import { Scoreboard } from "../components/statusBar/Scoreboard";
 import { v4 as uuidv4 } from "uuid";
+import { characterDataList } from "../global/characterData";
 
 function HowToPlayPage() {
   const playerId = uuidv4();
@@ -33,7 +34,7 @@ function HowToPlayPage() {
           and purchasing the game
         </p>
 
-        <section className="p-8 text-left">
+        <section className="p-8 text-left flex flex-col">
           <h2 className="text-xl font-bold">Objective</h2>
           <p>
             Score more points than your opponent by putting dice in your columns
@@ -47,6 +48,7 @@ function HowToPlayPage() {
                 diceGrid: [[null], [null], [null]],
                 isActivePlayer: true,
                 color: PlayerColorEnum.Red,
+                character: characterDataList[0],
               })
             }
             awayPlayerState={
@@ -57,10 +59,16 @@ function HowToPlayPage() {
                 diceGrid: [[null], [null], [null]],
                 isActivePlayer: false,
                 color: PlayerColorEnum.Orange,
+                character: characterDataList[1],
               })
             }
             usableDieState={new DiceData({ id: dieId, numberValue: 4 })}
           />
+          <div className="flex justify-evenly">
+            <h3 className="text-3xl">68</h3>
+            <h3 className="text-3xl">24</h3>
+          </div>
+
           <div className="py-4"></div>
 
           <h2 className="text-xl font-bold">How To Score</h2>
@@ -97,6 +105,7 @@ function HowToPlayPage() {
                       new DiceData({ id: dieId, numberValue: 3 }),
                     ],
                   ],
+                  character: characterDataList[0],
                 })
               }
               isHomePlayer={true}
