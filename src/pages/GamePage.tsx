@@ -2,7 +2,6 @@ import useGameState from "../state/gameState";
 import { PlayerArea } from "../components/playerArea/PlayerArea";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
-import { getColorByEnum } from "../logic/colorLogic";
 import { useEffect } from "react";
 import { Scoreboard } from "../components/statusBar/Scoreboard";
 

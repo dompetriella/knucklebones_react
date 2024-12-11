@@ -2,14 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 import { MenuButton } from "../components/utility/MenuButton";
 import useGameState from "../state/gameState";
-import { getColorByEnum } from "../logic/colorLogic";
 
 function PlayerWonPage() {
   const navigator = useNavigate();
   const startGameStateAction = useGameState((state) => state.startGame);
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
-  const beginFirstTurnAction = useGameState((state) => state.beginFirstTurn);
 
   const winningPlayer =
     homePlayerState!.score >= awayPlayerState!.score

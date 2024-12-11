@@ -3,7 +3,6 @@ import { AppRoutes } from "../router/AppRoutes";
 import useGameState from "../state/gameState";
 import { Player } from "../models/Player";
 import { MenuButton } from "../components/utility/MenuButton";
-import { getColorByEnum } from "../logic/colorLogic";
 
 function CoinFlipPage() {
   const navigator = useNavigate();

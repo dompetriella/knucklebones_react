@@ -1,4 +1,3 @@
-import { getColorByEnum } from "../../logic/colorLogic";
 import { calculateDiceDataColumn } from "../../logic/scoring";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";

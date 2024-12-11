@@ -1,9 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { waitRandomDelay } from "../../logic/utility";
 import Character from "../../models/Character";
 import { Player } from "../../models/Player";
 import useGameState from "../../state/gameState";
-import { AppRoutes } from "../../router/AppRoutes";
 import { PlayerTypeEnum } from "../../models/PlayerTypeEnum";
 import { characterDataList } from "../../global/characterData";
 
