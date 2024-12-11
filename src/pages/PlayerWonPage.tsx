@@ -18,16 +18,18 @@ function PlayerWonPage() {
 
   return (
     <div className="size-full flex flex-col justify-around bg-surface">
-      <h1 className="text-[4em] font-bold">{`${winningPlayer?.character?.characterName} Won!`}</h1>
-      <div className="flex flex-col justify-evenly">
-        <div className="flex flex-col self-center">
-          <img
-            src={winningPlayer?.character?.characterImagePath}
-            alt={winningPlayer?.character?.characterImageAlt}
-            width={256}
-            height={256}
-          />
-          <h2 className="text-4xl font-bold">{`${winningPlayer?.score}`}</h2>
+      <div className="flex flex-col">
+        <h1 className="text-[4em] font-bold">{`${winningPlayer?.character?.characterName} Won!`}</h1>
+        <div className="flex flex-col justify-start">
+          <div className="flex flex-col self-center">
+            <img
+              src={winningPlayer?.character?.characterImagePath}
+              alt={winningPlayer?.character?.characterImageAlt}
+              width={256}
+              height={256}
+            />
+            <h2 className="text-[5em] m-[-0.75em] font-bold">{`${winningPlayer?.score}`}</h2>
+          </div>
         </div>
       </div>
 

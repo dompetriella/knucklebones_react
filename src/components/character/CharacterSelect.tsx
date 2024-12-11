@@ -52,7 +52,7 @@ export function CharacterSelect({
         width={100}
         height={100}
       />
-      <h1 className="pt-4 text-xl">{character.characterName}</h1>
+      <h1 className=" text-xl">{character.characterName}</h1>
     </button>
   );
 }

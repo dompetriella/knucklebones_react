@@ -3,7 +3,7 @@ import Character from "../models/Character";
 import { PlayerColorEnum } from "../models/PlayerColorEnum";
 
 export const characterDataList = [ 
-  new Character({ characterName: "Axton", 
+  new Character({ characterName: "Axel", 
   characterImagePath: "RedPlayer.svg", 
   characterImageAlt: "a red axolotl", 
   color: getColorByEnum(PlayerColorEnum.Red)}), 
@@ -18,7 +18,7 @@ export const characterDataList = [
     characterImageAlt: "a green frog", 
     color: getColorByEnum(PlayerColorEnum.Green)}),
 
-  new Character({ characterName: "Batthew", 
+  new Character({ characterName: "Batt", 
     characterImagePath: "PurplePlayer.svg", 
     characterImageAlt: "a purple bat", 
     color: getColorByEnum(PlayerColorEnum.Purple)}),

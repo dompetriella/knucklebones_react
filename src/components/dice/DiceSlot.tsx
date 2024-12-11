@@ -34,8 +34,6 @@ function DiceSlot({
         matchingDiceCount++;
       }
     }
-
-    console.log(matchingDiceCount);
   }
 
   const color = () => {
@@ -43,7 +41,7 @@ function DiceSlot({
       return "transparent";
     }
     if (matchingDiceCount > 1) {
-      return playerColor.tertiary;
+      return playerColor.secondary;
     }
     return playerColor.primary;
   };
