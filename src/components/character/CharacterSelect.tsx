@@ -41,7 +41,7 @@ export function CharacterSelect({
       style={{
         background: isSelected ? character.color.primary : "var(--surface)",
       }}
-      className="p-6 m-2 border-onSurface border-4 shadow-xl rounded-xl flex flex-col bg-surface"
+      className="p-6 m-2 border-onSurface border-4 shadow-xl rounded-xl flex flex-col justify-center items-center bg-surface"
     >
       <img
         src={`/${character.characterImagePath}`}
@@ -49,7 +49,7 @@ export function CharacterSelect({
         width={100}
         height={100}
       />
-      <h1 className=" text-xl">{character.characterName}</h1>
+      <h1 className="text-center text-xl">{character.characterName}</h1>
     </button>
   );
 }
