@@ -32,7 +32,7 @@ function ChooseCharacterPage() {
           if (playTypeState != PlayerTypeEnum.Human) {
             navigator(AppRoutes.CpuDifficulty);
           } else {
-            navigator(AppRoutes.Start);
+            navigator(AppRoutes.WaitingRoom);
           }
         }}
         text={"Continue"}

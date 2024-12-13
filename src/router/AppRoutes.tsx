@@ -8,4 +8,5 @@ export class AppRoutes {
   static readonly CoinFlip = "/coinFlip";
   static readonly ChooseCharacter = "/chooseCharacter";
   static readonly CreateRoom = "/createRoom";
+  static readonly WaitingRoom = "/waitingRoom";
 }

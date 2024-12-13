@@ -26,8 +26,6 @@ function DiceSlot({
   let matchingDiceCount: number = 0;
 
   if (columnIndex != null) {
-    console.log(player.diceGrid[columnIndex]);
-
     for (const die of player.diceGrid[columnIndex]) {
       if (die?.numberValue === diceData?.numberValue) {
         matchingDiceCount++;
@@ -39,8 +37,11 @@ function DiceSlot({
     if (diceData === null) {
       return "transparent";
     }
-    if (matchingDiceCount > 1) {
+    if (matchingDiceCount === 2) {
       return playerColor.secondary;
+    }
+    if (matchingDiceCount === 3) {
+      return playerColor.tertiary;
     }
     return playerColor.primary;
   };

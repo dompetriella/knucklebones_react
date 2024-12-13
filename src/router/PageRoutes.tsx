@@ -9,6 +9,7 @@ import PlayerWonPage from "../pages/PlayerWonPage";
 import CoinFlipPage from "../pages/CoinFlipPage";
 import ChoosePlayerPage from "../pages/ChooseCharacterPage";
 import CreateRoomPage from "../pages/CreateRoomPage";
+import WaitingRoomPage from "../pages/WaitingRoomPage";
 
 export function PageRoutes() {
   return (
@@ -28,6 +29,7 @@ export function PageRoutes() {
         element={<ChoosePlayerPage />}
       ></Route>
       <Route path={AppRoutes.CreateRoom} element={<CreateRoomPage />}></Route>
+      <Route path={AppRoutes.WaitingRoom} element={<WaitingRoomPage />}></Route>
     </Routes>
   );
 }
