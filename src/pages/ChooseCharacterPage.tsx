@@ -6,11 +6,13 @@ import { characterDataList } from "../global/characterData";
 import { BackButton } from "../components/utility/BackButton";
 import useGameState from "../state/gameState";
 import { MenuButton } from "../components/utility/MenuButton";
+import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 
 function ChooseCharacterPage() {
   const navigator = useNavigate();
 
   const homePlayerState = useGameState((state) => state.homePlayer);
+  const playTypeState = useGameState((state) => state.playerType);
 
   return (
     <div className="flex size-full flex-col justify-start items-center relative bg-surface">
@@ -26,7 +28,13 @@ function ChooseCharacterPage() {
         })}
       </div>
       <MenuButton
-        onPressed={() => navigator(AppRoutes.CpuDifficulty)}
+        onPressed={() => {
+          if (playTypeState != PlayerTypeEnum.Human) {
+            navigator(AppRoutes.CpuDifficulty);
+          } else {
+            navigator(AppRoutes.Start);
+          }
+        }}
         text={"Continue"}
       />
     </div>

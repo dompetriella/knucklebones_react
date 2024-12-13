@@ -2,9 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 import { MenuButton } from "../components/utility/MenuButton";
 import { AppColors } from "../AppColors";
+import useGameState from "../state/gameState";
+import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 
 function StartPage() {
   const navigator = useNavigate();
+  const setPlayerTypeAction = useGameState((state) => state.setPlayerType);
 
   return (
     <>
@@ -15,13 +18,26 @@ function StartPage() {
         <div className="flex size-full flex-col justify-center items-center">
           <MenuButton
             text={"How To Play"}
+            width={250}
             bgColor={AppColors.Secondary}
             textColor={AppColors.OnSecondary}
             onPressed={() => navigator(AppRoutes.HowToPlay)}
           />
           <MenuButton
-            text={"Play VS CPU"}
-            onPressed={() => navigator(AppRoutes.ChooseCharacter)}
+            text={"Player VS CPU"}
+            width={250}
+            onPressed={() => {
+              navigator(AppRoutes.ChooseCharacter);
+              setPlayerTypeAction(PlayerTypeEnum.Easy);
+            }}
+          />
+          <MenuButton
+            width={250}
+            text={"Player VS Player"}
+            onPressed={() => {
+              setPlayerTypeAction(PlayerTypeEnum.Human);
+              navigator(AppRoutes.CreateRoom);
+            }}
           />
         </div>
       </div>
