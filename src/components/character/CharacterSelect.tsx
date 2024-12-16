@@ -7,9 +7,11 @@ import { characterDataList } from "../../global/characterData";
 export function CharacterSelect({
   character,
   player,
+  isSmall = false,
 }: {
   character: Character;
   player: Player;
+  isSmall?: boolean;
 }) {
   const setPlayerCharacterAction = useGameState(
     (state) => state.setPlayerCharacter
@@ -46,8 +48,8 @@ export function CharacterSelect({
       <img
         src={`/${character.characterImagePath}`}
         alt={character.characterImageAlt}
-        width={100}
-        height={100}
+        width={isSmall ? 65 : 100}
+        height={isSmall ? 65 : 100}
       />
       <h1 className="text-center text-xl">{character.characterName}</h1>
     </button>

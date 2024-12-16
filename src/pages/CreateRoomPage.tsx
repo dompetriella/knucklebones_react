@@ -16,16 +16,16 @@ function CreateRoomPage() {
         </div>
         <div className="flex size-full flex-col justify-center items-center">
           <MenuButton
-            text={"Join Room"}
+            text={"Join Game"}
             width={250}
             bgColor={AppColors.Secondary}
             textColor={AppColors.OnSecondary}
-            onPressed={() => navigator(AppRoutes.HowToPlay)}
+            onPressed={() => navigator(AppRoutes.JoiningRoom)}
           />
           <MenuButton
-            text={"Create Room"}
+            text={"Create Game"}
             width={250}
-            onPressed={() => navigator(AppRoutes.ChooseCharacter)}
+            onPressed={() => navigator(AppRoutes.WaitingRoom)}
           />
         </div>
       </div>

@@ -9,4 +9,5 @@ export class AppRoutes {
   static readonly ChooseCharacter = "/chooseCharacter";
   static readonly CreateRoom = "/createRoom";
   static readonly WaitingRoom = "/waitingRoom";
+  static readonly JoiningRoom = "/joiningRoom";
 }
