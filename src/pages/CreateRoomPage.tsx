@@ -3,6 +3,7 @@ import { AppRoutes } from "../router/AppRoutes";
 import { MenuButton } from "../components/utility/MenuButton";
 import { BackButton } from "../components/utility/BackButton";
 import { AppColors } from "../AppColors";
+import { createRoom } from "../logic/multiplayer";
 
 function CreateRoomPage() {
   const navigator = useNavigate();
@@ -26,9 +27,9 @@ function CreateRoomPage() {
             text={"Create Game"}
             width={250}
             onPressed={async () => {
-              
+              await createRoom();
               navigator(AppRoutes.WaitingRoom);
-            } }
+            }}
           />
         </div>
       </div>
