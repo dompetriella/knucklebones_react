@@ -13,7 +13,12 @@ function WaitingRoomPage() {
       <div className="bg-secondary h-1/5 w-full flex justify-center border-b-4 border-onSurface items-center">
         <h1 className="text-3xl">Waiting Room</h1>
       </div>
-      <div className="flex flex-wrap justify-center pt-8">
+      <div className="flex flex-col p-4">
+        <div className="text-2xl">Room Code</div>
+        <div className="text-3xl p-2">Room Code</div>
+      </div>
+
+      <div className="flex flex-wrap justify-center">
         {characterDataList.map((character) => {
           return (
             <CharacterSelect

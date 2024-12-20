@@ -25,7 +25,10 @@ function CreateRoomPage() {
           <MenuButton
             text={"Create Game"}
             width={250}
-            onPressed={() => navigator(AppRoutes.WaitingRoom)}
+            onPressed={async () => {
+              
+              navigator(AppRoutes.WaitingRoom);
+            } }
           />
         </div>
       </div>

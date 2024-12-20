@@ -42,8 +42,10 @@ export function CharacterSelect({
       }}
       style={{
         background: isSelected ? character.color.primary : "var(--surface)",
+        height: isSmall ? 128 : 160,
+        width: isSmall ? 128 : 160
       }}
-      className="p-6 m-2 border-onSurface border-4 shadow-xl rounded-xl flex flex-col justify-center items-center bg-surface"
+      className=" m-2 border-onSurface border-4 shadow-xl rounded-xl flex flex-col justify-center items-center bg-surface"
     >
       <img
         src={`/${character.characterImagePath}`}
