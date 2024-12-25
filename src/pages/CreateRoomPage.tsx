@@ -4,9 +4,15 @@ import { MenuButton } from "../components/utility/MenuButton";
 import { BackButton } from "../components/utility/BackButton";
 import { AppColors } from "../AppColors";
 import { createRoom } from "../logic/multiplayer";
+import { useState } from "react";
+import useGameState from "../state/gameState";
 
 function CreateRoomPage() {
   const navigator = useNavigate();
+  const multiplayerRoomStateAction = useGameState((state) => state.setMultiplayerRoom)
+
+
+  const [isLoading, setIsLoading] = useState(false)
 
   return (
     <>
@@ -24,11 +30,17 @@ function CreateRoomPage() {
             onPressed={() => navigator(AppRoutes.JoiningRoom)}
           />
           <MenuButton
-            text={"Create Game"}
+            text={isLoading ? "Loading ..." : "Create Game"}
             width={250}
             onPressed={async () => {
-              await createRoom();
-              navigator(AppRoutes.WaitingRoom);
+              setIsLoading(() => true);
+              const multiplayerRoom = await createRoom();
+              if (multiplayerRoom !== null) {
+                console.log(multiplayerRoom);
+                multiplayerRoomStateAction(multiplayerRoom);
+                setIsLoading(() => false)
+                navigator(AppRoutes.WaitingRoom);
+              }
             }}
           />
         </div>

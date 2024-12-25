@@ -8,6 +8,7 @@ import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { runCpuTurn } from "../logic/cpuLogic";
 import { v4 as uuidv4 } from "uuid";
 import Character from "../models/Character";
+import { MultiplayerRoom } from "../models/MultiplayerRoom";
 
 const emptyDiceArray: (DiceData | null)[][] = [
   [null, null, null],
@@ -45,6 +46,10 @@ interface GameState {
     columnIndex: number
   ) => void;
   rollNewUsableDie: () => void;
+
+  //Multiplayer
+  multiplayerRoom: MultiplayerRoom | null
+  setMultiplayerRoom: (room: MultiplayerRoom) => void
 }
 
 const useGameState = create<GameState>((set, get) => ({
@@ -65,6 +70,8 @@ const useGameState = create<GameState>((set, get) => ({
 
   playerType: PlayerTypeEnum.Easy,
   gameHasEnded: false,
+
+  multiplayerRoom: null,
 
   async startGame() {
     const coinFlip = generateRandomInt({ max: 1 });
@@ -347,6 +354,10 @@ const useGameState = create<GameState>((set, get) => ({
     set({
       usableDie: new DiceData({ id: newDieId, numberValue: newDieValue }),
     });
+  },
+
+  async setMultiplayerRoom(room: MultiplayerRoom) {
+    set({ multiplayerRoom: room});
   },
 }));
 
