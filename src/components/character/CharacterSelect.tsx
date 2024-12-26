@@ -3,6 +3,8 @@ import { Player } from "../../models/Player";
 import useGameState from "../../state/gameState";
 import { PlayerTypeEnum } from "../../models/PlayerTypeEnum";
 import { characterDataList } from "../../global/characterData";
+import { AppColors } from "../../AppColors";
+import { motion } from "framer-motion";
 
 export function CharacterSelect({
   character,
@@ -22,8 +24,13 @@ export function CharacterSelect({
 
   const isSelected = player.character === character;
 
+  const backgroundGradient = isSelected ? character.color.primary : AppColors.Surface
+
   return (
-    <button
+    <motion.button
+
+      animate={{ background: `linear-gradient(${backgroundGradient}, ${AppColors.Surface})` }}
+
       onClick={async () => {
         setPlayerCharacterAction(character, player.id);
         if (gameTypeState !== PlayerTypeEnum.Human) {
@@ -32,7 +39,7 @@ export function CharacterSelect({
           );
           setPlayerCharacterAction(
             remainingCharacters[
-              Math.floor(Math.random() * remainingCharacters.length)
+            Math.floor(Math.random() * remainingCharacters.length)
             ],
             awayPlayerState?.id!
           );
@@ -41,7 +48,7 @@ export function CharacterSelect({
         }
       }}
       style={{
-        background: isSelected ? character.color.primary : "var(--surface)",
+        background: `linear-gradient(${backgroundGradient}, ${AppColors.Surface})`,
         height: isSmall ? 128 : 160,
         width: isSmall ? 128 : 160
       }}
@@ -54,6 +61,6 @@ export function CharacterSelect({
         height={isSmall ? 65 : 100}
       />
       <h1 className="text-center text-xl">{character.characterName}</h1>
-    </button>
+    </motion.button>
   );
 }

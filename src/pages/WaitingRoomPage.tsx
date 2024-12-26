@@ -20,7 +20,7 @@ function WaitingRoomPage() {
         <h2 className="text-3xl">Room Code</h2>
       </div>
 
-      <button className="bg-secondary p-4 my-4 rounded-md">Copy Invite to Clipboard</button>
+      <button className="bg-secondary p-4 my-4 rounded-md border-4 border-onSurface">Copy Invite to Clipboard</button>
 
       <div className="flex flex-wrap justify-center">
         {characterDataList.map((character) => {
