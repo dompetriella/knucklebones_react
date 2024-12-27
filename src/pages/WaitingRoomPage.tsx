@@ -4,6 +4,8 @@ import { characterDataList } from "../global/characterData";
 import { CharacterSelect } from "../components/character/CharacterSelect";
 import useGameState from "../state/gameState";
 import { MenuButton } from "../components/utility/MenuButton";
+import { addPlayerToGame } from "../logic/multiplayer";
+import { motion } from "framer-motion";
 
 function WaitingRoomPage() {
   const homePlayerState = useGameState((state) => state.homePlayer);
@@ -33,7 +35,14 @@ function WaitingRoomPage() {
           );
         })}
       </div>
-      <MenuButton text={"Continue"} onPressed={() => console.log("confirm")} />
+      { homePlayerState?.character !== null ? 
+      <motion.div  initial={{ opacity: 0, y: 48 }} animate={{ opacity: 1, y: 0 }}>
+<MenuButton text={"Continue"} onPressed={() => {
+        addPlayerToGame(multiplayerRoomState!.id, homePlayerState!)
+      }} /> 
+      </motion.div>
+      
+      : null}
     </div>
   );
 }

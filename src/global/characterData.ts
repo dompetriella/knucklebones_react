@@ -4,6 +4,7 @@ import { PlayerColorEnum } from "../models/PlayerColorEnum";
 
 export const characterDataList = [
   new Character({
+    index: 0,
     characterName: "Axel",
     characterImagePath: "RedPlayer.svg",
     characterImageAlt: "a red axolotl",
@@ -11,6 +12,7 @@ export const characterDataList = [
   }),
 
   new Character({
+    index: 1,
     characterName: "Foxanne",
     characterImagePath: "OrangePlayer.svg",
     characterImageAlt: "a orange fox",
@@ -18,6 +20,7 @@ export const characterDataList = [
   }),
 
   new Character({
+    index: 2,
     characterName: "Frobert",
     characterImagePath: "GreenPlayer.svg",
     characterImageAlt: "a green frog",
@@ -25,6 +28,7 @@ export const characterDataList = [
   }),
 
   new Character({
+    index: 3,
     characterName: "Batrick",
     characterImagePath: "PurplePlayer.svg",
     characterImageAlt: "a purple bat",
