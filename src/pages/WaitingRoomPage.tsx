@@ -6,8 +6,11 @@ import useGameState from "../state/gameState";
 import { MenuButton } from "../components/utility/MenuButton";
 import { addPlayerToGame } from "../logic/multiplayer";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { Player } from "../models/Player";
 
 function WaitingRoomPage() {
+  const navigator = useNavigate();
   const homePlayerState = useGameState((state) => state.homePlayer);
   const multiplayerRoomState = useGameState((state) => state.multiplayerRoom);
 
@@ -22,7 +25,9 @@ function WaitingRoomPage() {
         <h2 className="text-3xl">Room Code</h2>
       </div>
 
-      <button className="bg-secondary p-4 my-4 rounded-md border-4 border-onSurface">Copy Invite to Clipboard</button>
+      <button className="bg-secondary p-4 my-4 rounded-md border-4 border-onSurface">
+        Copy Invite to Clipboard
+      </button>
 
       <div className="flex flex-wrap justify-center">
         {characterDataList.map((character) => {
@@ -35,14 +40,23 @@ function WaitingRoomPage() {
           );
         })}
       </div>
-      { homePlayerState?.character !== null ? 
-      <motion.div  initial={{ opacity: 0, y: 48 }} animate={{ opacity: 1, y: 0 }}>
-<MenuButton text={"Continue"} onPressed={() => {
-        addPlayerToGame(multiplayerRoomState!.id, homePlayerState!)
-      }} /> 
-      </motion.div>
-      
-      : null}
+      {homePlayerState?.character !== null ? (
+        <motion.div
+          initial={{ opacity: 0, y: 48 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <MenuButton
+            text={"Continue"}
+            onPressed={async () => {
+              const player: Player | null = await addPlayerToGame(
+                multiplayerRoomState!.id,
+                homePlayerState!
+              );
+              navigator(AppRoutes.ConnectingRoom);
+            }}
+          />
+        </motion.div>
+      ) : null}
     </div>
   );
 }

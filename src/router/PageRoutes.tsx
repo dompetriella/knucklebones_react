@@ -11,6 +11,7 @@ import ChoosePlayerPage from "../pages/ChooseCharacterPage";
 import CreateRoomPage from "../pages/CreateRoomPage";
 import WaitingRoomPage from "../pages/WaitingRoomPage";
 import JoiningRoomPage from "../pages/JoiningRoomPage";
+import ConnectingRoomPage from "../pages/ConnectingRoomPage";
 
 export function PageRoutes() {
   return (
@@ -32,6 +33,10 @@ export function PageRoutes() {
       <Route path={AppRoutes.CreateRoom} element={<CreateRoomPage />}></Route>
       <Route path={AppRoutes.WaitingRoom} element={<WaitingRoomPage />}></Route>
       <Route path={AppRoutes.JoiningRoom} element={<JoiningRoomPage />}></Route>
+      <Route
+        path={AppRoutes.ConnectingRoom}
+        element={<ConnectingRoomPage />}
+      ></Route>
     </Routes>
   );
 }
