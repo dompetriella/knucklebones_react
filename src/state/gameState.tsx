@@ -48,8 +48,9 @@ interface GameState {
   rollNewUsableDie: () => void;
 
   //Multiplayer
-  multiplayerRoom: MultiplayerRoom | null
-  setMultiplayerRoom: (room: MultiplayerRoom) => void
+  multiplayerRoom: MultiplayerRoom | null;
+  setMultiplayerRoom: (room: MultiplayerRoom) => void;
+  setPlayerFromDatabaseData: (updatedPlayer: Player) => void;
 }
 
 const useGameState = create<GameState>((set, get) => ({
@@ -357,7 +358,18 @@ const useGameState = create<GameState>((set, get) => ({
   },
 
   async setMultiplayerRoom(room: MultiplayerRoom) {
-    set({ multiplayerRoom: room});
+    set({ multiplayerRoom: room });
+  },
+
+  setPlayerFromDatabaseData(updatedPlayer: Player) {
+    const homePlayer = get().homePlayer;
+    const awayPlayer = get().awayPlayer;
+
+    if (updatedPlayer.id === homePlayer?.id) {
+      set({ homePlayer: updatedPlayer });
+    } else {
+      set({ awayPlayer: updatedPlayer });
+    }
   },
 }));
 

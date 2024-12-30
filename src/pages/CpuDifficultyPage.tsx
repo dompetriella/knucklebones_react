@@ -4,6 +4,7 @@ import { MenuButton } from "../components/utility/MenuButton";
 import useGameState from "../state/gameState";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { BackButton } from "../components/utility/BackButton";
+import { PageHeader } from "../components/utility/PageHeader";
 
 function CpuDifficultyPage() {
   const navigator = useNavigate();
@@ -12,10 +13,11 @@ function CpuDifficultyPage() {
   return (
     <>
       <div className="relative flex size-full flex-col justify-start items-center bg-surface">
-        <BackButton route={AppRoutes.ChooseCharacter} />
-        <div className="bg-secondary h-1/3 w-full flex justify-center items-center border-b-4 border-onSurface ">
-          <h1 className="text-3xl">CPU Difficulty</h1>
-        </div>
+        <PageHeader
+          headerText={"CPU Difficulty"}
+          heightPercentage={33}
+          returnRoute={AppRoutes.ChooseCharacter}
+        />
 
         {/* Menu Buttons */}
         <div className="flex size-full flex-col justify-center items-center">

@@ -32,29 +32,43 @@ export function alterHexColorOpacity(hex: string, opacity: number): string {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
-export function convertDiceArrayToNumberArray(diceDataArray: (DiceData | null)[][]): (number | null)[][] {
+export function convertDiceArrayToNumberArray(
+  diceDataArray: (DiceData | null)[][]
+): (number | null)[][] {
   if (diceDataArray === null) {
-    return [[null, null, null], [null, null, null], [null, null, null]];
+    return [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+    ];
   }
-  
+
   return diceDataArray.map((column) => {
-    const newColumn: (number | null)[] = column.map((diceData) => diceData?.numberValue ?? null)
+    const newColumn: (number | null)[] = column.map(
+      (diceData) => diceData?.numberValue ?? null
+    );
     return newColumn;
   });
 }
 
-export function convertNumberArrayToDiceArray(numberArray: (number | null)[][]): (DiceData | null)[][] {
+export function convertNumberArrayToDiceArray(
+  numberArray: (number | null)[][]
+): (DiceData | null)[][] {
   if (numberArray === null) {
-     return [[null, null, null], [null, null, null], [null, null, null]];
+    return [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+    ];
   }
-  
+
   return numberArray.map((column) => {
-    const newColumn: (DiceData | null)[] = column.map((diceData) =>{
+    const newColumn: (DiceData | null)[] = column.map((diceData) => {
       if (diceData === null) {
-        return null
+        return null;
       }
-      return new DiceData({ id: crypto.randomUUID(), numberValue: diceData})
-    })
+      return new DiceData({ id: crypto.randomUUID(), numberValue: diceData });
+    });
     return newColumn;
   });
 }

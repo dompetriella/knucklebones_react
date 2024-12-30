@@ -11,7 +11,7 @@ import ChoosePlayerPage from "../pages/ChooseCharacterPage";
 import CreateRoomPage from "../pages/CreateRoomPage";
 import WaitingRoomPage from "../pages/WaitingRoomPage";
 import JoiningRoomPage from "../pages/JoiningRoomPage";
-import ConnectingRoomPage from "../pages/ConnectingRoomPage";
+import ConnectingRoomPage from "../pages/WaitingRoomPage";
 
 export function PageRoutes() {
   return (

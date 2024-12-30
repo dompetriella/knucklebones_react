@@ -8,6 +8,23 @@ import {
   convertNumberArrayToDiceArray,
 } from "./utility";
 
+export function convertDatabasePlayerToPlayer(databasePlayer: any): Player {
+  const character =
+    characterDataList[
+      databasePlayer[DatabaseTableNames.KnucklebonesPlayers.CharacterId]
+    ];
+
+  return new Player({
+    id: databasePlayer[DatabaseTableNames.KnucklebonesPlayers.PlayerId],
+    playerName: character.characterName,
+    score: databasePlayer[DatabaseTableNames.KnucklebonesPlayers.PlayerScore],
+    diceGrid: convertNumberArrayToDiceArray(
+      databasePlayer[DatabaseTableNames.KnucklebonesPlayers.DiceGrid]
+    ),
+    character: character,
+  });
+}
+
 export async function createRoom(): Promise<MultiplayerRoom | null> {
   try {
     const roomCode: string = crypto.randomUUID().substring(0, 4);
@@ -46,6 +63,9 @@ export async function addPlayerToGame(
   const diceDataToNumberArray: (number | null)[][] =
     convertDiceArrayToNumberArray(player.diceGrid);
 
+  console.log(roomId);
+  console.log(player);
+
   try {
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
@@ -73,18 +93,10 @@ export async function addPlayerToGame(
 
     const returnedData = data[0];
 
-    return new Player({
-      id: returnedData[DatabaseTableNames.KnucklebonesPlayers.PlayerId],
-      playerName: "test",
-      score: returnedData[DatabaseTableNames.KnucklebonesPlayers.PlayerScore],
-      diceGrid: convertNumberArrayToDiceArray(
-        returnedData[DatabaseTableNames.KnucklebonesPlayers.DiceGrid]
-      ),
-      character:
-        characterDataList[
-          returnedData[DatabaseTableNames.KnucklebonesPlayers.CharacterId]
-        ],
-    });
+    console.log("Returned data");
+    console.log(returnedData);
+
+    return convertDatabasePlayerToPlayer(returnedData);
   } catch (err) {
     console.error("Unexpected error:", err);
     throw err;
@@ -122,6 +134,70 @@ export async function connectPlayerToRoom(
       roomCode: returnedData[DatabaseTableNames.KnucklebonesRooms.RoomCode],
       createdAt: returnedData[DatabaseTableNames.KnucklebonesRooms.CreatedAt],
     });
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    throw err;
+  }
+}
+
+export async function getPlayerUpdateFromDatabase(
+  player: Player
+): Promise<Player | null> {
+  try {
+    const { data, error } = await supabase
+      .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
+      .select("*")
+      .eq(DatabaseTableNames.KnucklebonesPlayers.PlayerId, player.id);
+
+    if (error) {
+      console.error(
+        `Error finding player with playerId ${player.id} - Error: `,
+        error.message
+      );
+      throw new Error(error.message);
+    }
+
+    if (data === null) {
+      console.log("Player found was null, so bailing");
+      return data;
+    }
+
+    console.log(`Successfully found player: Player: ${data[0]}`);
+
+    const returnedData = data[0];
+    return convertDatabasePlayerToPlayer(returnedData);
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    throw err;
+  }
+}
+
+export async function findOtherPlayerInRoom(
+  roomId: number
+): Promise<Player | null> {
+  try {
+    const { data, error } = await supabase
+      .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
+      .select("*")
+      .eq(DatabaseTableNames.KnucklebonesPlayers.RoomId, roomId);
+
+    if (error) {
+      console.error(
+        `Error finding player in room with ID ${roomId} - Error: `,
+        error.message
+      );
+      throw new Error(error.message);
+    }
+
+    if (data === null) {
+      console.log("Player found was null, so bailing");
+      return data;
+    }
+
+    console.log(`Successfully found player: Player: ${data[0]}`);
+
+    const returnedData = data[0];
+    return convertDatabasePlayerToPlayer(returnedData);
   } catch (err) {
     console.error("Unexpected error:", err);
     throw err;

@@ -4,6 +4,7 @@ import { MenuButton } from "../components/utility/MenuButton";
 import { AppColors } from "../AppColors";
 import useGameState from "../state/gameState";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
+import { PageHeader } from "../components/utility/PageHeader";
 
 function StartPage() {
   const navigator = useNavigate();
@@ -12,9 +13,7 @@ function StartPage() {
   return (
     <>
       <div className="flex size-full flex-col justify-start items-center bg-surface">
-        <div className="bg-secondary h-1/3 w-full flex justify-center border-b-4 border-onSurface items-center">
-          <h1 className="text-3xl">{"KnuckleBones"}</h1>
-        </div>
+        <PageHeader headerText="KnuckleBones" heightPercentage={33} />
         <div className="flex size-full flex-col justify-center items-center">
           <MenuButton
             text={"How To Play"}
