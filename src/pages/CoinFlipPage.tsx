@@ -79,7 +79,7 @@ function CoinFlipPage() {
               async () => {
                 await beginFirstTurnAction();
               },
-              gameTypeState === PlayerTypeEnum.Human ? 5000 : 0
+              gameTypeState === PlayerTypeEnum.Human ? 1000 : 0
             );
           }}
         />

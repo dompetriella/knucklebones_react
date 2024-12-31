@@ -12,6 +12,7 @@ import { MultiplayerRoom } from "../models/MultiplayerRoom";
 import {
   getDiceDataForState,
   rollMultiplayerDice,
+  setPlayerActivity,
   updatePlayerFromState,
 } from "../logic/multiplayer";
 
@@ -148,30 +149,53 @@ const useGameState = create<GameState>((set, get) => ({
     const awayPlayerState = get().awayPlayer;
 
     const cpuActive = get().playerType !== PlayerTypeEnum.Human;
-    console.log("Wait, they aint human!");
 
-    set({
-      homePlayer: homePlayerState?.copyWith({
-        isActivePlayer: !homePlayerState?.isActivePlayer,
-      }),
-      awayPlayer: awayPlayerState?.copyWith({
-        isActivePlayer: !awayPlayerState?.isActivePlayer,
-      }),
-    });
+    if (get().playerType === PlayerTypeEnum.Human) {
+      let updatedHomePlayer;
+      let updatedAwayPlayer;
+      if (homePlayerState?.isActivePlayer) {
+        updatedHomePlayer = await setPlayerActivity(false, homePlayerState.id);
+        updatedAwayPlayer = await setPlayerActivity(true, awayPlayerState?.id!);
+      } else {
+        updatedHomePlayer = await setPlayerActivity(
+          false,
+          homePlayerState?.id!
+        );
+        updatedAwayPlayer = await setPlayerActivity(true, awayPlayerState?.id!);
+      }
 
-    if (cpuActive) {
-      const cpuPlayerState = get().awayPlayer;
-      const cpuDifficultyState = get().playerType;
-      const addDiceToColumnStateAction = (player: Player, column: number) => {
-        get().addUsableDieToPlayerColumn(player, column);
-      };
-      await runCpuTurn({
-        cpuPlayerState: cpuPlayerState!,
-        humanPlayerState: homePlayerState!,
-        cpuDifficultyState: cpuDifficultyState,
-        usableDiceState: get().usableDie!,
-        addDiceToColumn: addDiceToColumnStateAction,
+      set({
+        homePlayer: homePlayerState?.copyWith({
+          isActivePlayer: updatedHomePlayer?.isActivePlayer,
+        }),
+        awayPlayer: awayPlayerState?.copyWith({
+          isActivePlayer: updatedAwayPlayer?.isActivePlayer,
+        }),
       });
+    } else {
+      set({
+        homePlayer: homePlayerState?.copyWith({
+          isActivePlayer: !homePlayerState?.isActivePlayer,
+        }),
+        awayPlayer: awayPlayerState?.copyWith({
+          isActivePlayer: !awayPlayerState?.isActivePlayer,
+        }),
+      });
+
+      if (cpuActive) {
+        const cpuPlayerState = get().awayPlayer;
+        const cpuDifficultyState = get().playerType;
+        const addDiceToColumnStateAction = (player: Player, column: number) => {
+          get().addUsableDieToPlayerColumn(player, column);
+        };
+        await runCpuTurn({
+          cpuPlayerState: cpuPlayerState!,
+          humanPlayerState: homePlayerState!,
+          cpuDifficultyState: cpuDifficultyState,
+          usableDiceState: get().usableDie!,
+          addDiceToColumn: addDiceToColumnStateAction,
+        });
+      }
     }
   },
 
@@ -195,12 +219,21 @@ const useGameState = create<GameState>((set, get) => ({
   },
 
   async endPlayerTurn() {
+    const playerType = get().playerType;
+
     console.log(`Ending player turn\n\n ///////////`);
+    if (playerType === PlayerTypeEnum.Human) {
+      console.log("swapping player");
+      await get().swapActivePlayer();
+      set({ usableDie: null });
+      await waitRandomDelay(1000, 1000);
+      console.log("ready to roll again");
+      await get().rollNewUsableDie();
+    }
     set({ usableDie: null });
     await waitRandomDelay(1000, 1000);
     await get().rollNewUsableDie();
-    console.log("swapping player");
-    get().swapActivePlayer();
+    // get().swapActivePlayer();
   },
 
   endGame() {
@@ -284,6 +317,11 @@ const useGameState = create<GameState>((set, get) => ({
         usableDie!.numberValue,
         columnIndex
       );
+
+      if (playerType === PlayerTypeEnum.Human) {
+        await updatePlayerFromState(updatedPlayer);
+      }
+
       console.log("started updating");
       get().updateGameScore();
       console.log("starting to end player turn");
@@ -392,37 +430,14 @@ const useGameState = create<GameState>((set, get) => ({
       const homePlayerState = get().homePlayer;
       const multiplayerRoomState = get().multiplayerRoom;
       if (homePlayerState?.isActivePlayer) {
-        console.log("Rolling for network, player: ", homePlayerState.id);
+        console.log(
+          `Rolling for network, player ${homePlayerState.character?.characterName}: ${homePlayerState.id}`
+        );
         await rollMultiplayerDice({
           dieNumber: newDieValue,
           roomId: multiplayerRoomState?.id!,
         });
       }
-
-      // setTimeout(async () => {
-      //   const diceDataFromDatabase: DiceData | null = await getDiceDataForState(
-      //     multiplayerRoomState?.id!
-      //   );
-      //   set({
-      //     usableDie: diceDataFromDatabase,
-      //   });
-
-      //   // it's possible the other character outran above
-      //   // do another check
-      //   if (diceDataFromDatabase === null) {
-      //     setTimeout(async () => {
-      //       const diceDataFromDatabase: DiceData | null =
-      //         await getDiceDataForState(multiplayerRoomState?.id!);
-      //       if (
-      //         diceDataFromDatabase?.numberValue !== get().usableDie?.numberValue
-      //       ) {
-      //         set({
-      //           usableDie: diceDataFromDatabase,
-      //         });
-      //       }
-      //     }, 3000);
-      //   }
-      // }, 1000);
     } else {
       const newDieId = uuidv4();
       stateDie = new DiceData({ id: newDieId, numberValue: newDieValue });

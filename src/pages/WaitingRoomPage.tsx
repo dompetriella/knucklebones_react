@@ -7,7 +7,7 @@ import { supabase } from "../App";
 import { useEffect, useState } from "react";
 import {
   convertDatabasePlayerToPlayer,
-  setActivePlayer,
+  setPlayerActivity,
 } from "../logic/multiplayer";
 import { Player } from "../models/Player";
 import { generateRandomInt } from "../logic/utility";
@@ -46,7 +46,8 @@ function WaitingRoomPage() {
             const coinTossWinner =
               players[generateRandomInt({ max: players.length - 1 })];
 
-            const winningPlayer: Player | null = await setActivePlayer(
+            const winningPlayer: Player | null = await setPlayerActivity(
+              true,
               coinTossWinner
             );
 
@@ -56,7 +57,7 @@ function WaitingRoomPage() {
               setTimeout(() => {
                 setConnectionState(() => true);
                 navigator(AppRoutes.CoinFlip);
-              }, 5000);
+              }, 3000);
             } else {
               console.log("returned player was null, cannot start game");
             }

@@ -333,19 +333,20 @@ export async function findOtherPlayerInRoom(
   }
 }
 
-export async function setActivePlayer(
-  playerId: string
+export async function setPlayerActivity(
+  isActive: boolean,
+  playerIdToActivate: string
 ): Promise<Player | null> {
   try {
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
-      .update({ is_active_player: true })
-      .eq(DatabaseTableNames.KnucklebonesPlayers.PlayerId, playerId)
+      .update({ is_active_player: isActive })
+      .eq(DatabaseTableNames.KnucklebonesPlayers.PlayerId, playerIdToActivate)
       .select();
 
     if (error) {
       console.error(
-        `Error finding player with ID ${playerId} - Error: `,
+        `Error finding player with ID ${playerIdToActivate} - Error: `,
         error.message
       );
       throw new Error(error.message);
@@ -356,9 +357,14 @@ export async function setActivePlayer(
       return data;
     }
 
-    console.log(`Successfully found player for active set: Player: ${data[0]}`);
-
     const returnedData = data[0];
+    console.log(
+      `Successfully found Player: ${
+        returnedData[DatabaseTableNames.KnucklebonesPlayers.PlayerId]
+      }`
+    );
+    console.log(`${isActive ? "Activating Player" : "Deactivating Player"}`);
+
     return convertDatabasePlayerToPlayer(returnedData);
   } catch (err) {
     console.error("Unexpected error:", err);
