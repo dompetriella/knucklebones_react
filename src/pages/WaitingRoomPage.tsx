@@ -21,27 +21,35 @@ function WaitingRoomPage() {
   const roomId = multiplayerRoomState?.id;
 
   useEffect(() => {
-    const subscription = supabase
-      .channel("room-changes") // Unique channel name
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "knucklebones_players" },
-        (payload) => {
-          const newRow = payload.new;
-          if (newRow.room_id === multiplayerRoomState?.id) {
-            console.log("New row added for the specified room:", newRow);
-          }
-          const updatedPlayer: Player = convertDatabasePlayerToPlayer(newRow);
-          setPlayerFromDatabaseData(updatedPlayer);
-        }
-      )
-      .subscribe();
+    if (awayPlayerState?.character == null) {
+      const subscription = supabase
+        .channel("room-changes") // Unique channel name
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "knucklebones_players" },
+          (payload) => {
+            const newRow = payload.new;
+            if (newRow.room_id === multiplayerRoomState?.id) {
+              console.log("New row added for the specified room:", newRow);
+            }
+            const updatedPlayer: Player = convertDatabasePlayerToPlayer(newRow);
+            setPlayerFromDatabaseData(updatedPlayer);
 
-    // Clean up the subscription when the component unmounts
-    return () => {
-      supabase.removeChannel(subscription);
-    };
+            // setTimeout(() => {
+            //   navigator(AppRoutes.CoinFlip); 
+            // }, 5000);
+          }
+        )
+        .subscribe();
+
+      // Clean up the subscription when the component unmounts
+      return () => {
+        supabase.removeChannel(subscription);
+      };
+    }
   }, [roomId]);
+
+
 
   return (
     <div className="flex flex-col size-full bg-surface">

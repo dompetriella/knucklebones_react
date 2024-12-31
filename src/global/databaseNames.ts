@@ -15,5 +15,6 @@ export class DatabaseTableNames {
     static readonly PlayerScore = "player_score";
     static readonly DiceGrid = "dice_grid";
     static readonly CharacterId = "character_id"
+    static readonly IsActivePlayer = 'is_active_player'
   };
 }

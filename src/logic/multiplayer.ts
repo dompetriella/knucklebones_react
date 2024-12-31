@@ -22,6 +22,7 @@ export function convertDatabasePlayerToPlayer(databasePlayer: any): Player {
       databasePlayer[DatabaseTableNames.KnucklebonesPlayers.DiceGrid]
     ),
     character: character,
+    isActivePlayer: databasePlayer[DatabaseTableNames.KnucklebonesPlayers.IsActivePlayer]
   });
 }
 
