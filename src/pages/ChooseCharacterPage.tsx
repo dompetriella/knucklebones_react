@@ -43,37 +43,39 @@ function ChooseCharacterPage() {
             );
           })}
         </div>
-        <MenuButton
-          onPressed={async () => {
-            if (playTypeState != PlayerTypeEnum.Human) {
-              navigator(AppRoutes.CpuDifficulty);
-            } else {
-              setIsLoading(() => true);
-              let multiplayerRoomHoist = multiplayerRoomState;
-              if (multiplayerRoomHoist == null) {
-                const multiplayerRoom = await createRoom();
-                if (multiplayerRoom !== null) {
-                  setMultiplayerRoomStateAction(multiplayerRoom);
-                  multiplayerRoomHoist = multiplayerRoom;
+        {homePlayerState?.character !== null ? (
+          <MenuButton
+            onPressed={async () => {
+              if (playTypeState != PlayerTypeEnum.Human) {
+                navigator(AppRoutes.CpuDifficulty);
+              } else {
+                setIsLoading(() => true);
+                let multiplayerRoomHoist = multiplayerRoomState;
+                if (multiplayerRoomHoist == null) {
+                  const multiplayerRoom = await createRoom();
+                  if (multiplayerRoom !== null) {
+                    setMultiplayerRoomStateAction(multiplayerRoom);
+                    multiplayerRoomHoist = multiplayerRoom;
+                  } else {
+                    console.log("Multiplayer Room is null");
+                  }
+                }
+
+                const insertedPlayer: Player | null = await addPlayerToGame(
+                  multiplayerRoomHoist!.id,
+                  homePlayerState!
+                );
+                if (insertedPlayer !== null) {
+                  setIsLoading(() => false);
+                  navigator(AppRoutes.ConnectingRoom);
                 } else {
-                  console.log("Multiplayer Room is null");
+                  console.log("Inserted player is null");
                 }
               }
-
-              const insertedPlayer: Player | null = await addPlayerToGame(
-                multiplayerRoomHoist!.id,
-                homePlayerState!
-              );
-              if (insertedPlayer !== null) {
-                setIsLoading(() => false);
-                navigator(AppRoutes.ConnectingRoom);
-              } else {
-                console.log("Inserted player is null");
-              }
-            }
-          }}
-          text={isLoading ? "Loading..." : "Continue"}
-        />
+            }}
+            text={isLoading ? "Loading..." : "Continue"}
+          />
+        ) : null}
       </div>
     </div>
   );

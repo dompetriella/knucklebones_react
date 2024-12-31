@@ -9,6 +9,11 @@ import { runCpuTurn } from "../logic/cpuLogic";
 import { v4 as uuidv4 } from "uuid";
 import Character from "../models/Character";
 import { MultiplayerRoom } from "../models/MultiplayerRoom";
+import {
+  getDiceDataForState,
+  rollMultiplayerDice,
+  updatePlayerFromState,
+} from "../logic/multiplayer";
 
 const emptyDiceArray: (DiceData | null)[][] = [
   [null, null, null],
@@ -46,6 +51,7 @@ interface GameState {
     columnIndex: number
   ) => void;
   rollNewUsableDie: () => void;
+  directlySetUsableDie: (dieValue: number | null) => void;
 
   //Multiplayer
   multiplayerRoom: MultiplayerRoom | null;
@@ -96,12 +102,13 @@ const useGameState = create<GameState>((set, get) => ({
     });
   },
 
-  beginFirstTurn() {
-    get().rollNewUsableDie();
+  async beginFirstTurn() {
+    await get().rollNewUsableDie();
     const cpuPlayerState = get().awayPlayer;
+    const isCpuGame = get().playerType !== PlayerTypeEnum.Human;
     // CPU was chosen to go first
 
-    if (cpuPlayerState?.isActivePlayer) {
+    if (cpuPlayerState?.isActivePlayer && isCpuGame) {
       const cpuPlayerState = get().awayPlayer;
       const cpuDifficultyState = get().playerType;
       const usableDie = get().usableDie;
@@ -141,6 +148,7 @@ const useGameState = create<GameState>((set, get) => ({
     const awayPlayerState = get().awayPlayer;
 
     const cpuActive = get().playerType !== PlayerTypeEnum.Human;
+    console.log("Wait, they aint human!");
 
     set({
       homePlayer: homePlayerState?.copyWith({
@@ -190,7 +198,7 @@ const useGameState = create<GameState>((set, get) => ({
     console.log(`Ending player turn\n\n ///////////`);
     set({ usableDie: null });
     await waitRandomDelay(1000, 1000);
-    get().rollNewUsableDie();
+    await get().rollNewUsableDie();
     console.log("swapping player");
     get().swapActivePlayer();
   },
@@ -243,6 +251,12 @@ const useGameState = create<GameState>((set, get) => ({
         set({
           awayPlayer: updatedPlayer,
         });
+      }
+
+      const playerType = get().playerType;
+      // if we're in multiplayer mode, update the player
+      if (playerType === PlayerTypeEnum.Human) {
+        await updatePlayerFromState(updatedPlayer);
       }
 
       // check to see if this die ended the game
@@ -347,14 +361,75 @@ const useGameState = create<GameState>((set, get) => ({
     } else {
       set({ awayPlayer: updatedPlayer });
     }
+    const playerType = get().playerType;
+    // if we're in multiplayer mode, update the player
+    if (playerType === PlayerTypeEnum.Human) {
+      await updatePlayerFromState(updatedPlayer);
+    }
+  },
+
+  directlySetUsableDie(dieValue) {
+    console.log(`directly setting die in state to: ${dieValue}`);
+    if (dieValue === null) {
+      set({ usableDie: null });
+      return;
+    }
+    set({
+      usableDie: new DiceData({
+        id: crypto.randomUUID(),
+        numberValue: dieValue!,
+      }),
+    });
   },
 
   async rollNewUsableDie() {
+    const playerType = get().playerType;
+
     const newDieValue = generateRandomInt({ min: 1, max: 6 });
-    const newDieId = uuidv4();
-    set({
-      usableDie: new DiceData({ id: newDieId, numberValue: newDieValue }),
-    });
+    let stateDie: DiceData | null;
+
+    if (playerType === PlayerTypeEnum.Human) {
+      const homePlayerState = get().homePlayer;
+      const multiplayerRoomState = get().multiplayerRoom;
+      if (homePlayerState?.isActivePlayer) {
+        console.log("Rolling for network, player: ", homePlayerState.id);
+        await rollMultiplayerDice({
+          dieNumber: newDieValue,
+          roomId: multiplayerRoomState?.id!,
+        });
+      }
+
+      // setTimeout(async () => {
+      //   const diceDataFromDatabase: DiceData | null = await getDiceDataForState(
+      //     multiplayerRoomState?.id!
+      //   );
+      //   set({
+      //     usableDie: diceDataFromDatabase,
+      //   });
+
+      //   // it's possible the other character outran above
+      //   // do another check
+      //   if (diceDataFromDatabase === null) {
+      //     setTimeout(async () => {
+      //       const diceDataFromDatabase: DiceData | null =
+      //         await getDiceDataForState(multiplayerRoomState?.id!);
+      //       if (
+      //         diceDataFromDatabase?.numberValue !== get().usableDie?.numberValue
+      //       ) {
+      //         set({
+      //           usableDie: diceDataFromDatabase,
+      //         });
+      //       }
+      //     }, 3000);
+      //   }
+      // }, 1000);
+    } else {
+      const newDieId = uuidv4();
+      stateDie = new DiceData({ id: newDieId, numberValue: newDieValue });
+      set({
+        usableDie: stateDie,
+      });
+    }
   },
 
   async setMultiplayerRoom(room: MultiplayerRoom) {

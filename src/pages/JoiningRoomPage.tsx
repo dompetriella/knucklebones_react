@@ -52,7 +52,7 @@ function JoiningRoomPage() {
             if (multiplayerRoom !== null) {
               console.log(multiplayerRoom);
               setMultiplayerRoomStateAction(multiplayerRoom);
-              setIsLoading(() => false);
+
               const roomCreator: Player | null = await findOtherPlayerInRoom(
                 multiplayerRoom.id
               );

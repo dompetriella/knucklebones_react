@@ -4,6 +4,7 @@ export class DatabaseTableNames {
     static readonly Id = "id";
     static readonly RoomCode = "room_code";
     static readonly CreatedAt = "created_at";
+    static readonly UsableDice = "usable_dice";
   };
 
   static readonly KnucklebonesPlayers = class {
@@ -14,7 +15,7 @@ export class DatabaseTableNames {
     static readonly CreatedAt = "created_at";
     static readonly PlayerScore = "player_score";
     static readonly DiceGrid = "dice_grid";
-    static readonly CharacterId = "character_id"
-    static readonly IsActivePlayer = 'is_active_player'
+    static readonly CharacterId = "character_id";
+    static readonly IsActivePlayer = "is_active_player";
   };
 }

@@ -4,9 +4,13 @@ import { BackButton } from "../components/utility/BackButton";
 import useGameState from "../state/gameState";
 import { PageHeader } from "../components/utility/PageHeader";
 import { supabase } from "../App";
-import { useEffect } from "react";
-import { convertDatabasePlayerToPlayer } from "../logic/multiplayer";
+import { useEffect, useState } from "react";
+import {
+  convertDatabasePlayerToPlayer,
+  setActivePlayer,
+} from "../logic/multiplayer";
 import { Player } from "../models/Player";
+import { generateRandomInt } from "../logic/utility";
 
 function WaitingRoomPage() {
   const navigator = useNavigate();
@@ -20,6 +24,8 @@ function WaitingRoomPage() {
 
   const roomId = multiplayerRoomState?.id;
 
+  const [connectionState, setConnectionState] = useState(false);
+
   useEffect(() => {
     if (awayPlayerState?.character == null) {
       const subscription = supabase
@@ -27,7 +33,7 @@ function WaitingRoomPage() {
         .on(
           "postgres_changes",
           { event: "INSERT", schema: "public", table: "knucklebones_players" },
-          (payload) => {
+          async (payload) => {
             const newRow = payload.new;
             if (newRow.room_id === multiplayerRoomState?.id) {
               console.log("New row added for the specified room:", newRow);
@@ -35,9 +41,25 @@ function WaitingRoomPage() {
             const updatedPlayer: Player = convertDatabasePlayerToPlayer(newRow);
             setPlayerFromDatabaseData(updatedPlayer);
 
-            // setTimeout(() => {
-            //   navigator(AppRoutes.CoinFlip); 
-            // }, 5000);
+            const players: string[] = [updatedPlayer.id, homePlayerState!.id];
+
+            const coinTossWinner =
+              players[generateRandomInt({ max: players.length - 1 })];
+
+            const winningPlayer: Player | null = await setActivePlayer(
+              coinTossWinner
+            );
+
+            if (winningPlayer != null) {
+              setPlayerFromDatabaseData(winningPlayer);
+
+              setTimeout(() => {
+                setConnectionState(() => true);
+                navigator(AppRoutes.CoinFlip);
+              }, 5000);
+            } else {
+              console.log("returned player was null, cannot start game");
+            }
           }
         )
         .subscribe();
@@ -46,14 +68,20 @@ function WaitingRoomPage() {
       return () => {
         supabase.removeChannel(subscription);
       };
+    } else {
+      setTimeout(() => {
+        setConnectionState(() => true);
+        navigator(AppRoutes.CoinFlip);
+      }, 5000);
     }
   }, [roomId]);
 
-
-
   return (
     <div className="flex flex-col size-full bg-surface">
-      <PageHeader headerText={"Connecting ..."} returnRoute={AppRoutes.Start} />
+      <PageHeader
+        headerText={connectionState ? "Connecting ..." : "Connected!"}
+        returnRoute={AppRoutes.Start}
+      />
       <div className="flex flex-col h-48 justify-center items-center">
         <h1 className="text-3xl">Room Code</h1>
         <h2 className="text-3xl font-bold">{multiplayerRoomState?.roomCode}</h2>
