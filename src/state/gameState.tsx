@@ -56,6 +56,8 @@ interface GameState {
 
   //Multiplayer
   multiplayerRoom: MultiplayerRoom | null;
+  hostPlayerId: string;
+  setHostPlayerId: (id: string) => void;
   setMultiplayerRoom: (room: MultiplayerRoom) => void;
   setPlayerFromDatabaseData: (updatedPlayer: Player) => void;
 }
@@ -80,6 +82,8 @@ const useGameState = create<GameState>((set, get) => ({
   gameHasEnded: false,
 
   multiplayerRoom: null,
+
+  hostPlayerId: "",
 
   async startGame() {
     const coinFlip = generateRandomInt({ max: 1 });
@@ -151,27 +155,27 @@ const useGameState = create<GameState>((set, get) => ({
     const cpuActive = get().playerType !== PlayerTypeEnum.Human;
 
     if (get().playerType === PlayerTypeEnum.Human) {
-      let updatedHomePlayer;
-      let updatedAwayPlayer;
-      if (homePlayerState?.isActivePlayer) {
-        updatedHomePlayer = await setPlayerActivity(false, homePlayerState.id);
-        updatedAwayPlayer = await setPlayerActivity(true, awayPlayerState?.id!);
-      } else {
-        updatedHomePlayer = await setPlayerActivity(
-          false,
-          homePlayerState?.id!
-        );
-        updatedAwayPlayer = await setPlayerActivity(true, awayPlayerState?.id!);
-      }
+      const hostPlayerId: string = get().hostPlayerId;
 
-      set({
-        homePlayer: homePlayerState?.copyWith({
-          isActivePlayer: updatedHomePlayer?.isActivePlayer,
-        }),
-        awayPlayer: awayPlayerState?.copyWith({
-          isActivePlayer: updatedAwayPlayer?.isActivePlayer,
-        }),
-      });
+      if (homePlayerState?.id == hostPlayerId) {
+        const updatedHomePlayer = await setPlayerActivity(
+          !homePlayerState.isActivePlayer,
+          homePlayerState.id
+        );
+        const updatedAwayPlayer = await setPlayerActivity(
+          !awayPlayerState?.isActivePlayer,
+          awayPlayerState?.id!
+        );
+
+        set({
+          homePlayer: homePlayerState?.copyWith({
+            isActivePlayer: updatedHomePlayer?.isActivePlayer,
+          }),
+          awayPlayer: awayPlayerState?.copyWith({
+            isActivePlayer: updatedAwayPlayer?.isActivePlayer,
+          }),
+        });
+      }
     } else {
       set({
         homePlayer: homePlayerState?.copyWith({
@@ -224,16 +228,18 @@ const useGameState = create<GameState>((set, get) => ({
     console.log(`Ending player turn\n\n ///////////`);
     if (playerType === PlayerTypeEnum.Human) {
       console.log("swapping player");
-      await get().swapActivePlayer();
+
       set({ usableDie: null });
       await waitRandomDelay(1000, 1000);
       console.log("ready to roll again");
       await get().rollNewUsableDie();
+      await get().swapActivePlayer();
+    } else {
+      set({ usableDie: null });
+      await waitRandomDelay(1000, 1000);
+      await get().rollNewUsableDie();
+      get().swapActivePlayer();
     }
-    set({ usableDie: null });
-    await waitRandomDelay(1000, 1000);
-    await get().rollNewUsableDie();
-    get().swapActivePlayer();
   },
 
   endGame() {
@@ -422,6 +428,7 @@ const useGameState = create<GameState>((set, get) => ({
 
   async rollNewUsableDie() {
     const playerType = get().playerType;
+    const hostPlayerId = get().hostPlayerId;
 
     const newDieValue = generateRandomInt({ min: 1, max: 6 });
     let stateDie: DiceData | null;
@@ -429,7 +436,7 @@ const useGameState = create<GameState>((set, get) => ({
     if (playerType === PlayerTypeEnum.Human) {
       const homePlayerState = get().homePlayer;
       const multiplayerRoomState = get().multiplayerRoom;
-      if (homePlayerState?.isActivePlayer) {
+      if (homePlayerState?.id === hostPlayerId) {
         console.log(
           `Rolling for network, player ${homePlayerState.character?.characterName}: ${homePlayerState.id}`
         );
@@ -453,13 +460,16 @@ const useGameState = create<GameState>((set, get) => ({
 
   setPlayerFromDatabaseData(updatedPlayer: Player) {
     const homePlayer = get().homePlayer;
-    const awayPlayer = get().awayPlayer;
 
     if (updatedPlayer.id === homePlayer?.id) {
       set({ homePlayer: updatedPlayer });
     } else {
       set({ awayPlayer: updatedPlayer });
     }
+  },
+
+  setHostPlayerId(id: string) {
+    set({ hostPlayerId: id });
   },
 }));
 

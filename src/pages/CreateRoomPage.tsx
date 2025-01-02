@@ -10,11 +10,8 @@ import { PageHeader } from "../components/utility/PageHeader";
 
 function CreateRoomPage() {
   const navigator = useNavigate();
-  const multiplayerRoomStateAction = useGameState(
-    (state) => state.setMultiplayerRoom
-  );
-
-  const [isLoading, setIsLoading] = useState(false);
+  const homePlayerState = useGameState((state) => state.homePlayer);
+  const setHostIdAction = useGameState((state) => state.setHostPlayerId);
 
   return (
     <>
@@ -33,9 +30,10 @@ function CreateRoomPage() {
             onPressed={() => navigator(AppRoutes.JoiningRoom)}
           />
           <MenuButton
-            text={isLoading ? "Loading ..." : "Create Game"}
+            text={"Create Game"}
             width={250}
             onPressed={() => {
+              setHostIdAction(homePlayerState?.id!);
               navigator(AppRoutes.ChooseCharacter);
             }}
           />
