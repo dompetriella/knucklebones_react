@@ -233,7 +233,7 @@ const useGameState = create<GameState>((set, get) => ({
     set({ usableDie: null });
     await waitRandomDelay(1000, 1000);
     await get().rollNewUsableDie();
-    // get().swapActivePlayer();
+    get().swapActivePlayer();
   },
 
   endGame() {
