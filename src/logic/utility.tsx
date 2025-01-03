@@ -88,6 +88,6 @@ export function convertJsonArrayToDiceArray(
     return newColumn;
   });
   console.log("converting json to DiceData");
-  console.log(newDiceDataArray);
+  console.log("array: " + newDiceDataArray);
   return newDiceDataArray;
 }

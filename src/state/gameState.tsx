@@ -14,7 +14,6 @@ import {
   swapNetworkPlayers,
   updatePlayerFromState,
 } from "../logic/multiplayer";
-import { forEach } from "lodash";
 
 const emptyDiceArray: (DiceData | null)[][] = [
   [null, null, null],
@@ -251,36 +250,40 @@ const useGameState = create<GameState>((set, get) => ({
     const selectedPlayer: Player = player;
     const usableDie = get().usableDie;
 
-    let mutablePlayerDiceGrid: (DiceData | null)[][] = selectedPlayer.diceGrid;
-    let mutablePlayerDiceColumn: (DiceData | null)[] =
-      selectedPlayer.diceGrid[columnIndex];
-
-    console.log(`current dice grid`);
-    mutablePlayerDiceGrid.forEach((column) => {
-      column.forEach((diceData) => {
-        console.log("[" + diceData?.numberValue + "] ");
-      });
-    });
-    let diceWasAdded = false;
-
-    console.log(
-      `attempted to add die ${usableDie?.id}:${usableDie?.numberValue} at column index ${columnIndex}`
-    );
-    for (let index = 0; index < mutablePlayerDiceColumn.length; index++) {
-      if (mutablePlayerDiceColumn[index] === null) {
-        mutablePlayerDiceColumn[index] = usableDie?.copyWith({ id: uuidv4() })!;
-        console.log(`Added dice at index ${index}`);
-        diceWasAdded = true;
-        break;
-      }
+    if (!usableDie) {
+      console.error("Usable die is null or undefined.");
+      return;
     }
 
-    if (diceWasAdded) {
-      mutablePlayerDiceGrid[columnIndex] = mutablePlayerDiceColumn;
-      const updatedPlayer: Player = selectedPlayer.copyWith({
-        diceGrid: mutablePlayerDiceGrid,
+    console.log(
+      `Attempting to add die ${usableDie.id}:${usableDie.numberValue} to column index ${columnIndex}`
+    );
+
+    const updatedDiceGrid = selectedPlayer.diceGrid.map((row, index) =>
+      index === columnIndex ? [...row] : row
+    );
+    const updatedColumn = [...updatedDiceGrid[columnIndex]];
+
+    const emptySpotIndex = updatedColumn.findIndex((die) => die === null);
+    if (emptySpotIndex !== -1) {
+      const newDie = new DiceData({
+        id: crypto.randomUUID(),
+        numberValue: usableDie.numberValue,
       });
-      if (player === get().homePlayer) {
+      updatedColumn[emptySpotIndex] = newDie;
+      updatedDiceGrid[columnIndex] = updatedColumn;
+
+      console.log(
+        `Added dice at index ${emptySpotIndex} in column ${columnIndex}`
+      );
+
+      // Create a new immutable Player object
+      const updatedPlayer: Player = selectedPlayer.copyWith({
+        diceGrid: updatedDiceGrid,
+      });
+
+      // Update the state immutably
+      if (player.id === get().homePlayer?.id) {
         set({
           homePlayer: updatedPlayer,
         });
@@ -291,21 +294,16 @@ const useGameState = create<GameState>((set, get) => ({
       }
 
       const playerType = get().playerType;
-      // if we're in multiplayer mode, update the player
+
+      // If in multiplayer mode, update the player in the database
       if (playerType === PlayerTypeEnum.Human) {
         await updatePlayerFromState(updatedPlayer);
       }
 
-      // check to see if this die ended the game
-      let playerEndedGame = true;
-
-      player.diceGrid.forEach((column) => {
-        column.forEach((die) => {
-          if (die === null) {
-            playerEndedGame = false;
-          }
-        });
-      });
+      // Check if the player has filled their grid (ends the game)
+      const playerEndedGame = updatedDiceGrid.every((column) =>
+        column.every((die) => die !== null)
+      );
 
       if (playerEndedGame) {
         get().updateGameScore();
@@ -313,25 +311,23 @@ const useGameState = create<GameState>((set, get) => ({
         get().endGame();
         return;
       }
-      // after die is added
 
-      console.log("started removing");
+      // Remove matching dice from the other player
+      console.log("Started removing matching dice...");
       await get().removeMatchingDiceFromOtherPlayer(
         updatedPlayer,
-        usableDie!.numberValue,
+        usableDie.numberValue,
         columnIndex
       );
 
-      if (playerType === PlayerTypeEnum.Human) {
-        await updatePlayerFromState(updatedPlayer);
-      }
-
-      console.log("started updating");
+      // Update the game score and end the player's turn
+      console.log("Updating game score and ending turn...");
       get().updateGameScore();
-      console.log("starting to end player turn");
       await get().endPlayerTurn();
     } else {
-      console.log("no dice added.  SAD");
+      console.log(
+        "No empty spots available in the column. Unable to add dice."
+      );
     }
   },
 

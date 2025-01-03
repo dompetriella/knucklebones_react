@@ -12,6 +12,7 @@ import {
 } from "../logic/multiplayer";
 import { DatabaseTableNames } from "../global/databaseNames";
 import { DiceData } from "../models/DiceData";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 function GamePage() {
   const navigator = useNavigate();
@@ -110,30 +111,51 @@ function GamePage() {
   }, []);
 
   useEffect(() => {
-    const subscription = supabase
-      .channel("away-player-updates") // Unique channel name
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "knucklebones_players",
-          filter: `room_id=eq.${multiplayerRoomState?.id}`,
-        },
-        async (payload) => {
-          const updatedRow = payload.new;
+    const subscribeToUpdates = async () => {
+      try {
+        const subscription = await supabase
+          .channel("away-player-updates") // Unique channel name
+          .on(
+            "postgres_changes",
+            {
+              event: "UPDATE",
+              schema: "public",
+              table: "knucklebones_players",
+              filter: `room_id=eq.${multiplayerRoomState?.id}`,
+            },
+            async (payload) => {
+              try {
+                const updatedRow = payload.new;
+                console.log(
+                  "Updated row for the specified player:",
+                  updatedRow
+                );
 
-          console.log("Updated row for the specified player:", updatedRow);
+                const updatedPlayer = convertDatabasePlayerToPlayer(updatedRow);
+                setPlayerFromDatabaseData(updatedPlayer);
+              } catch (error) {
+                console.error("Error processing payload:", error);
+              }
+            }
+          )
+          .subscribe();
 
-          const updatedPlayer: Player =
-            convertDatabasePlayerToPlayer(updatedRow);
-          setPlayerFromDatabaseData(updatedPlayer);
-        }
-      )
-      .subscribe();
+        return subscription;
+      } catch (error) {
+        console.error("Error subscribing to channel:", error);
+      }
+    };
+
+    let subscription: RealtimeChannel | undefined;
+
+    subscribeToUpdates().then((sub) => {
+      subscription = sub;
+    });
 
     return () => {
-      supabase.removeChannel(subscription);
+      if (subscription) {
+        supabase.removeChannel(subscription);
+      }
     };
   }, []);
 

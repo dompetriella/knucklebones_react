@@ -1,5 +1,5 @@
 export class DiceData {
-  id: string; // Changed from number to string
+  id: string;
   numberValue: number;
 
   constructor({ id, numberValue = 0 }: { id: string; numberValue?: number }) {
@@ -11,7 +11,7 @@ export class DiceData {
     id,
     numberValue,
   }: {
-    id?: string; // Updated type here
+    id?: string;
     numberValue?: number;
   }): DiceData {
     return new DiceData({
