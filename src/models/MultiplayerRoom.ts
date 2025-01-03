@@ -1,8 +1,10 @@
+import { DiceData } from "./DiceData";
+
 export class MultiplayerRoom {
   id: number;
   roomCode: string;
   createdAt: Date;
-  usableDice: number | null;
+  usableDice: DiceData | null;
 
   constructor({
     id,
@@ -13,7 +15,7 @@ export class MultiplayerRoom {
     id: number;
     roomCode: string;
     createdAt?: Date;
-    usableDice?: number | null;
+    usableDice?: DiceData | null;
   }) {
     this.id = id;
     this.roomCode = roomCode;
@@ -30,7 +32,7 @@ export class MultiplayerRoom {
     id?: number;
     roomCode?: string;
     createdAt?: Date;
-    usableDice?: number | null;
+    usableDice?: DiceData | null;
   }): MultiplayerRoom {
     return new MultiplayerRoom({
       id: id ?? this.id,

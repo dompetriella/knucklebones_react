@@ -6,7 +6,10 @@ import { useEffect } from "react";
 import { Scoreboard } from "../components/statusBar/Scoreboard";
 import { supabase } from "../App";
 import { Player } from "../models/Player";
-import { convertDatabasePlayerToPlayer } from "../logic/multiplayer";
+import {
+  convertDatabasePlayerToPlayer,
+  getDiceDataForState,
+} from "../logic/multiplayer";
 import { DatabaseTableNames } from "../global/databaseNames";
 import { DiceData } from "../models/DiceData";
 
@@ -27,6 +30,18 @@ function GamePage() {
   const gameHasEndedState = useGameState((state) => state.gameHasEnded);
 
   const gameHasEnded = useGameState((state) => state.gameHasEnded);
+
+  useEffect(() => {
+    const getCurrentNetworkDie = async () => {
+      const networkDie: DiceData | null = await getDiceDataForState(
+        multiplayerRoomState?.id!
+      );
+      if (networkDie !== usableDieState) {
+        directlySetDieValueAction(networkDie);
+      }
+    };
+    getCurrentNetworkDie();
+  }, []);
 
   useEffect(() => {
     if (gameHasEnded) {

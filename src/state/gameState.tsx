@@ -10,12 +10,11 @@ import { v4 as uuidv4 } from "uuid";
 import Character from "../models/Character";
 import { MultiplayerRoom } from "../models/MultiplayerRoom";
 import {
-  getDiceDataForState,
   rollMultiplayerDice,
-  setPlayerActivity,
   swapNetworkPlayers,
   updatePlayerFromState,
 } from "../logic/multiplayer";
+import { forEach } from "lodash";
 
 const emptyDiceArray: (DiceData | null)[][] = [
   [null, null, null],
@@ -53,7 +52,7 @@ interface GameState {
     columnIndex: number
   ) => void;
   rollNewUsableDie: () => Promise<void>;
-  directlySetUsableDie: (dieValue: number | null) => Promise<void>;
+  directlySetUsableDie: (die: DiceData | null) => Promise<void>;
 
   //Multiplayer
   multiplayerRoom: MultiplayerRoom | null;
@@ -156,18 +155,17 @@ const useGameState = create<GameState>((set, get) => ({
     const cpuActive = get().playerType !== PlayerTypeEnum.Human;
 
     if (get().playerType === PlayerTypeEnum.Human) {
+      const activePlayer = homePlayerState?.isActivePlayer
+        ? homePlayerState
+        : awayPlayerState;
+      const inactivePlayer = homePlayerState?.isActivePlayer
+        ? awayPlayerState
+        : homePlayerState;
 
-        const activePlayer = homePlayerState?.isActivePlayer ? homePlayerState : awayPlayerState;
-        const inactivePlayer = homePlayerState?.isActivePlayer ? awayPlayerState : homePlayerState;
+      console.log("active Player: " + activePlayer?.id);
+      console.log("inactive Plyaer: " + inactivePlayer?.id);
 
-        console.log('active Player: ' + activePlayer?.id);
-        console.log('inactive Plyaer: ' + inactivePlayer?.id);
-
-        await swapNetworkPlayers(
-          inactivePlayer!.id,
-          activePlayer!.id
-        );
-
+      await swapNetworkPlayers(inactivePlayer!.id, activePlayer!.id);
     } else {
       set({
         homePlayer: homePlayerState?.copyWith({
@@ -257,9 +255,17 @@ const useGameState = create<GameState>((set, get) => ({
     let mutablePlayerDiceColumn: (DiceData | null)[] =
       selectedPlayer.diceGrid[columnIndex];
 
+    console.log(`current dice grid`);
+    mutablePlayerDiceGrid.forEach((column) => {
+      column.forEach((diceData) => {
+        console.log("[" + diceData?.numberValue + "] ");
+      });
+    });
     let diceWasAdded = false;
 
-    console.log(`attempted to add a dice at column index ${columnIndex}`);
+    console.log(
+      `attempted to add die ${usableDie?.id}:${usableDie?.numberValue} at column index ${columnIndex}`
+    );
     for (let index = 0; index < mutablePlayerDiceColumn.length; index++) {
       if (mutablePlayerDiceColumn[index] === null) {
         mutablePlayerDiceColumn[index] = usableDie?.copyWith({ id: uuidv4() })!;
@@ -404,17 +410,14 @@ const useGameState = create<GameState>((set, get) => ({
     }
   },
 
-  async directlySetUsableDie(dieValue) {
-    console.log(`directly setting die in state to: ${dieValue}`);
-    if (dieValue === null) {
+  async directlySetUsableDie(die) {
+    console.log(`directly setting die in state to: ${die?.numberValue}`);
+    if (die === null) {
       set({ usableDie: null });
       return;
     }
     set({
-      usableDie: new DiceData({
-        id: crypto.randomUUID(),
-        numberValue: dieValue!,
-      }),
+      usableDie: die,
     });
   },
 
@@ -433,7 +436,10 @@ const useGameState = create<GameState>((set, get) => ({
           `Rolling for network, player ${homePlayerState.character?.characterName}: ${homePlayerState.id}`
         );
         await rollMultiplayerDice({
-          dieNumber: newDieValue,
+          die: new DiceData({
+            id: crypto.randomUUID(),
+            numberValue: newDieValue,
+          }),
           roomId: multiplayerRoomState?.id!,
         });
       }

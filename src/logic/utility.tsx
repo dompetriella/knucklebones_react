@@ -32,9 +32,9 @@ export function alterHexColorOpacity(hex: string, opacity: number): string {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
-export function convertDiceArrayToNumberArray(
+export function convertDiceArrayToJsonArray(
   diceDataArray: (DiceData | null)[][]
-): (number | null)[][] {
+): ({ id: string; numberValue: number } | null)[][] {
   if (diceDataArray === null) {
     return [
       [null, null, null],
@@ -43,18 +43,31 @@ export function convertDiceArrayToNumberArray(
     ];
   }
 
-  return diceDataArray.map((column) => {
-    const newColumn: (number | null)[] = column.map(
-      (diceData) => diceData?.numberValue ?? null
-    );
+  const newDiceArray = diceDataArray.map((column) => {
+    const newColumn: ({
+      id: string;
+      numberValue: number;
+    } | null)[] = column.map((diceData) => {
+      if (diceData) {
+        return {
+          id: diceData.id,
+          numberValue: diceData.numberValue,
+        };
+      }
+      return null;
+    });
     return newColumn;
   });
+
+  console.log("Converting Dice Data to Json");
+  console.log(newDiceArray);
+  return newDiceArray;
 }
 
-export function convertNumberArrayToDiceArray(
-  numberArray: (number | null)[][]
+export function convertJsonArrayToDiceArray(
+  jsonArray: ({ id: string; numberValue: number } | null)[][]
 ): (DiceData | null)[][] {
-  if (numberArray === null) {
+  if (jsonArray === null) {
     return [
       [null, null, null],
       [null, null, null],
@@ -62,13 +75,19 @@ export function convertNumberArrayToDiceArray(
     ];
   }
 
-  return numberArray.map((column) => {
+  const newDiceDataArray = jsonArray.map((column) => {
     const newColumn: (DiceData | null)[] = column.map((diceData) => {
       if (diceData === null) {
         return null;
       }
-      return new DiceData({ id: crypto.randomUUID(), numberValue: diceData });
+      return new DiceData({
+        id: diceData.id,
+        numberValue: diceData.numberValue,
+      });
     });
     return newColumn;
   });
+  console.log("converting json to DiceData");
+  console.log(newDiceDataArray);
+  return newDiceDataArray;
 }
