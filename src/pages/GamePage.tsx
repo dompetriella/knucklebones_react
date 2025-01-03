@@ -17,6 +17,9 @@ function GamePage() {
   const directlySetDieValueAction = useGameState(
     (state) => state.directlySetUsableDie
   );
+  const setPlayerFromDatabaseData = useGameState(
+    (state) => state.setPlayerFromDatabaseData
+  );
   const multiplayerRoomState = useGameState((state) => state.multiplayerRoom);
 
   const homePlayerState = useGameState((state) => state.homePlayer);
@@ -100,7 +103,7 @@ function GamePage() {
           event: "UPDATE",
           schema: "public",
           table: "knucklebones_players",
-          filter: `player_id=eq.${awayPlayerState!.id}`,
+          filter: `room_id=eq.${multiplayerRoomState?.id}`,
         },
         async (payload) => {
           const updatedRow = payload.new;
@@ -139,6 +142,3 @@ function GamePage() {
 }
 
 export default GamePage;
-function setPlayerFromDatabaseData(updatedPlayer: Player) {
-  throw new Error("Function not implemented.");
-}

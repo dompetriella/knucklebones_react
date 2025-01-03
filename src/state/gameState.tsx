@@ -13,6 +13,7 @@ import {
   getDiceDataForState,
   rollMultiplayerDice,
   setPlayerActivity,
+  swapNetworkPlayers,
   updatePlayerFromState,
 } from "../logic/multiplayer";
 
@@ -155,27 +156,18 @@ const useGameState = create<GameState>((set, get) => ({
     const cpuActive = get().playerType !== PlayerTypeEnum.Human;
 
     if (get().playerType === PlayerTypeEnum.Human) {
-      const hostPlayerId: string = get().hostPlayerId;
 
-      if (homePlayerState?.id == hostPlayerId) {
-        const updatedHomePlayer = await setPlayerActivity(
-          !homePlayerState.isActivePlayer,
-          homePlayerState.id
-        );
-        const updatedAwayPlayer = await setPlayerActivity(
-          !awayPlayerState?.isActivePlayer,
-          awayPlayerState?.id!
+        const activePlayer = homePlayerState?.isActivePlayer ? homePlayerState : awayPlayerState;
+        const inactivePlayer = homePlayerState?.isActivePlayer ? awayPlayerState : homePlayerState;
+
+        console.log('active Player: ' + activePlayer?.id);
+        console.log('inactive Plyaer: ' + inactivePlayer?.id);
+
+        await swapNetworkPlayers(
+          inactivePlayer!.id,
+          activePlayer!.id
         );
 
-        set({
-          homePlayer: homePlayerState?.copyWith({
-            isActivePlayer: updatedHomePlayer?.isActivePlayer,
-          }),
-          awayPlayer: awayPlayerState?.copyWith({
-            isActivePlayer: updatedAwayPlayer?.isActivePlayer,
-          }),
-        });
-      }
     } else {
       set({
         homePlayer: homePlayerState?.copyWith({

@@ -371,3 +371,57 @@ export async function setPlayerActivity(
     throw err;
   }
 }
+
+export async function swapNetworkPlayers(
+  playerIdToActivate: string,
+  playerIdToDeactivate: string
+): Promise<Player | null> {
+  try {
+    // Prepare the data for upsert
+    const updates = [
+      {
+        player_id: playerIdToActivate,
+        is_active_player: true,
+      },
+      {
+        player_id: playerIdToDeactivate,
+        is_active_player: false,
+      },
+    ];
+
+    // Perform the upsert
+    const { data, error } = await supabase
+      .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
+      .upsert(updates, { onConflict: "player_id" }) // Use player_id as the unique key
+      .select();
+
+    if (error) {
+      console.error(
+        `Error swapping active players: ${playerIdToActivate} and ${playerIdToDeactivate} - Error: `,
+        error.message
+      );
+      throw new Error(error.message);
+    }
+
+    if (!data || data.length === 0) {
+      console.log("No players were updated.");
+      return null;
+    }
+
+    console.log("Updated players:", data);
+
+    // Find the player that was activated
+    const activatedPlayer = data.find(
+      (player) => player.player_id === playerIdToActivate
+    );
+
+    return activatedPlayer
+      ? convertDatabasePlayerToPlayer(activatedPlayer)
+      : null;
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    throw err;
+  }
+}
+
+
