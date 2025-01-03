@@ -34,14 +34,14 @@ interface GameState {
 
   setPlayerType: (playerType: PlayerTypeEnum) => void;
   setPlayerCharacter: (character: Character | null, playerId: string) => void;
-  swapActivePlayer: () => void;
-  updateGameScore: () => void;
-  endPlayerTurn: () => void;
+  swapActivePlayer: () => Promise<void>;
+  updateGameScore: () => Promise<void>;
+  endPlayerTurn: () => Promise<void>;
 
   // Game Flow
   gameHasEnded: boolean;
   startGame: () => void;
-  beginFirstTurn: () => void;
+  beginFirstTurn: () => Promise<void>;
   endGame: () => void;
 
   // Dice
@@ -52,15 +52,15 @@ interface GameState {
     diceValue: number,
     columnIndex: number
   ) => void;
-  rollNewUsableDie: () => void;
-  directlySetUsableDie: (dieValue: number | null) => void;
+  rollNewUsableDie: () => Promise<void>;
+  directlySetUsableDie: (dieValue: number | null) => Promise<void>;
 
   //Multiplayer
   multiplayerRoom: MultiplayerRoom | null;
   hostPlayerId: string;
-  setHostPlayerId: (id: string) => void;
-  setMultiplayerRoom: (room: MultiplayerRoom) => void;
-  setPlayerFromDatabaseData: (updatedPlayer: Player) => void;
+  setHostPlayerId: (id: string) => Promise<void>;
+  setMultiplayerRoom: (room: MultiplayerRoom) => Promise<void>;
+  setPlayerFromDatabaseData: (updatedPlayer: Player) => Promise<void>;
 }
 
 const useGameState = create<GameState>((set, get) => ({
@@ -131,7 +131,7 @@ const useGameState = create<GameState>((set, get) => ({
     }
   },
 
-  updateGameScore() {
+  async updateGameScore() {
     const homePlayerState = get().homePlayer;
     const awayPlayerState = get().awayPlayer;
 
@@ -404,7 +404,7 @@ const useGameState = create<GameState>((set, get) => ({
     }
   },
 
-  directlySetUsableDie(dieValue) {
+  async directlySetUsableDie(dieValue) {
     console.log(`directly setting die in state to: ${dieValue}`);
     if (dieValue === null) {
       set({ usableDie: null });
@@ -450,7 +450,7 @@ const useGameState = create<GameState>((set, get) => ({
     set({ multiplayerRoom: room });
   },
 
-  setPlayerFromDatabaseData(updatedPlayer: Player) {
+  async setPlayerFromDatabaseData(updatedPlayer: Player) {
     const homePlayer = get().homePlayer;
 
     if (updatedPlayer.id === homePlayer?.id) {
@@ -460,7 +460,7 @@ const useGameState = create<GameState>((set, get) => ({
     }
   },
 
-  setHostPlayerId(id: string) {
+  async setHostPlayerId(id: string) {
     set({ hostPlayerId: id });
   },
 }));
