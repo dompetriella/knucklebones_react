@@ -40,7 +40,7 @@ interface GameState {
   gameHasEnded: boolean;
   startGame: () => void;
   beginFirstTurn: () => Promise<void>;
-  endGame: () => void;
+  endGame: () => Promise<void>;
 
   // Dice
   usableDie: DiceData | null;
@@ -235,19 +235,23 @@ const useGameState = create<GameState>((set, get) => ({
     }
   },
 
-  endGame() {
+  async endGame() {
+
+    const endGameHomePlayer = get().homePlayer?.copyWith({
+      isActivePlayer: false,
+      diceGrid: emptyDiceArray,
+    })
+
+    const endGameAwayPlayer = get().awayPlayer?.copyWith({
+      isActivePlayer: false,
+      diceGrid: emptyDiceArray,
+    })
+
     set({
       gameHasEnded: true,
       usableDie: null,
-      homePlayer: get().homePlayer?.copyWith({
-        isActivePlayer: false,
-        diceGrid: emptyDiceArray,
-      }),
-      awayPlayer: get().awayPlayer?.copyWith({
-        isActivePlayer: false,
-        diceGrid: emptyDiceArray,
-
-      }),
+      homePlayer: endGameHomePlayer,
+      awayPlayer: endGameAwayPlayer
     });
   },
 
