@@ -13,6 +13,7 @@ import {
 import { DatabaseTableNames } from "../global/databaseNames";
 import { DiceData } from "../models/DiceData";
 import { RealtimeChannel } from "@supabase/supabase-js";
+import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 
 function GamePage() {
   const navigator = useNavigate();
@@ -29,8 +30,12 @@ function GamePage() {
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
   const gameHasEndedState = useGameState((state) => state.gameHasEnded);
+  const playerType = useGameState((state) => state.playerType)
 
   const gameHasEnded = useGameState((state) => state.gameHasEnded);
+
+
+  const isMultiplayer = playerType === PlayerTypeEnum.Human;
 
   useEffect(() => {
     const getCurrentNetworkDie = async () => {
@@ -41,7 +46,10 @@ function GamePage() {
         directlySetDieValueAction(networkDie);
       }
     };
-    getCurrentNetworkDie();
+    if (isMultiplayer) {
+      getCurrentNetworkDie();
+    }
+
   }, []);
 
   useEffect(() => {
@@ -107,7 +115,10 @@ function GamePage() {
     };
 
     // Call the async function
-    subscribeToUsableDiceUpdates();
+    if (isMultiplayer) {
+      subscribeToUsableDiceUpdates();
+    }
+
   }, []);
 
   useEffect(() => {
@@ -148,15 +159,19 @@ function GamePage() {
 
     let subscription: RealtimeChannel | undefined;
 
-    subscribeToUpdates().then((sub) => {
-      subscription = sub;
-    });
+    if (isMultiplayer) {
+      subscribeToUpdates().then((sub) => {
+        subscription = sub;
+      });
 
-    return () => {
-      if (subscription) {
-        supabase.removeChannel(subscription);
-      }
-    };
+      return () => {
+        if (subscription) {
+          supabase.removeChannel(subscription);
+        }
+      };
+    }
+
+
   }, []);
 
   return (

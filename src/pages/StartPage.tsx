@@ -21,6 +21,7 @@ function StartPage() {
             bgColor={AppColors.Secondary}
             textColor={AppColors.OnSecondary}
             onPressed={() => navigator(AppRoutes.HowToPlay)}
+            animationDelay={0.5}
           />
           <MenuButton
             text={"Player VS CPU"}
@@ -29,6 +30,7 @@ function StartPage() {
               navigator(AppRoutes.ChooseCharacter);
               setPlayerTypeAction(PlayerTypeEnum.Easy);
             }}
+            animationDelay={1.0}
           />
           <MenuButton
             width={250}
@@ -37,6 +39,7 @@ function StartPage() {
               setPlayerTypeAction(PlayerTypeEnum.Human);
               navigator(AppRoutes.CreateRoom);
             }}
+            animationDelay={1.5}
           />
         </div>
       </div>

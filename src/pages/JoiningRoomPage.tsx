@@ -41,36 +41,41 @@ function JoiningRoomPage() {
             className="w-48 text-3xl p-4 rounded-md border-2 text-center border-onSecondary"
           ></input>
         </div>
-        <MenuButton
-          text={isLoading ? "Loading ..." : "Join Game"}
-          width={250}
-          onPressed={async () => {
-            setIsLoading(() => true);
-            const multiplayerRoom = await connectPlayerToRoom(
-              roomCodeInputState.toUpperCase()
-            );
-            if (multiplayerRoom !== null) {
-              console.log(multiplayerRoom);
-              setMultiplayerRoomStateAction(multiplayerRoom);
+        {
+          roomCodeInputState.length === 4 ?
+            <MenuButton
+              text={isLoading ? "Loading ..." : "Join Game"}
+              width={250}
+              onPressed={async () => {
+                setIsLoading(() => true);
+                const multiplayerRoom = await connectPlayerToRoom(
+                  roomCodeInputState.toUpperCase()
+                );
+                if (multiplayerRoom !== null) {
+                  console.log(multiplayerRoom);
+                  setMultiplayerRoomStateAction(multiplayerRoom);
 
-              const roomCreator: Player | null = await findOtherPlayerInRoom(
-                multiplayerRoom.id
-              );
-              if (roomCreator != null) {
-                setPlayerFromDatabaseDataAction(roomCreator);
-                navigator(AppRoutes.ChooseCharacter);
-                setIsLoading(() => false);
-              } else {
-                console.log("could not find room creator");
-              }
-            } else {
-              console.log(
-                "error finding room, multiplayer room " + multiplayerRoom
-              );
-              setIsLoading(() => false);
-            }
-          }}
-        />
+                  const roomCreator: Player | null = await findOtherPlayerInRoom(
+                    multiplayerRoom.id
+                  );
+                  if (roomCreator != null) {
+                    setPlayerFromDatabaseDataAction(roomCreator);
+                    navigator(AppRoutes.ChooseCharacter);
+                    setIsLoading(() => false);
+                  } else {
+                    console.log("could not find room creator");
+                  }
+                } else {
+                  console.log(
+                    "error finding room, multiplayer room " + multiplayerRoom
+                  );
+                  setIsLoading(() => false);
+                }
+              }}
+            />
+            : null
+        }
+
       </div>
     </div>
   );

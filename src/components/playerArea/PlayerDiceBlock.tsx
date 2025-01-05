@@ -11,6 +11,9 @@ export function PlayerDiceBlock({
   player: Player;
   isHomePlayer: boolean;
 }) {
+
+  const homePlayerState = useGameState((state) => state.homePlayer)
+
   const addUsableDieToPlayerColumnAction = useGameState(
     (state) => state.addUsableDieToPlayerColumn
   );
@@ -42,8 +45,9 @@ export function PlayerDiceBlock({
       >
         {player?.diceGrid.map((_, i) => (
           <button
+            key={i}
             onClick={() => {
-              if (player.isActivePlayer) {
+              if (player.isActivePlayer && player.id === homePlayerState!.id) {
                 addUsableDieToPlayerColumnAction(player, i);
               }
             }}
@@ -51,26 +55,28 @@ export function PlayerDiceBlock({
           >
             {!isHomePlayer
               ? player?.diceGrid[i]
-                  .slice()
-                  .reverse()
-                  .map((dice) => (
-                    <DiceSlot
-                      diceData={dice ?? null}
-                      player={player}
-                      columnIndex={i}
-                      initialYDistance={-192}
-                      initialScaling={2.5}
-                    />
-                  ))
-              : player?.diceGrid[i].map((dice) => (
+                .slice()
+                .reverse()
+                .map((dice) => (
                   <DiceSlot
+                    key={dice?.id}
                     diceData={dice ?? null}
                     player={player}
                     columnIndex={i}
-                    initialYDistance={192}
-                    initialScaling={3}
+                    initialYDistance={-192}
+                    initialScaling={2.5}
                   />
-                ))}
+                ))
+              : player?.diceGrid[i].map((dice) => (
+                <DiceSlot
+                  key={dice?.id}
+                  diceData={dice ?? null}
+                  player={player}
+                  columnIndex={i}
+                  initialYDistance={192}
+                  initialScaling={3}
+                />
+              ))}
           </button>
         ))}
       </div>

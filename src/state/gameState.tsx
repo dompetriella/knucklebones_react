@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Player } from "../models/Player";
 import { DiceData } from "../models/DiceData";
 import { PlayerColorEnum } from "../models/PlayerColorEnum";
-import { generateRandomInt, waitRandomDelay } from "../logic/utility";
+import { checkForGameOver, generateRandomInt, waitRandomDelay } from "../logic/utility";
 import { calculatePlayerScore } from "../logic/scoring";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { runCpuTurn } from "../logic/cpuLogic";
@@ -133,13 +133,17 @@ const useGameState = create<GameState>((set, get) => ({
     const homePlayerState = get().homePlayer;
     const awayPlayerState = get().awayPlayer;
 
+    const updatedHomePlayer = homePlayerState?.copyWith({
+      score: calculatePlayerScore(homePlayerState)
+    });
+
+    const updatedAwayPlayer = awayPlayerState?.copyWith({
+      score: calculatePlayerScore(awayPlayerState),
+    });
+
     set({
-      homePlayer: homePlayerState?.copyWith({
-        score: calculatePlayerScore(homePlayerState),
-      }),
-      awayPlayer: awayPlayerState?.copyWith({
-        score: calculatePlayerScore(awayPlayerState),
-      }),
+      homePlayer: updatedHomePlayer,
+      awayPlayer: updatedAwayPlayer
     });
   },
 
@@ -215,19 +219,14 @@ const useGameState = create<GameState>((set, get) => ({
     const playerType = get().playerType;
 
     console.log(`Ending player turn\n\n ///////////`);
+    set({ usableDie: null });
+    await waitRandomDelay(1000, 1000);
     if (playerType === PlayerTypeEnum.Human) {
-      console.log("swapping player");
-
-      set({ usableDie: null });
-      await waitRandomDelay(1000, 1000);
-      console.log("ready to roll again");
+      await get().swapActivePlayer();
+      await get().rollNewUsableDie();
+    } else {
       await get().rollNewUsableDie();
       await get().swapActivePlayer();
-    } else {
-      set({ usableDie: null });
-      await waitRandomDelay(1000, 1000);
-      await get().rollNewUsableDie();
-      get().swapActivePlayer();
     }
   },
 
@@ -249,6 +248,7 @@ const useGameState = create<GameState>((set, get) => ({
   async addUsableDieToPlayerColumn(player: Player, columnIndex: number) {
     const selectedPlayer: Player = player;
     const usableDie = get().usableDie;
+    const playerType = get().playerType;
 
     if (!usableDie) {
       console.error("Usable die is null or undefined.");
@@ -277,12 +277,10 @@ const useGameState = create<GameState>((set, get) => ({
         `Added dice at index ${emptySpotIndex} in column ${columnIndex}`
       );
 
-      // Create a new immutable Player object
       const updatedPlayer: Player = selectedPlayer.copyWith({
         diceGrid: updatedDiceGrid,
       });
 
-      // Update the state immutably
       if (player.id === get().homePlayer?.id) {
         set({
           homePlayer: updatedPlayer,
@@ -293,19 +291,14 @@ const useGameState = create<GameState>((set, get) => ({
         });
       }
 
-      const playerType = get().playerType;
-
-      // If in multiplayer mode, update the player in the database
       if (playerType === PlayerTypeEnum.Human) {
         await updatePlayerFromState(updatedPlayer);
       }
 
-      // Check if the player has filled their grid (ends the game)
-      const playerEndedGame = updatedDiceGrid.every((column) =>
-        column.every((die) => die !== null)
-      );
+      const currentHomePlayerState = get().homePlayer;
+      const currentAwayPlayerState = get().awayPlayer;
 
-      if (playerEndedGame) {
+      if (await checkForGameOver(currentHomePlayerState!, currentAwayPlayerState!)) {
         get().updateGameScore();
         await waitRandomDelay(1000, 1000);
         get().endGame();
@@ -322,8 +315,16 @@ const useGameState = create<GameState>((set, get) => ({
 
       // Update the game score and end the player's turn
       console.log("Updating game score and ending turn...");
-      get().updateGameScore();
+      await get().updateGameScore();
+
+      if (get().playerType === PlayerTypeEnum.Human) {
+        await updatePlayerFromState(get().homePlayer!);
+        await updatePlayerFromState(get().awayPlayer!);
+
+      }
+
       await get().endPlayerTurn();
+
     } else {
       console.log(
         "No empty spots available in the column. Unable to add dice."
@@ -403,6 +404,7 @@ const useGameState = create<GameState>((set, get) => ({
     // if we're in multiplayer mode, update the player
     if (playerType === PlayerTypeEnum.Human) {
       await updatePlayerFromState(updatedPlayer);
+
     }
   },
 
@@ -455,10 +457,19 @@ const useGameState = create<GameState>((set, get) => ({
   async setPlayerFromDatabaseData(updatedPlayer: Player) {
     const homePlayer = get().homePlayer;
 
-    if (updatedPlayer.id === homePlayer?.id) {
+    const homePlayerIsUpdated = updatedPlayer.id === homePlayer?.id;
+
+    if (homePlayerIsUpdated) {
       set({ homePlayer: updatedPlayer });
     } else {
       set({ awayPlayer: updatedPlayer });
+    }
+
+    const gameHasEnded = await checkForGameOver(homePlayerIsUpdated ? updatedPlayer : homePlayer!, homePlayerIsUpdated ? homePlayer : updatedPlayer);
+
+    if (gameHasEnded) {
+      await waitRandomDelay(1000, 1000);
+      get().endGame()
     }
   },
 

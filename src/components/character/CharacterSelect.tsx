@@ -7,6 +7,7 @@ import { AppColors } from "../../AppColors";
 import { motion } from "framer-motion";
 
 export function CharacterSelect({
+
   character,
   player,
   isSmall = false,

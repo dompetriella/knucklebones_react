@@ -1,4 +1,5 @@
 import { DiceData } from "../models/DiceData";
+import { Player } from "../models/Player";
 
 export function generateRandomInt({
   min = 0,
@@ -87,7 +88,35 @@ export function convertJsonArrayToDiceArray(
     });
     return newColumn;
   });
-  console.log("converting json to DiceData");
-  console.log("array: " + newDiceDataArray);
   return newDiceDataArray;
+}
+
+
+export async function checkForGameOver(currentHomePlayerState: Player, currentAwayPlayerState: Player): Promise<boolean> {
+  let homePlayerNulls = 0;
+  currentHomePlayerState?.diceGrid.forEach((column,) => {
+    column.forEach((dieSlot,) => {
+      if (dieSlot === null) {
+        homePlayerNulls++;
+      }
+    })
+  })
+
+  let awayPlayerNulls = 0;
+  currentAwayPlayerState?.diceGrid.forEach((column) => {
+    column.forEach((dieSlot) => {
+      if (dieSlot === null) {
+        awayPlayerNulls++;
+      }
+    })
+  })
+
+
+  console.log('home player has ' + homePlayerNulls + ' die slots free')
+  console.log('away player has ' + awayPlayerNulls + ' die slots free')
+
+  if (homePlayerNulls === 0 || awayPlayerNulls === 0) {
+    return true;
+  }
+  return false;
 }

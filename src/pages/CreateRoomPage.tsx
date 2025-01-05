@@ -28,6 +28,7 @@ function CreateRoomPage() {
             bgColor={AppColors.Secondary}
             textColor={AppColors.OnSecondary}
             onPressed={() => navigator(AppRoutes.JoiningRoom)}
+            animationDelay={0.25}
           />
           <MenuButton
             text={"Create Game"}
@@ -36,6 +37,7 @@ function CreateRoomPage() {
               setHostIdAction(homePlayerState?.id!);
               navigator(AppRoutes.ChooseCharacter);
             }}
+            animationDelay={0.50}
           />
         </div>
       </div>

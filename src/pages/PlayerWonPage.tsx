@@ -5,7 +5,6 @@ import useGameState from "../state/gameState";
 
 function PlayerWonPage() {
   const navigator = useNavigate();
-  const startGameStateAction = useGameState((state) => state.startGame);
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
 
@@ -32,18 +31,20 @@ function PlayerWonPage() {
       </div>
 
       <div className="flex flex-col items-center">
-        <MenuButton
+        {/* <MenuButton
           text={"Play Again"}
           onPressed={() => {
             startGameStateAction();
             navigator({ pathname: AppRoutes.CoinFlip });
           }}
-        />
+          animationDelay={0.5}
+        /> */}
         <MenuButton
           text={"Main Menu"}
           onPressed={() => {
             navigator({ pathname: AppRoutes.Start });
           }}
+          animationDelay={1.0}
         />
       </div>
     </div>

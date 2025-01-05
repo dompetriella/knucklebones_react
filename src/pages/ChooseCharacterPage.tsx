@@ -37,6 +37,7 @@ function ChooseCharacterPage() {
           {characterDataList.map((character) => {
             return (
               <CharacterSelect
+                key={character.index}
                 character={character}
                 player={homePlayerState!}
               />

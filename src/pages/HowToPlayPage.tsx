@@ -73,7 +73,8 @@ function HowToPlayPage() {
 
           <h2 className="text-xl font-bold">How To Score</h2>
           <p>
-            When it's your turn, click a column to add the rolled dice to it.
+            When it's your turn (indicated by the die in your color, and next to your player),
+            click a column to add the rolled dice to it.
             Dice of the same value in the same column increase the amount scored
             by a factor of dice matched.
           </p>
