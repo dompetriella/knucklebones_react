@@ -410,6 +410,11 @@ const useGameState = create<GameState>((set, get) => ({
 
   async directlySetUsableDie(die) {
     console.log(`directly setting die in state to: ${die?.numberValue}`);
+
+    if (die === undefined) {
+      return;
+    }
+
     if (die === null) {
       set({ usableDie: null });
       return;
@@ -421,7 +426,6 @@ const useGameState = create<GameState>((set, get) => ({
 
   async rollNewUsableDie() {
     const playerType = get().playerType;
-    const hostPlayerId = get().hostPlayerId;
 
     const newDieValue = generateRandomInt({ min: 1, max: 6 });
     let stateDie: DiceData | null;
@@ -429,9 +433,9 @@ const useGameState = create<GameState>((set, get) => ({
     if (playerType === PlayerTypeEnum.Human) {
       const homePlayerState = get().homePlayer;
       const multiplayerRoomState = get().multiplayerRoom;
-      if (homePlayerState?.id === hostPlayerId) {
+      if (homePlayerState?.isActivePlayer) {
         console.log(
-          `Rolling for network, player ${homePlayerState.character?.characterName}: ${homePlayerState.id}`
+          `Rolling for network, player ${homePlayerState!.character?.characterName}: ${homePlayerState!.id}`
         );
         await rollMultiplayerDice({
           die: new DiceData({

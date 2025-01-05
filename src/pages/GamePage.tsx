@@ -88,7 +88,7 @@ function GamePage() {
 
                 console.log("Updated usable dice data:", updatedRow);
 
-                if (updatedRow.usable_dice !== null) {
+                if (updatedRow.usable_dice !== null && updatedRow.usable_dice !== undefined && updatedRow.usable_dice.id !== usableDieState?.id) {
                   directlySetDieValueAction(updatedRow.usable_dice);
                 }
               } catch (payloadError) {

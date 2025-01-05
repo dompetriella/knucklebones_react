@@ -112,9 +112,6 @@ export async function checkForGameOver(currentHomePlayerState: Player, currentAw
   })
 
 
-  console.log('home player has ' + homePlayerNulls + ' die slots free')
-  console.log('away player has ' + awayPlayerNulls + ' die slots free')
-
   if (homePlayerNulls === 0 || awayPlayerNulls === 0) {
     return true;
   }

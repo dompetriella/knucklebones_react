@@ -12,7 +12,7 @@ import {
 export function convertDatabasePlayerToPlayer(databasePlayer: any): Player {
   const character =
     characterDataList[
-      databasePlayer[DatabaseTableNames.KnucklebonesPlayers.CharacterId]
+    databasePlayer[DatabaseTableNames.KnucklebonesPlayers.CharacterId]
     ];
 
   return new Player({
@@ -42,42 +42,6 @@ export async function rollMultiplayerDice({
       .update({ usable_dice: { id: die.id, numberValue: die.numberValue } })
       .eq(DatabaseTableNames.KnucklebonesRooms.Id, roomId)
       .select();
-
-    if (error) {
-      console.error("Error rolling new die to network:", error.message);
-      throw new Error(error.message);
-    }
-
-    console.log("Rolled network die:", data);
-    if (data === null) {
-      console.log("Die is null, this is alright if purposeful");
-      return data;
-    }
-
-    const returnedData = data[0];
-
-    return new DiceData({
-      id: returnedData[DatabaseTableNames.KnucklebonesRooms.UsableDice].id,
-      numberValue:
-        returnedData[DatabaseTableNames.KnucklebonesRooms.UsableDice]
-          .numberValue,
-    });
-  } catch (err) {
-    console.error("Unexpected error:", err);
-    throw err;
-  }
-}
-
-export async function getMultiplayerGameDie({
-  roomId,
-}: {
-  roomId: number;
-}): Promise<DiceData | null> {
-  try {
-    const { data, error } = await supabase
-      .from(DatabaseTableNames.KnucklebonesRooms.TableName)
-      .select(DatabaseTableNames.KnucklebonesRooms.UsableDice)
-      .eq(DatabaseTableNames.KnucklebonesRooms.Id, roomId);
 
     if (error) {
       console.error("Error rolling new die to network:", error.message);
@@ -396,8 +360,7 @@ export async function setPlayerActivity(
 
     const returnedData = data[0];
     console.log(
-      `Successfully found Player: ${
-        returnedData[DatabaseTableNames.KnucklebonesPlayers.PlayerId]
+      `Successfully found Player: ${returnedData[DatabaseTableNames.KnucklebonesPlayers.PlayerId]
       }`
     );
     console.log(`${isActive ? "Activating Player" : "Deactivating Player"}`);
