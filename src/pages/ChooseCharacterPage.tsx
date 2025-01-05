@@ -1,9 +1,8 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 
 import { CharacterSelect } from "../components/character/CharacterSelect";
 import { characterDataList } from "../global/characterData";
-import { BackButton } from "../components/utility/BackButton";
 import useGameState from "../state/gameState";
 import { MenuButton } from "../components/utility/MenuButton";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";

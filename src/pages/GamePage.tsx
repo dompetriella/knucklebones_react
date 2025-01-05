@@ -5,7 +5,6 @@ import { AppRoutes } from "../router/AppRoutes";
 import { useEffect } from "react";
 import { Scoreboard } from "../components/statusBar/Scoreboard";
 import { supabase } from "../App";
-import { Player } from "../models/Player";
 import {
   convertDatabasePlayerToPlayer,
   getDiceDataForState,

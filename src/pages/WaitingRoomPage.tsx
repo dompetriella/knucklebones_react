@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
-import { BackButton } from "../components/utility/BackButton";
 import useGameState from "../state/gameState";
 import { PageHeader } from "../components/utility/PageHeader";
 import { supabase } from "../App";

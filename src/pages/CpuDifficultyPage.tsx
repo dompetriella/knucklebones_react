@@ -3,7 +3,6 @@ import { AppRoutes } from "../router/AppRoutes";
 import { MenuButton } from "../components/utility/MenuButton";
 import useGameState from "../state/gameState";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
-import { BackButton } from "../components/utility/BackButton";
 import { PageHeader } from "../components/utility/PageHeader";
 
 function CpuDifficultyPage() {
