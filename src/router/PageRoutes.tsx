@@ -32,7 +32,7 @@ export function PageRoutes() {
       ></Route>
       <Route path={AppRoutes.CreateRoom} element={<CreateRoomPage />}></Route>
       <Route path={AppRoutes.WaitingRoom} element={<WaitingRoomPage />}></Route>
-      <Route path={AppRoutes.JoiningRoom} element={<JoiningRoomPage />}></Route>
+      <Route path={'joiningRoom/:roomCode?'} element={<JoiningRoomPage />}></Route>
       <Route
         path={AppRoutes.ConnectingRoom}
         element={<ConnectingRoomPage />}

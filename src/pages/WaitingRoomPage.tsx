@@ -10,9 +10,11 @@ import {
 } from "../logic/multiplayer";
 import { Player } from "../models/Player";
 import { generateRandomInt } from "../logic/utility";
+import { Icon } from "@mui/material";
+import { CopyAll, FileCopy } from "@mui/icons-material";
 
 function WaitingRoomPage() {
-  const navigator = useNavigate();
+  const appNavigator = useNavigate();
 
   const multiplayerRoomState = useGameState((state) => state.multiplayerRoom);
   const homePlayerState = useGameState((state) => state.homePlayer);
@@ -23,7 +25,7 @@ function WaitingRoomPage() {
 
   const roomId = multiplayerRoomState?.id;
 
-  const [connectionState, setConnectionState] = useState(false);
+  const [connectionState, setConnectionState] = useState(true);
 
   useEffect(() => {
     if (awayPlayerState?.character == null) {
@@ -52,10 +54,10 @@ function WaitingRoomPage() {
 
             if (winningPlayer != null) {
               setPlayerFromDatabaseData(winningPlayer);
+              setConnectionState(() => false);
 
               setTimeout(() => {
-                setConnectionState(() => true);
-                navigator(AppRoutes.CoinFlip);
+                appNavigator(AppRoutes.CoinFlip);
               }, 3000);
             } else {
               console.log("returned player was null, cannot start game");
@@ -71,21 +73,35 @@ function WaitingRoomPage() {
     } else {
       setTimeout(() => {
         setConnectionState(() => true);
-        navigator(AppRoutes.CoinFlip);
+        appNavigator(AppRoutes.CoinFlip);
       }, 5000);
     }
   }, [roomId]);
 
   return (
-    <div className="flex flex-col size-full bg-surface">
+    <div className="flex items-center flex-col size-full bg-surface">
       <PageHeader
         headerText={connectionState ? "Connecting ..." : "Connected!"}
         returnRoute={AppRoutes.Start}
       />
-      <div className="flex flex-col h-48 justify-center items-center">
+      <button
+        onClick={() => {
+          const joinUrl = `https://play-knucklebones.web.app/joiningRoom/${multiplayerRoomState?.roomCode}`;
+          navigator.clipboard.writeText(joinUrl).then(() => {
+            console.log(`Wrote ${joinUrl} to clipboard`)
+          });
+        }}
+        className="flex flex-col m-4 p-2 w-56 rounded-xl  justify-center items-center bg-tertiary"
+      >
         <h1 className="text-3xl">Room Code</h1>
-        <h2 className="text-3xl font-bold">{multiplayerRoomState?.roomCode}</h2>
-      </div>
+        <div className="flex justify-evenly items-center my-2 p-2 w-40 rounded-xl bg-surface">
+          <h2 className="text-3xl  font-bold">
+            {multiplayerRoomState?.roomCode}
+          </h2>
+          <div className="w-2"></div>
+          <CopyAll style={{ width: 32, height: 32 }} />
+        </div>
+      </button>
       <div className="flex flex-col size-full justify-evenly items-center">
         <div className="flex flex-col">
           {awayPlayerState?.character === null ? (

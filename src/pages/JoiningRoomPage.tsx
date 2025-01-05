@@ -1,7 +1,7 @@
 import { AppRoutes } from "../router/AppRoutes";
 
 import { MenuButton } from "../components/utility/MenuButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 
   connectPlayerToRoom,
@@ -9,11 +9,12 @@ import {
 
 } from "../logic/multiplayer";
 import useGameState from "../state/gameState";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PageHeader } from "../components/utility/PageHeader";
 import { Player } from "../models/Player";
 
 function JoiningRoomPage() {
+  const { roomCode } = useParams();
   const navigator = useNavigate();
   const setMultiplayerRoomStateAction = useGameState(
     (state) => state.setMultiplayerRoom
@@ -25,6 +26,15 @@ function JoiningRoomPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [roomCodeInputState, setRoomCodeInputState] = useState("");
+
+  useEffect(() => {
+    if (roomCode) {
+      setRoomCodeInputState(() => roomCode)
+    }
+    else {
+      console.log('no room code')
+    }
+  },[roomCode])
 
   return (
     <div className="flex size-full flex-col justify-start items-center relative bg-surface">
