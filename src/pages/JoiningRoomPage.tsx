@@ -43,7 +43,7 @@ function JoiningRoomPage() {
     <div className="flex size-full flex-col justify-start items-center relative bg-surface">
       <PageHeader headerText={"Join Game"} returnRoute={AppRoutes.CreateRoom} />
 
-      <div className="w-full h-full flex flex-col justify-center items-center p-16">
+       <div className="w-full h-full flex flex-col justify-center items-center p-16">
         <div className="p-8 mb-8 rounded-2xl border-4 border-onSecondary bg-secondary">
           <div className="p-4">
             <h1 className="text-3xl">Room Code</h1>

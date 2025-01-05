@@ -24,7 +24,7 @@ function WaitingRoomPage() {
 
   const roomId = multiplayerRoomState?.id;
 
-  const [connectionState, setConnectionState] = useState(true);
+  const [hasConnected, setHasConnected] = useState(false);
 
   useEffect(() => {
     if (awayPlayerState?.character == null) {
@@ -53,7 +53,7 @@ function WaitingRoomPage() {
 
             if (winningPlayer != null) {
               setPlayerFromDatabaseData(winningPlayer);
-              setConnectionState(() => false);
+              setHasConnected(() => true);
 
               setTimeout(() => {
                 appNavigator(AppRoutes.CoinFlip);
@@ -69,21 +69,17 @@ function WaitingRoomPage() {
       return () => {
         supabase.removeChannel(subscription);
       };
-    } else {
-      setTimeout(() => {
-        setConnectionState(() => true);
-        appNavigator(AppRoutes.CoinFlip);
-      }, 5000);
-    }
+    } 
+    
   }, [roomId]);
 
   return (
     <div className="flex items-center flex-col size-full bg-surface">
       <PageHeader
-        headerText={connectionState ? "Connecting ..." : "Connected!"}
+        headerText={!hasConnected ? "Connecting ..." : "Connected!"}
         returnRoute={AppRoutes.Start}
       />
-      <button
+      { !hasConnected ? <button
         onClick={() => {
           const joinUrl = `https://play-knucklebones.web.app/joiningRoom/${multiplayerRoomState?.roomCode}`;
           navigator.clipboard.writeText(joinUrl).then(() => {
@@ -100,7 +96,7 @@ function WaitingRoomPage() {
           <div className="w-2"></div>
           <CopyAll style={{ width: 32, height: 32 }} />
         </div>
-      </button>
+      </button> : null} 
       <div className="flex flex-col size-full justify-evenly items-center">
         <div className="flex flex-col">
           {awayPlayerState?.character === null ? (
