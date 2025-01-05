@@ -12,6 +12,7 @@ import useGameState from "../state/gameState";
 import { useNavigate, useParams } from "react-router-dom";
 import { PageHeader } from "../components/utility/PageHeader";
 import { Player } from "../models/Player";
+import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 
 function JoiningRoomPage() {
   const { roomCode } = useParams();
@@ -20,6 +21,7 @@ function JoiningRoomPage() {
     (state) => state.setMultiplayerRoom
   );
 
+  const setPlayerTypeAction = useGameState((state) => state.setPlayerType);
   const setPlayerFromDatabaseDataAction = useGameState(
     (state) => state.setPlayerFromDatabaseData
   );
@@ -29,6 +31,7 @@ function JoiningRoomPage() {
 
   useEffect(() => {
     if (roomCode) {
+      setPlayerTypeAction(PlayerTypeEnum.Human);
       setRoomCodeInputState(() => roomCode)
     }
     else {

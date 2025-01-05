@@ -10,8 +10,7 @@ import {
 } from "../logic/multiplayer";
 import { Player } from "../models/Player";
 import { generateRandomInt } from "../logic/utility";
-import { Icon } from "@mui/material";
-import { CopyAll, FileCopy } from "@mui/icons-material";
+import { CopyAll } from "@mui/icons-material";
 
 function WaitingRoomPage() {
   const appNavigator = useNavigate();
