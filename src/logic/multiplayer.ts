@@ -32,14 +32,14 @@ export async function rollMultiplayerDice({
   die,
   roomId,
 }: {
-  die: DiceData;
+  die: DiceData | null;
   roomId: number;
 }): Promise<DiceData | null> {
   try {
-    console.log(`Sending die data number: ${die.numberValue} to room`);
+    console.log(`Sending die data number: ${die?.numberValue ?? null} to room`);
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesRooms.TableName)
-      .update({ usable_dice: { id: die.id, numberValue: die.numberValue } })
+      .update({ usable_dice: die === null ? null : { id: die!.id, numberValue: die!.numberValue } })
       .eq(DatabaseTableNames.KnucklebonesRooms.Id, roomId)
       .select();
 
@@ -48,19 +48,21 @@ export async function rollMultiplayerDice({
       throw new Error(error.message);
     }
 
-    console.log("Rolled network die:", data);
     if (data === null) {
-      console.log("Die is null, this is alright if purposeful");
       return data;
     }
 
     const returnedData = data[0];
 
+    if (returnedData === null || returnedData === undefined) {
+      return null;
+    }
+
     return new DiceData({
-      id: returnedData[DatabaseTableNames.KnucklebonesRooms.UsableDice].id,
+      id: returnedData[DatabaseTableNames.KnucklebonesRooms.UsableDice]?.id,
       numberValue:
         returnedData[DatabaseTableNames.KnucklebonesRooms.UsableDice]
-          .numberValue,
+          ?.numberValue,
     });
   } catch (err) {
     console.error("Unexpected error:", err);
@@ -145,10 +147,6 @@ export async function addPlayerToGame(
 ): Promise<Player | null> {
   const diceDataToJsonArray = convertDiceArrayToJsonArray(player.diceGrid);
 
-  console.log("dice array to insert: " + diceDataToJsonArray);
-  console.log(roomId);
-  console.log(player);
-
   try {
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
@@ -190,9 +188,6 @@ export async function updatePlayerFromState(
   player: Player
 ): Promise<Player | null> {
   const diceDataToJsonArray = convertDiceArrayToJsonArray(player.diceGrid);
-
-  console.log("dice array to insert: " + diceDataToJsonArray);
-  console.log(player);
 
   try {
     const { data, error } = await supabase

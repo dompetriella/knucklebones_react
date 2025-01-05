@@ -86,9 +86,7 @@ function GamePage() {
                   return;
                 }
 
-                console.log("Updated usable dice data:", updatedRow);
-
-                if (updatedRow.usable_dice !== null && updatedRow.usable_dice !== undefined && updatedRow.usable_dice.id !== usableDieState?.id) {
+                if (updatedRow.usable_dice !== undefined) {
                   directlySetDieValueAction(updatedRow.usable_dice);
                 }
               } catch (payloadError) {

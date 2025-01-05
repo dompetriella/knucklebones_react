@@ -52,7 +52,6 @@ function JoiningRoomPage() {
                   roomCodeInputState.toUpperCase()
                 );
                 if (multiplayerRoom !== null) {
-                  console.log(multiplayerRoom);
                   setMultiplayerRoomStateAction(multiplayerRoom);
 
                   const roomCreator: Player | null = await findOtherPlayerInRoom(

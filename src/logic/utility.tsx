@@ -59,9 +59,6 @@ export function convertDiceArrayToJsonArray(
     });
     return newColumn;
   });
-
-  console.log("Converting Dice Data to Json");
-  console.log(newDiceArray);
   return newDiceArray;
 }
 

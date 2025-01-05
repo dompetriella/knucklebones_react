@@ -56,8 +56,6 @@ function ChooseCharacterPage() {
                   if (multiplayerRoom !== null) {
                     setMultiplayerRoomStateAction(multiplayerRoom);
                     multiplayerRoomHoist = multiplayerRoom;
-                  } else {
-                    console.log("Multiplayer Room is null");
                   }
                 }
 
@@ -68,8 +66,6 @@ function ChooseCharacterPage() {
                 if (insertedPlayer !== null) {
                   setIsLoading(() => false);
                   navigator(AppRoutes.ConnectingRoom);
-                } else {
-                  console.log("Inserted player is null");
                 }
               }
             }}

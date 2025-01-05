@@ -133,6 +133,8 @@ const useGameState = create<GameState>((set, get) => ({
     const homePlayerState = get().homePlayer;
     const awayPlayerState = get().awayPlayer;
 
+    const isMultiplayer = get().playerType === PlayerTypeEnum.Hard;
+
     const updatedHomePlayer = homePlayerState?.copyWith({
       score: calculatePlayerScore(homePlayerState)
     });
@@ -145,6 +147,11 @@ const useGameState = create<GameState>((set, get) => ({
       homePlayer: updatedHomePlayer,
       awayPlayer: updatedAwayPlayer
     });
+
+    if (isMultiplayer) {
+      await updatePlayerFromState(updatedHomePlayer!);
+      await updatePlayerFromState(updatedAwayPlayer!);
+    }
   },
 
   setPlayerType(playerType: PlayerTypeEnum) {
@@ -165,8 +172,6 @@ const useGameState = create<GameState>((set, get) => ({
         ? awayPlayerState
         : homePlayerState;
 
-      console.log("active Player: " + activePlayer?.id);
-      console.log("inactive Plyaer: " + inactivePlayer?.id);
 
       await swapNetworkPlayers(inactivePlayer!.id, activePlayer!.id);
     } else {
@@ -241,6 +246,7 @@ const useGameState = create<GameState>((set, get) => ({
       awayPlayer: get().awayPlayer?.copyWith({
         isActivePlayer: false,
         diceGrid: emptyDiceArray,
+
       }),
     });
   },
@@ -249,15 +255,12 @@ const useGameState = create<GameState>((set, get) => ({
     const selectedPlayer: Player = player;
     const usableDie = get().usableDie;
     const playerType = get().playerType;
+    const isMultiplayer = playerType === PlayerTypeEnum.Human;
 
     if (!usableDie) {
       console.error("Usable die is null or undefined.");
       return;
     }
-
-    console.log(
-      `Attempting to add die ${usableDie.id}:${usableDie.numberValue} to column index ${columnIndex}`
-    );
 
     const updatedDiceGrid = selectedPlayer.diceGrid.map((row, index) =>
       index === columnIndex ? [...row] : row
@@ -291,15 +294,20 @@ const useGameState = create<GameState>((set, get) => ({
         });
       }
 
-      if (playerType === PlayerTypeEnum.Human) {
+      if (isMultiplayer) {
+        const roomId = get().multiplayerRoom!.id;
         await updatePlayerFromState(updatedPlayer);
+        await rollMultiplayerDice({ die: null, roomId: roomId });
+        get().directlySetUsableDie(null);
       }
 
       const currentHomePlayerState = get().homePlayer;
       const currentAwayPlayerState = get().awayPlayer;
 
-      if (await checkForGameOver(currentHomePlayerState!, currentAwayPlayerState!)) {
-        get().updateGameScore();
+      const isGameOver = await checkForGameOver(currentHomePlayerState!, currentAwayPlayerState!)
+
+      if (isGameOver) {
+        await get().updateGameScore();
         await waitRandomDelay(1000, 1000);
         get().endGame();
         return;
@@ -316,12 +324,6 @@ const useGameState = create<GameState>((set, get) => ({
       // Update the game score and end the player's turn
       console.log("Updating game score and ending turn...");
       await get().updateGameScore();
-
-      if (get().playerType === PlayerTypeEnum.Human) {
-        await updatePlayerFromState(get().homePlayer!);
-        await updatePlayerFromState(get().awayPlayer!);
-
-      }
 
       await get().endPlayerTurn();
 
