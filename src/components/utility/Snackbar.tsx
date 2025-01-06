@@ -18,12 +18,14 @@ const GlobalSnackbar: React.FC = () => {
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+  reason?: string
   ) => {
     if (reason === "clickaway") {
       return; // Prevent Snackbar from closing when the user clicks away
     }
     hideSnackbar();
+
+    if (event) {}
   };
 
   const snackbarBackground =
