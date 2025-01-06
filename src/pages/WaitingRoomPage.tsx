@@ -15,6 +15,8 @@ import { CopyAll } from "@mui/icons-material";
 function WaitingRoomPage() {
   const appNavigator = useNavigate();
 
+  const showSnackbarAction = useGameState((state) => state.showSnackbar);
+
   const multiplayerRoomState = useGameState((state) => state.multiplayerRoom);
   const hostPlayerIdState = useGameState((state) => state.hostPlayerId);
   const homePlayerState = useGameState((state) => state.homePlayer);
@@ -70,14 +72,12 @@ function WaitingRoomPage() {
       return () => {
         supabase.removeChannel(subscription);
       };
-    }
-    else {
+    } else {
       setTimeout(() => {
         setHasConnected(() => true);
         appNavigator(AppRoutes.CoinFlip);
       }, 5000);
-    } 
-    
+    }
   }, [roomId]);
 
   return (
@@ -86,24 +86,30 @@ function WaitingRoomPage() {
         headerText={!hasConnected ? "Connecting ..." : "Connected!"}
         returnRoute={AppRoutes.Start}
       />
-      { !hasConnected && homePlayerState?.id === hostPlayerIdState ? <button
-        onClick={() => {
-          const joinUrl = `https://play-knucklebones.web.app/joiningRoom/${multiplayerRoomState?.roomCode}`;
-          navigator.clipboard.writeText(joinUrl).then(() => {
-            console.log(`Wrote ${joinUrl} to clipboard`)
-          });
-        }}
-        className="flex flex-col m-4 p-2 w-56 rounded-xl  justify-center items-center bg-tertiary"
-      >
-        <h1 className="text-3xl">Room Code</h1>
-        <div className="flex justify-evenly items-center my-2 p-2 w-40 rounded-xl bg-surface">
-          <h2 className="text-3xl  font-bold">
-            {multiplayerRoomState?.roomCode}
-          </h2>
-          <div className="w-2"></div>
-          <CopyAll style={{ width: 32, height: 32 }} />
-        </div>
-      </button> : null} 
+      {!hasConnected && homePlayerState?.id === hostPlayerIdState ? (
+        <button
+          onClick={() => {
+            const joinUrl = `https://play-knucklebones.web.app/joiningRoom/${multiplayerRoomState?.roomCode}`;
+            navigator.clipboard.writeText(joinUrl).then(() => {
+              console.log(`Wrote ${joinUrl} to clipboard`);
+            });
+            showSnackbarAction(
+              `Share link for game copied to clipboard. \n\n ${joinUrl}`,
+              "success"
+            );
+          }}
+          className="flex flex-col m-4 p-2 w-56 rounded-xl  justify-center items-center bg-tertiary"
+        >
+          <h1 className="text-3xl">Room Code</h1>
+          <div className="flex justify-evenly items-center my-2 p-2 w-40 rounded-xl bg-surface">
+            <h2 className="text-3xl  font-bold">
+              {multiplayerRoomState?.roomCode}
+            </h2>
+            <div className="w-2"></div>
+            <CopyAll style={{ width: 32, height: 32 }} />
+          </div>
+        </button>
+      ) : null}
       <div className="flex flex-col size-full justify-evenly items-center">
         <div className="flex flex-col">
           {awayPlayerState?.character === null ? (

@@ -64,7 +64,7 @@ function HowToPlayPage() {
             }
             usableDieState={new DiceData({ id: dieId, numberValue: 4 })}
           />
-          <div className="flex justify-evenly">
+          <div className="flex justify-around">
             <h3 className="text-3xl">68</h3>
             <h3 className="text-3xl">24</h3>
           </div>
@@ -73,10 +73,10 @@ function HowToPlayPage() {
 
           <h2 className="text-xl font-bold">How To Score</h2>
           <p>
-            When it's your turn (indicated by the die in your color, and next to your player),
-            click a column to add the rolled dice to it.
-            Dice of the same value in the same column increase the amount scored
-            by a factor of dice matched.
+            When it's your turn (indicated by the die in your color, and next to
+            your player), click a column to add the rolled dice to it. Dice of
+            the same value in the same column increase the amount scored by a
+            factor of dice matched.
           </p>
           <div className="flex flex-col items-center">
             <h3 className="p-4 text-xl font-bold justify-evenly">Example</h3>

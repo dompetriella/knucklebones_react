@@ -18,20 +18,54 @@ const GlobalSnackbar: React.FC = () => {
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
-  reason?: string
+    reason?: string
   ) => {
     if (reason === "clickaway") {
       return; // Prevent Snackbar from closing when the user clicks away
     }
     hideSnackbar();
 
-    if (event) {}
+    if (event) {
+    }
   };
 
-  const snackbarBackground =
-    snackbar.severity === "error" ? AppColors.Primary : AppColors.Secondary;
-  const snackbarTextColor =
-    snackbar.severity === "error" ? AppColors.OnPrimary : AppColors.OnSecondary;
+  let snackbarBackgroundColor;
+  let snackbarTextColor;
+  switch (snackbar.severity) {
+    case "success":
+      snackbarBackgroundColor = AppColors.Green;
+      break;
+    case "info":
+      snackbarBackgroundColor = AppColors.Orange;
+      break;
+    case "warning":
+      snackbarBackgroundColor = AppColors.Purple;
+      break;
+    case "error":
+      snackbarBackgroundColor = AppColors.Red;
+      break;
+    default:
+      snackbarBackgroundColor = AppColors.Orange;
+      break;
+  }
+
+  switch (snackbar.severity) {
+    case "success":
+      snackbarTextColor = AppColors.onGreen;
+      break;
+    case "info":
+      snackbarBackgroundColor = AppColors.onOrange;
+      break;
+    case "warning":
+      snackbarBackgroundColor = AppColors.onPurple;
+      break;
+    case "error":
+      snackbarBackgroundColor = AppColors.onPurple;
+      break;
+    default:
+      snackbarBackgroundColor = AppColors.onOrange;
+      break;
+  }
 
   return (
     <Snackbar
@@ -42,7 +76,7 @@ const GlobalSnackbar: React.FC = () => {
     >
       <Alert
         style={{
-          background: snackbarBackground,
+          background: snackbarBackgroundColor,
           color: snackbarTextColor,
           fontSize: "1em",
         }}
