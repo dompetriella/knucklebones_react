@@ -59,6 +59,15 @@ interface GameState {
   setHostPlayerId: (id: string) => Promise<void>;
   setMultiplayerRoom: (room: MultiplayerRoom) => Promise<void>;
   setPlayerFromDatabaseData: (updatedPlayer: Player) => Promise<void>;
+
+  //Snackbar
+  snackbar: {
+    isOpen: boolean;
+    message: string;
+    severity: 'info' | 'success' | 'warning' | 'error';
+  };
+  showSnackbar: (message: string, severity?: 'info' | 'success' | 'warning' | 'error') => void;
+  hideSnackbar: () => void;
 }
 
 const useGameState = create<GameState>((set, get) => ({
@@ -485,6 +494,32 @@ const useGameState = create<GameState>((set, get) => ({
 
   async setHostPlayerId(id: string) {
     set({ hostPlayerId: id });
+  },
+
+  snackbar: {
+    isOpen: false,
+    message: '',
+    severity: 'info', // Default severity
+  },
+
+  showSnackbar: (message, severity = 'info') => {
+    set({
+      snackbar: {
+        isOpen: true,
+        message,
+        severity,
+      },
+    });
+  },
+
+  hideSnackbar: () => {
+    set({
+      snackbar: {
+        isOpen: false,
+        message: '',
+        severity: 'info',
+      },
+    });
   },
 }));
 

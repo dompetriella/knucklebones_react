@@ -16,6 +16,7 @@ function WaitingRoomPage() {
   const appNavigator = useNavigate();
 
   const multiplayerRoomState = useGameState((state) => state.multiplayerRoom);
+  const hostPlayerIdState = useGameState((state) => state.hostPlayerId);
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
   const setPlayerFromDatabaseData = useGameState(
@@ -69,6 +70,12 @@ function WaitingRoomPage() {
       return () => {
         supabase.removeChannel(subscription);
       };
+    }
+    else {
+      setTimeout(() => {
+        setHasConnected(() => true);
+        appNavigator(AppRoutes.CoinFlip);
+      }, 5000);
     } 
     
   }, [roomId]);
@@ -79,7 +86,7 @@ function WaitingRoomPage() {
         headerText={!hasConnected ? "Connecting ..." : "Connected!"}
         returnRoute={AppRoutes.Start}
       />
-      { !hasConnected ? <button
+      { !hasConnected && homePlayerState?.id === hostPlayerIdState ? <button
         onClick={() => {
           const joinUrl = `https://play-knucklebones.web.app/joiningRoom/${multiplayerRoomState?.roomCode}`;
           navigator.clipboard.writeText(joinUrl).then(() => {

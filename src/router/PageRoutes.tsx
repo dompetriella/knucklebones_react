@@ -12,6 +12,7 @@ import CreateRoomPage from "../pages/CreateRoomPage";
 import WaitingRoomPage from "../pages/WaitingRoomPage";
 import JoiningRoomPage from "../pages/JoiningRoomPage";
 import ConnectingRoomPage from "../pages/WaitingRoomPage";
+import GlobalSnackbar from "../components/utility/Snackbar";
 
 export function PageRoutes() {
   return (
@@ -37,6 +38,7 @@ export function PageRoutes() {
         path={AppRoutes.ConnectingRoom}
         element={<ConnectingRoomPage />}
       ></Route>
+
     </Routes>
   );
 }
