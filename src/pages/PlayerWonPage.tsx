@@ -16,7 +16,7 @@ function PlayerWonPage() {
   return (
     <div className="size-full flex flex-col justify-around bg-surface">
       <div className="flex flex-col">
-        <h1 className="text-[4em] font-bold">{`${winningPlayer?.character?.characterName} Won!`}</h1>
+        <h1 className="text-[4em] font-bold">{`${winningPlayer?.character?.characterName}\n\n Won!`}</h1>
         <div className="flex flex-col justify-start">
           <div className="flex flex-col self-center">
             <img

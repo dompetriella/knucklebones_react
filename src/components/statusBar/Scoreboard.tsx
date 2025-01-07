@@ -28,6 +28,7 @@ export function Scoreboard({
           initialXDistance={-64}
           initialYDistance={64}
           initialRotation={360}
+          animationDelay={1}
         />
 
         <DiceSlot
@@ -36,6 +37,7 @@ export function Scoreboard({
           initialXDistance={64}
           initialYDistance={-64}
           initialRotation={-360}
+          animationDelay={1}
         />
       </div>
 

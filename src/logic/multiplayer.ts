@@ -12,7 +12,7 @@ import {
 export function convertDatabasePlayerToPlayer(databasePlayer: any): Player {
   const character =
     characterDataList[
-    databasePlayer[DatabaseTableNames.KnucklebonesPlayers.CharacterId]
+      databasePlayer[DatabaseTableNames.KnucklebonesPlayers.CharacterId]
     ];
 
   return new Player({
@@ -39,7 +39,10 @@ export async function rollMultiplayerDice({
     console.log(`Sending die data number: ${die?.numberValue ?? null} to room`);
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesRooms.TableName)
-      .update({ usable_dice: die === null ? null : { id: die!.id, numberValue: die!.numberValue } })
+      .update({
+        usable_dice:
+          die === null ? null : { id: die!.id, numberValue: die!.numberValue },
+      })
       .eq(DatabaseTableNames.KnucklebonesRooms.Id, roomId)
       .select();
 
@@ -247,6 +250,10 @@ export async function connectPlayerToRoom(
       return data;
     }
 
+    if (data.length == 0) {
+      return null;
+    }
+
     console.log(`Connected successfully: RoomId ${data[0].id}`, data);
 
     const returnedData = data[0];
@@ -355,7 +362,8 @@ export async function setPlayerActivity(
 
     const returnedData = data[0];
     console.log(
-      `Successfully found Player: ${returnedData[DatabaseTableNames.KnucklebonesPlayers.PlayerId]
+      `Successfully found Player: ${
+        returnedData[DatabaseTableNames.KnucklebonesPlayers.PlayerId]
       }`
     );
     console.log(`${isActive ? "Activating Player" : "Deactivating Player"}`);

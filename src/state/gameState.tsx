@@ -2,7 +2,11 @@ import { create } from "zustand";
 import { Player } from "../models/Player";
 import { DiceData } from "../models/DiceData";
 import { PlayerColorEnum } from "../models/PlayerColorEnum";
-import { checkForGameOver, generateRandomInt, waitRandomDelay } from "../logic/utility";
+import {
+  checkForGameOver,
+  generateRandomInt,
+  waitRandomDelay,
+} from "../logic/utility";
 import { calculatePlayerScore } from "../logic/scoring";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { runCpuTurn } from "../logic/cpuLogic";
@@ -64,9 +68,12 @@ interface GameState {
   snackbar: {
     isOpen: boolean;
     message: string;
-    severity: 'info' | 'success' | 'warning' | 'error';
+    severity: "info" | "success" | "warning" | "error";
   };
-  showSnackbar: (message: string, severity?: 'info' | 'success' | 'warning' | 'error') => void;
+  showSnackbar: (
+    message: string,
+    severity?: "info" | "success" | "warning" | "error"
+  ) => void;
   hideSnackbar: () => void;
 }
 
@@ -145,7 +152,7 @@ const useGameState = create<GameState>((set, get) => ({
     const isMultiplayer = get().playerType === PlayerTypeEnum.Hard;
 
     const updatedHomePlayer = homePlayerState?.copyWith({
-      score: calculatePlayerScore(homePlayerState)
+      score: calculatePlayerScore(homePlayerState),
     });
 
     const updatedAwayPlayer = awayPlayerState?.copyWith({
@@ -154,7 +161,7 @@ const useGameState = create<GameState>((set, get) => ({
 
     set({
       homePlayer: updatedHomePlayer,
-      awayPlayer: updatedAwayPlayer
+      awayPlayer: updatedAwayPlayer,
     });
 
     if (isMultiplayer) {
@@ -180,7 +187,6 @@ const useGameState = create<GameState>((set, get) => ({
       const inactivePlayer = homePlayerState?.isActivePlayer
         ? awayPlayerState
         : homePlayerState;
-
 
       await swapNetworkPlayers(inactivePlayer!.id, activePlayer!.id);
     } else {
@@ -245,25 +251,26 @@ const useGameState = create<GameState>((set, get) => ({
   },
 
   async endGame() {
-
     const endGameHomePlayer = get().homePlayer?.copyWith({
       isActivePlayer: false,
       diceGrid: emptyDiceArray,
-    })
+    });
 
     const endGameAwayPlayer = get().awayPlayer?.copyWith({
       isActivePlayer: false,
       diceGrid: emptyDiceArray,
-    })
+    });
 
     set({
       gameHasEnded: true,
       usableDie: null,
       homePlayer: endGameHomePlayer,
-      awayPlayer: endGameAwayPlayer
+      awayPlayer: endGameAwayPlayer,
     });
   },
 
+  // this is the big boy
+  // this one matters
   async addUsableDieToPlayerColumn(player: Player, columnIndex: number) {
     const selectedPlayer: Player = player;
     const usableDie = get().usableDie;
@@ -295,6 +302,7 @@ const useGameState = create<GameState>((set, get) => ({
 
       const updatedPlayer: Player = selectedPlayer.copyWith({
         diceGrid: updatedDiceGrid,
+        score: selectedPlayer.score,
       });
 
       if (player.id === get().homePlayer?.id) {
@@ -307,20 +315,27 @@ const useGameState = create<GameState>((set, get) => ({
         });
       }
 
+      // update the player's dice and state to DB
       if (isMultiplayer) {
-        const roomId = get().multiplayerRoom!.id;
         await updatePlayerFromState(updatedPlayer);
-        await rollMultiplayerDice({ die: null, roomId: roomId });
-        get().directlySetUsableDie(null);
       }
 
       const currentHomePlayerState = get().homePlayer;
       const currentAwayPlayerState = get().awayPlayer;
 
-      const isGameOver = await checkForGameOver(currentHomePlayerState!, currentAwayPlayerState!)
+      const isGameOver = await checkForGameOver(
+        currentHomePlayerState!,
+        currentAwayPlayerState!
+      );
 
+      // Game has ended, update db and end game
       if (isGameOver) {
         await get().updateGameScore();
+        const scoredHomePlayerState = get().homePlayer;
+        const scoredAwayPlayerState = get().awayPlayer;
+
+        await updatePlayerFromState(scoredHomePlayerState!);
+        await updatePlayerFromState(scoredAwayPlayerState!);
         await waitRandomDelay(1000, 1000);
         get().endGame();
         return;
@@ -337,9 +352,15 @@ const useGameState = create<GameState>((set, get) => ({
       // Update the game score and end the player's turn
       console.log("Updating game score and ending turn...");
       await get().updateGameScore();
+      if (isMultiplayer) {
+        const scoredHomePlayerState = get().homePlayer;
+        const scoredAwayPlayerState = get().awayPlayer;
 
+        await updatePlayerFromState(scoredHomePlayerState!);
+        await updatePlayerFromState(scoredAwayPlayerState!);
+      }
+      // End player turn (includes swapping player)
       await get().endPlayerTurn();
-
     } else {
       console.log(
         "No empty spots available in the column. Unable to add dice."
@@ -419,7 +440,6 @@ const useGameState = create<GameState>((set, get) => ({
     // if we're in multiplayer mode, update the player
     if (playerType === PlayerTypeEnum.Human) {
       await updatePlayerFromState(updatedPlayer);
-
     }
   },
 
@@ -450,7 +470,9 @@ const useGameState = create<GameState>((set, get) => ({
       const multiplayerRoomState = get().multiplayerRoom;
       if (homePlayerState?.isActivePlayer) {
         console.log(
-          `Rolling for network, player ${homePlayerState!.character?.characterName}: ${homePlayerState!.id}`
+          `Rolling for network, player ${
+            homePlayerState!.character?.characterName
+          }: ${homePlayerState!.id}`
         );
         await rollMultiplayerDice({
           die: new DiceData({
@@ -459,6 +481,8 @@ const useGameState = create<GameState>((set, get) => ({
           }),
           roomId: multiplayerRoomState?.id!,
         });
+      } else {
+        console.log("Not active player, waiting for active player to roll");
       }
     } else {
       const newDieId = uuidv4();
@@ -484,11 +508,14 @@ const useGameState = create<GameState>((set, get) => ({
       set({ awayPlayer: updatedPlayer });
     }
 
-    const gameHasEnded = await checkForGameOver(homePlayerIsUpdated ? updatedPlayer : homePlayer!, homePlayerIsUpdated ? homePlayer : updatedPlayer);
+    const gameHasEnded = await checkForGameOver(
+      homePlayerIsUpdated ? updatedPlayer : homePlayer!,
+      homePlayerIsUpdated ? homePlayer : updatedPlayer
+    );
 
     if (gameHasEnded) {
       await waitRandomDelay(1000, 1000);
-      get().endGame()
+      get().endGame();
     }
   },
 
@@ -498,11 +525,11 @@ const useGameState = create<GameState>((set, get) => ({
 
   snackbar: {
     isOpen: false,
-    message: '',
-    severity: 'info', // Default severity
+    message: "",
+    severity: "info", // Default severity
   },
 
-  showSnackbar: (message, severity = 'info') => {
+  showSnackbar: (message, severity = "info") => {
     set({
       snackbar: {
         isOpen: true,
@@ -516,8 +543,8 @@ const useGameState = create<GameState>((set, get) => ({
     set({
       snackbar: {
         isOpen: false,
-        message: '',
-        severity: 'info',
+        message: "",
+        severity: "info",
       },
     });
   },

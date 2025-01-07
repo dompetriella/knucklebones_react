@@ -29,43 +29,42 @@ const GlobalSnackbar: React.FC = () => {
     }
   };
 
-  let snackbarBackgroundColor;
   let snackbarTextColor;
-  switch (snackbar.severity) {
-    case "success":
-      snackbarBackgroundColor = AppColors.Green;
-      break;
-    case "info":
-      snackbarBackgroundColor = AppColors.Orange;
-      break;
-    case "warning":
-      snackbarBackgroundColor = AppColors.Purple;
-      break;
-    case "error":
-      snackbarBackgroundColor = AppColors.Red;
-      break;
-    default:
-      snackbarBackgroundColor = AppColors.Orange;
-      break;
-  }
+  const snackbarBackgroundColor = () => {
+    switch (snackbar.severity) {
+      case "success":
+        return AppColors.Green;
+      case "info":
+        return AppColors.Secondary;
 
-  switch (snackbar.severity) {
-    case "success":
-      snackbarTextColor = AppColors.onGreen;
-      break;
-    case "info":
-      snackbarBackgroundColor = AppColors.onOrange;
-      break;
-    case "warning":
-      snackbarBackgroundColor = AppColors.onPurple;
-      break;
-    case "error":
-      snackbarBackgroundColor = AppColors.onPurple;
-      break;
-    default:
-      snackbarBackgroundColor = AppColors.onOrange;
-      break;
-  }
+      case "warning":
+        return AppColors.Tertiary;
+
+      case "error":
+        return AppColors.Primary;
+
+      default:
+        return AppColors.Secondary;
+    }
+  };
+
+  const snackbarTexColor = () => {
+    switch (snackbar.severity) {
+      case "success":
+        return AppColors.onGreen;
+      case "info":
+        return AppColors.onOrange;
+
+      case "warning":
+        return AppColors.onPurple;
+
+      case "error":
+        return AppColors.onRed;
+
+      default:
+        return AppColors.onOrange;
+    }
+  };
 
   return (
     <Snackbar
@@ -76,8 +75,8 @@ const GlobalSnackbar: React.FC = () => {
     >
       <Alert
         style={{
-          background: snackbarBackgroundColor,
-          color: snackbarTextColor,
+          background: snackbarBackgroundColor(),
+          color: snackbarTexColor(),
           fontSize: "1em",
         }}
         onClose={handleClose}

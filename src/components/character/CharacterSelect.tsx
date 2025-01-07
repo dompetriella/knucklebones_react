@@ -7,7 +7,6 @@ import { AppColors } from "../../AppColors";
 import { motion } from "framer-motion";
 
 export function CharacterSelect({
-
   character,
   player,
   isSmall = false,
@@ -26,13 +25,15 @@ export function CharacterSelect({
 
   const isSelected = player.character === character;
 
-  const backgroundGradient = isSelected ? character.color.primary : AppColors.Surface
+  const backgroundGradient = isSelected
+    ? character.color.primary
+    : AppColors.Surface;
 
   return (
     <motion.button
-
-      animate={{ background: `linear-gradient(${backgroundGradient}, ${AppColors.Surface})` }}
-
+      animate={{
+        background: `linear-gradient(${backgroundGradient}, ${AppColors.Surface})`,
+      }}
       onClick={async () => {
         setPlayerCharacterAction(character, player.id);
         if (gameTypeState !== PlayerTypeEnum.Human) {
@@ -41,12 +42,10 @@ export function CharacterSelect({
           );
           setPlayerCharacterAction(
             remainingCharacters[
-            Math.floor(Math.random() * remainingCharacters.length)
+              Math.floor(Math.random() * remainingCharacters.length)
             ],
             awayPlayerState?.id!
           );
-
-          showSnackbarAction('Good choice!');
         } else {
           //TODO: This will need to be worked out for online
         }
@@ -54,7 +53,7 @@ export function CharacterSelect({
       style={{
         background: `linear-gradient(${backgroundGradient}, ${AppColors.Surface})`,
         height: isSmall ? 128 : 160,
-        width: isSmall ? 128 : 160
+        width: isSmall ? 128 : 160,
       }}
       className=" m-2 border-onSurface border-4 shadow-xl rounded-xl flex flex-col justify-center items-center bg-surface"
     >

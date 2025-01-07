@@ -1,7 +1,9 @@
+import { motion } from "framer-motion";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";
 import useGameState from "../../state/gameState";
 import { PlayerDiceBlock } from "./PlayerDiceBlock";
+import { PlayerScore } from "./PlayerScore";
 
 export function PlayerArea({
   player,
@@ -23,22 +25,13 @@ export function PlayerArea({
       className="flex flex-col justify-evenly items-center size-full"
     >
       {player === homePlayerState ? (
-        <h1
-          style={{ color: playerColor.onPrimary }}
-          className="w-full text-2xl font-bold"
-        >{`${homePlayerState?.character?.characterName.toUpperCase()} - ${
-          homePlayerState?.score
-        }`}</h1>
+        <PlayerScore player={homePlayerState!} />
       ) : null}
 
       <PlayerDiceBlock player={player!} isHomePlayer={isHomePlayer} />
+
       {player === awayPlayerState ? (
-        <h1
-          style={{ color: playerColor.onPrimary }}
-          className="w-full text-2xl font-bold"
-        >{`${awayPlayerState?.character?.characterName.toUpperCase()} - ${
-          awayPlayerState?.score
-        }`}</h1>
+        <PlayerScore player={awayPlayerState!} />
       ) : null}
     </div>
   );

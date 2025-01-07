@@ -12,6 +12,7 @@ function DiceSlot({
   initialXDistance = 0,
   initialScaling = 1,
   initialRotation = 0,
+  animationDelay = 0,
 }: {
   diceData: DiceData | null;
   player: Player;
@@ -20,6 +21,7 @@ function DiceSlot({
   initialXDistance?: number;
   initialScaling?: number;
   initialRotation?: number;
+  animationDelay?: number;
 }) {
   const playerColor: PlayerColor = player.character?.color!;
 
@@ -62,11 +64,17 @@ function DiceSlot({
           x: 0,
           y: 0,
           rotate: diceData !== null ? initialRotation : 0,
+          transition: {
+            delay: diceData === null ? 0 : animationDelay,
+            type: "spring",
+            stiffness: 400, // Increase for a snappier motion
+            damping: 28,
+          },
         }}
         transition={{
           type: "spring",
-          stiffness: 400, // Increase for a snappier motion
-          damping: 28, // Increase to reduce bounce
+          stiffness: 400,
+          damping: 28,
         }}
       >
         <div
