@@ -429,3 +429,72 @@ export async function swapNetworkPlayers(
     throw err;
   }
 }
+
+export async function deleteHourOldRooms() {
+  const hourOld = new Date(Date.now() - 3600 * 1000);
+
+  try {
+    const { data, error } = await supabase
+      .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
+      .delete()
+      .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld);
+
+    if (error) {
+      console.error("Error deleting rows:", error);
+    } else {
+      console.log("Deleted rows:", data);
+    }
+  } catch (e) {
+    console.log("An error occurred:", e);
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from(DatabaseTableNames.KnucklebonesRooms.TableName)
+      .delete()
+      .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld);
+
+    if (error) {
+      console.error("Error deleting rows:", error);
+    } else {
+      console.log("Deleted rows:", data);
+    }
+  } catch (e) {
+    console.log("An error occurred:", e);
+  }
+}
+
+export async function deleteGameByRoomId(roomId: number) {
+  const hourOld = new Date(Date.now() - 3600 * 1000);
+
+  try {
+    const { data, error } = await supabase
+      .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
+      .delete()
+      .eq(DatabaseTableNames.KnucklebonesPlayers.RoomId, roomId)
+      .select();
+
+    if (error) {
+      console.error("Error deleting rows:", error);
+    } else {
+      console.log("Deleted rows:", data);
+    }
+  } catch (e) {
+    console.log("An error occurred:", e);
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from(DatabaseTableNames.KnucklebonesRooms.TableName)
+      .delete()
+      .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld);
+
+    if (error) {
+      console.error("Error deleting rows:", error);
+    } else {
+      console.log("Deleted rows:", data);
+    }
+  } catch (e) {
+    console.log("An error occurred:", e);
+  }
+}
