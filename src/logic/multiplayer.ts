@@ -130,7 +130,10 @@ export async function getDiceDataForState(
     const returnedData = data[0];
     console.log(`Die value returned: ${returnedData.usable_dice}`);
 
-    if (returnedData.usable_dice === null) {
+    if (
+      returnedData.usable_dice === null ||
+      returnedData.usable_dice === undefined
+    ) {
       return null;
     }
 

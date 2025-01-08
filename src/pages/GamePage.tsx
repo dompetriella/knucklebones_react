@@ -29,13 +29,13 @@ function GamePage() {
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
   const gameHasEndedState = useGameState((state) => state.gameHasEnded);
-  const playerType = useGameState((state) => state.playerType)
+  const playerType = useGameState((state) => state.playerType);
 
   const gameHasEnded = useGameState((state) => state.gameHasEnded);
 
-
   const isMultiplayer = playerType === PlayerTypeEnum.Human;
 
+  // checking for the first rolled die
   useEffect(() => {
     const getCurrentNetworkDie = async () => {
       const networkDie: DiceData | null = await getDiceDataForState(
@@ -48,16 +48,16 @@ function GamePage() {
     if (isMultiplayer) {
       getCurrentNetworkDie();
     }
-
   }, []);
 
+  // checking for game over
   useEffect(() => {
     if (gameHasEnded) {
       navigator(AppRoutes.PlayerWon);
     }
   }, [gameHasEnded]);
 
-  // Add a subscription for `usable_dice`
+  // checking for dice rolled updates
   useEffect(() => {
     const subscribeToUsableDiceUpdates = async () => {
       try {
@@ -115,9 +115,9 @@ function GamePage() {
     if (isMultiplayer) {
       subscribeToUsableDiceUpdates();
     }
-
   }, []);
 
+  // getting player updates
   useEffect(() => {
     const subscribeToUpdates = async () => {
       try {
@@ -167,8 +167,6 @@ function GamePage() {
         }
       };
     }
-
-
   }, []);
 
   return (

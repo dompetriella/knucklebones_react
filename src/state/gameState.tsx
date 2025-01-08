@@ -149,7 +149,7 @@ const useGameState = create<GameState>((set, get) => ({
     const homePlayerState = get().homePlayer;
     const awayPlayerState = get().awayPlayer;
 
-    const isMultiplayer = get().playerType === PlayerTypeEnum.Hard;
+    const isMultiplayer = get().playerType === PlayerTypeEnum.Human;
 
     const updatedHomePlayer = homePlayerState?.copyWith({
       score: calculatePlayerScore(homePlayerState),
@@ -334,8 +334,11 @@ const useGameState = create<GameState>((set, get) => ({
         const scoredHomePlayerState = get().homePlayer;
         const scoredAwayPlayerState = get().awayPlayer;
 
-        await updatePlayerFromState(scoredHomePlayerState!);
-        await updatePlayerFromState(scoredAwayPlayerState!);
+        if (isMultiplayer) {
+          await updatePlayerFromState(scoredHomePlayerState!);
+          await updatePlayerFromState(scoredAwayPlayerState!);
+        }
+
         await waitRandomDelay(1000, 1000);
         get().endGame();
         return;
