@@ -29,7 +29,6 @@ const GlobalSnackbar: React.FC = () => {
     }
   };
 
-  let snackbarTextColor;
   const snackbarBackgroundColor = () => {
     switch (snackbar.severity) {
       case "success":

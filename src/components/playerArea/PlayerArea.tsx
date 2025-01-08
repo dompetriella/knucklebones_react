@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";
 import useGameState from "../../state/gameState";

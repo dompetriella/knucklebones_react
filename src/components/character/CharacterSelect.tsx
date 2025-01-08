@@ -21,7 +21,6 @@ export function CharacterSelect({
 
   const gameTypeState = useGameState((state) => state.playerType);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
-  const showSnackbarAction = useGameState((state) => state.showSnackbar);
 
   const isSelected = player.character === character;
 

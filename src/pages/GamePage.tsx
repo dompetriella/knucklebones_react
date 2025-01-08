@@ -119,9 +119,46 @@ function GamePage() {
 
   // getting player updates
   useEffect(() => {
+    let subscription: RealtimeChannel | undefined;
+    let timeoutId: NodeJS.Timeout | undefined;
+
+    const fetchDataIfNoUpdate = async () => {
+      console.log("No update received in 10 seconds, making a network call...");
+      // Replace with your network call logic
+      const die: DiceData | null = await getDiceDataForState(
+        multiplayerRoomState?.id!
+      );
+
+      if (die === null || die === undefined) {
+        console.log(
+          "polled database for die after 10s inactivity.  Null was found"
+        );
+      } else {
+        if (die.id != usableDieState?.id) {
+          console.log("Its been 10s and, dice update not received correctly");
+          console.log(
+            `Manually recieved ${die.id}:${die.numberValue}, setting to state`
+          );
+          directlySetDieValueAction(die);
+        } else {
+          console.log(
+            "10 seconds of inactivity, but die data is already in state"
+          );
+          console.log("They thinking hard");
+        }
+      }
+    };
+
+    const resetTimeout = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(fetchDataIfNoUpdate, 10000); // 10 seconds
+    };
+
     const subscribeToUpdates = async () => {
       try {
-        const subscription = await supabase
+        subscription = await supabase
           .channel("away-player-updates") // Unique channel name
           .on(
             "postgres_changes",
@@ -141,6 +178,9 @@ function GamePage() {
 
                 const updatedPlayer = convertDatabasePlayerToPlayer(updatedRow);
                 setPlayerFromDatabaseData(updatedPlayer);
+
+                // Reset timeout on receiving an update
+                resetTimeout();
               } catch (error) {
                 console.error("Error processing payload:", error);
               }
@@ -148,22 +188,22 @@ function GamePage() {
           )
           .subscribe();
 
-        return subscription;
+        // Start the timeout when the subscription is successful
+        resetTimeout();
       } catch (error) {
         console.error("Error subscribing to channel:", error);
       }
     };
 
-    let subscription: RealtimeChannel | undefined;
-
     if (isMultiplayer) {
-      subscribeToUpdates().then((sub) => {
-        subscription = sub;
-      });
+      subscribeToUpdates();
 
       return () => {
         if (subscription) {
           supabase.removeChannel(subscription);
+        }
+        if (timeoutId) {
+          clearTimeout(timeoutId);
         }
       };
     }
