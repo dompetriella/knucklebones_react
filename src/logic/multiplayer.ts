@@ -442,6 +442,10 @@ export async function deleteHourOldRooms() {
       .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld)
       .select();
 
+    if (!data) {
+      console.log("no rows found that meet that criteria, 0 rows affected");
+    }
+
     if (error) {
       console.error("Error deleting rows:", error);
     } else {
@@ -459,6 +463,10 @@ export async function deleteHourOldRooms() {
       .delete()
       .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld.toISOString)
       .select();
+
+    if (!data) {
+      console.log("no rows found that meet that criteria, 0 rows affected");
+    }
 
     if (error) {
       console.error("Error deleting rows:", error);
