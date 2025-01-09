@@ -439,7 +439,10 @@ export async function deleteHourOldRooms() {
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
       .delete()
-      .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld)
+      .lt(
+        DatabaseTableNames.KnucklebonesPlayers.CreatedAt,
+        hourOld.toISOString()
+      )
       .select();
 
     if (!data) {
@@ -449,8 +452,11 @@ export async function deleteHourOldRooms() {
     if (error) {
       console.error("Error deleting rows:", error);
     } else {
-      const deletedRows = data !== null ? data[0].length : 0;
-      console.log(`Deleted ${deletedRows} rows`);
+      if (data.length > 0) {
+        const deletedRows =
+          data !== null || data !== undefined ? data.length : 0;
+        console.log(`Deleted ${deletedRows} rows`);
+      }
     }
   } catch (e) {
     console.log("An error occurred:", e);
@@ -461,7 +467,10 @@ export async function deleteHourOldRooms() {
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesRooms.TableName)
       .delete()
-      .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld.toISOString)
+      .lt(
+        DatabaseTableNames.KnucklebonesPlayers.CreatedAt,
+        hourOld.toISOString()
+      )
       .select();
 
     if (!data) {
@@ -471,8 +480,11 @@ export async function deleteHourOldRooms() {
     if (error) {
       console.error("Error deleting rows:", error);
     } else {
-      const deletedRows = data !== null ? data[0].length : 0;
-      console.log(`Deleted ${deletedRows} rows`);
+      if (data.length > 0) {
+        const deletedRows =
+          data !== null || data !== undefined ? data.length : 0;
+        console.log(`Deleted ${deletedRows} rows`);
+      }
     }
   } catch (e) {
     console.log("An error occurred:", e);
