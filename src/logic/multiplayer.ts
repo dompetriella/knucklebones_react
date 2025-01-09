@@ -1,6 +1,7 @@
 import { supabase } from "../App";
 import { characterDataList } from "../global/characterData";
 import { DatabaseTableNames } from "../global/databaseNames";
+import { emptyDiceArray } from "../global/utility";
 import { DiceData } from "../models/DiceData";
 import { MultiplayerRoom } from "../models/MultiplayerRoom";
 import { Player } from "../models/Player";
@@ -434,30 +435,36 @@ export async function deleteHourOldRooms() {
   const hourOld = new Date(Date.now() - 3600 * 1000);
 
   try {
+    console.log("Attempting to delete old players");
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
       .delete()
-      .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld);
+      .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld)
+      .select();
 
     if (error) {
       console.error("Error deleting rows:", error);
     } else {
-      console.log("Deleted rows:", data);
+      const deletedRows = data !== null ? data[0].length : 0;
+      console.log(`Deleted ${deletedRows} rows`);
     }
   } catch (e) {
     console.log("An error occurred:", e);
   }
 
   try {
+    console.log("Now deleting the associated rooms");
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesRooms.TableName)
       .delete()
-      .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld);
+      .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld.toISOString)
+      .select();
 
     if (error) {
       console.error("Error deleting rows:", error);
     } else {
-      console.log("Deleted rows:", data);
+      const deletedRows = data !== null ? data[0].length : 0;
+      console.log(`Deleted ${deletedRows} rows`);
     }
   } catch (e) {
     console.log("An error occurred:", e);
@@ -497,4 +504,26 @@ export async function deleteGameByRoomId(roomId: number) {
   } catch (e) {
     console.log("An error occurred:", e);
   }
+}
+
+export async function restartMultiplayerGame({
+  homePlayerState,
+  awayPlayerState,
+}: {
+  homePlayerState: Player;
+  awayPlayerState: Player;
+}) {
+  const updatedHomePlayer = homePlayerState.copyWith({
+    score: 0,
+    diceGrid: emptyDiceArray,
+    isActivePlayer: false,
+  });
+  const updatedAwayPlayer = awayPlayerState.copyWith({
+    score: 0,
+    diceGrid: emptyDiceArray,
+    isActivePlayer: false,
+  });
+
+  await updatePlayerFromState(updatedHomePlayer);
+  await updatePlayerFromState(updatedAwayPlayer);
 }

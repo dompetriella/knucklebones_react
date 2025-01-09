@@ -18,15 +18,30 @@ import {
   swapNetworkPlayers,
   updatePlayerFromState,
 } from "../logic/multiplayer";
-
-const emptyDiceArray: (DiceData | null)[][] = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
+import { emptyDiceArray } from "../global/utility";
 
 const homePlayerId = uuidv4();
 const awayPlayerId = uuidv4();
+
+const defaultGameState = {
+  homePlayer: new Player({
+    id: homePlayerId,
+    playerName: "",
+    isActivePlayer: true,
+    color: PlayerColorEnum.Red,
+  }),
+  awayPlayer: new Player({
+    id: awayPlayerId,
+    playerName: "",
+    isActivePlayer: false,
+    color: PlayerColorEnum.Orange,
+  }),
+  usableDie: null,
+  playerType: PlayerTypeEnum.Easy,
+  gameHasEnded: false,
+  multiplayerRoom: null,
+  hostPlayerId: "",
+};
 
 interface GameState {
   // Player
@@ -34,6 +49,7 @@ interface GameState {
   awayPlayer: Player | null;
   playerType: PlayerTypeEnum;
 
+  resetGameToDefault: () => Promise<void>;
   setPlayerType: (playerType: PlayerTypeEnum) => void;
   setPlayerCharacter: (character: Character | null, playerId: string) => void;
   swapActivePlayer: () => Promise<void>;
@@ -78,27 +94,11 @@ interface GameState {
 }
 
 const useGameState = create<GameState>((set, get) => ({
-  homePlayer: new Player({
-    id: homePlayerId,
-    playerName: "",
-    isActivePlayer: true,
-    color: PlayerColorEnum.Red,
-  }),
-  awayPlayer: new Player({
-    id: awayPlayerId,
-    playerName: "",
-    isActivePlayer: false,
-    color: PlayerColorEnum.Orange,
-  }),
+  ...defaultGameState,
 
-  usableDie: null,
-
-  playerType: PlayerTypeEnum.Easy,
-  gameHasEnded: false,
-
-  multiplayerRoom: null,
-
-  hostPlayerId: "",
+  async resetGameToDefault() {
+    set(defaultGameState);
+  },
 
   async startGame() {
     const coinFlip = generateRandomInt({ max: 1 });
@@ -123,6 +123,7 @@ const useGameState = create<GameState>((set, get) => ({
   },
 
   async beginFirstTurn() {
+    set({ gameHasEnded: false });
     await get().rollNewUsableDie();
     const cpuPlayerState = get().awayPlayer;
     const isCpuGame = get().playerType !== PlayerTypeEnum.Human;
@@ -529,7 +530,7 @@ const useGameState = create<GameState>((set, get) => ({
   snackbar: {
     isOpen: false,
     message: "",
-    severity: "info", // Default severity
+    severity: "info",
   },
 
   showSnackbar: (message, severity = "info") => {

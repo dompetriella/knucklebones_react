@@ -2,11 +2,22 @@ import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 import { MenuButton } from "../components/utility/MenuButton";
 import useGameState from "../state/gameState";
+import {
+  deleteGameByRoomId,
+  restartMultiplayerGame,
+} from "../logic/multiplayer";
+import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 
 function PlayerWonPage() {
   const navigator = useNavigate();
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
+  const multiplayerRoomState = useGameState((state) => state.multiplayerRoom);
+  const playerTypeState = useGameState((state) => state.playerType);
+
+  const resetStateAction = useGameState((state) => state.resetGameToDefault);
+
+  const isMultiplayer = playerTypeState === PlayerTypeEnum.Human;
 
   const winningPlayer =
     homePlayerState!.score >= awayPlayerState!.score
@@ -31,18 +42,31 @@ function PlayerWonPage() {
       </div>
 
       <div className="flex flex-col items-center">
-        {/* <MenuButton
+        <MenuButton
           text={"Play Again"}
-          onPressed={() => {
-            startGameStateAction();
-            navigator({ pathname: AppRoutes.CoinFlip });
+          onPressed={async () => {
+            if (isMultiplayer) {
+              await restartMultiplayerGame({
+                homePlayerState: homePlayerState!,
+                awayPlayerState: awayPlayerState!,
+              });
+              navigator({ pathname: AppRoutes.WaitingRoom });
+            } else {
+              resetStateAction();
+              navigator({ pathname: AppRoutes.ChooseCharacter });
+            }
           }}
           animationDelay={0.5}
-        /> */}
+        />
         <MenuButton
           text={"Main Menu"}
-          onPressed={() => {
+          onPressed={async () => {
             navigator({ pathname: AppRoutes.Start });
+            const roomId = multiplayerRoomState?.id;
+            await resetStateAction();
+            if (isMultiplayer && roomId !== null) {
+              await deleteGameByRoomId(roomId!);
+            }
           }}
           animationDelay={1.0}
         />

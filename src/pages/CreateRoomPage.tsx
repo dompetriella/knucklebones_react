@@ -4,6 +4,7 @@ import { MenuButton } from "../components/utility/MenuButton";
 import { AppColors } from "../AppColors";
 import useGameState from "../state/gameState";
 import { PageHeader } from "../components/utility/PageHeader";
+import { deleteHourOldRooms } from "../logic/multiplayer";
 
 function CreateRoomPage() {
   const navigator = useNavigate();
@@ -30,11 +31,12 @@ function CreateRoomPage() {
           <MenuButton
             text={"Create Game"}
             width={250}
-            onPressed={() => {
+            onPressed={async () => {
+              await deleteHourOldRooms();
               setHostIdAction(homePlayerState?.id!);
               navigator(AppRoutes.ChooseCharacter);
             }}
-            animationDelay={0.50}
+            animationDelay={0.5}
           />
         </div>
       </div>
