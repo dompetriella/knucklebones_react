@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { calculateDiceDataColumn } from "../../logic/scoring";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";
@@ -11,8 +12,9 @@ export function PlayerDiceBlock({
   player: Player;
   isHomePlayer: boolean;
 }) {
+  const [isDiceAddOnCooldown, setIsDiceAddOnCooldown] = useState(false);
 
-  const homePlayerState = useGameState((state) => state.homePlayer)
+  const homePlayerState = useGameState((state) => state.homePlayer);
 
   const addUsableDieToPlayerColumnAction = useGameState(
     (state) => state.addUsableDieToPlayerColumn
@@ -47,36 +49,44 @@ export function PlayerDiceBlock({
           <button
             key={i}
             onClick={() => {
-              if (player.isActivePlayer && player.id === homePlayerState!.id) {
+              if (
+                player.isActivePlayer &&
+                player.id === homePlayerState!.id &&
+                !isDiceAddOnCooldown
+              ) {
+                setIsDiceAddOnCooldown(() => true);
                 addUsableDieToPlayerColumnAction(player, i);
+                setTimeout(() => {
+                  setIsDiceAddOnCooldown(() => false);
+                }, 1000);
               }
             }}
             className="flex flex-col bg-surface m-1 pb-2 rounded-lg"
           >
             {!isHomePlayer
               ? player?.diceGrid[i]
-                .slice()
-                .reverse()
-                .map((dice) => (
+                  .slice()
+                  .reverse()
+                  .map((dice) => (
+                    <DiceSlot
+                      key={dice?.id}
+                      diceData={dice ?? null}
+                      player={player}
+                      columnIndex={i}
+                      initialYDistance={-192}
+                      initialScaling={2.5}
+                    />
+                  ))
+              : player?.diceGrid[i].map((dice) => (
                   <DiceSlot
                     key={dice?.id}
                     diceData={dice ?? null}
                     player={player}
                     columnIndex={i}
-                    initialYDistance={-192}
-                    initialScaling={2.5}
+                    initialYDistance={192}
+                    initialScaling={3}
                   />
-                ))
-              : player?.diceGrid[i].map((dice) => (
-                <DiceSlot
-                  key={dice?.id}
-                  diceData={dice ?? null}
-                  player={player}
-                  columnIndex={i}
-                  initialYDistance={192}
-                  initialScaling={3}
-                />
-              ))}
+                ))}
           </button>
         ))}
       </div>
