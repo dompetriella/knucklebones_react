@@ -13,17 +13,18 @@ import { Player } from "../models/Player";
 
 function ChooseCharacterPage() {
   const navigator = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const multiplayerRoomState = useGameState((state) => state.multiplayerRoom);
+  const homePlayerState = useGameState((state) => state.homePlayer);
+  const awayPlayerState = useGameState((state) => state.awayPlayer);
+  const playTypeState = useGameState((state) => state.playerType);
+
+  const awayPlayerCharacterId = awayPlayerState?.character?.index;
 
   const setMultiplayerRoomStateAction = useGameState(
     (state) => state.setMultiplayerRoom
   );
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const homePlayerState = useGameState((state) => state.homePlayer);
-  const playTypeState = useGameState((state) => state.playerType);
 
   return (
     <div className="flex size-full flex-col justify-between items-center bg-surface">
@@ -39,6 +40,7 @@ function ChooseCharacterPage() {
                 key={character.index}
                 character={character}
                 player={homePlayerState!}
+                isAlreadySelected={awayPlayerCharacterId === character.index}
               />
             );
           })}

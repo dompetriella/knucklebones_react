@@ -9,18 +9,22 @@ import { motion } from "framer-motion";
 export function CharacterSelect({
   character,
   player,
+  isAlreadySelected,
   isSmall = false,
 }: {
   character: Character;
   player: Player;
+  isAlreadySelected: boolean;
   isSmall?: boolean;
 }) {
+  const gameTypeState = useGameState((state) => state.playerType);
+  const awayPlayerState = useGameState((state) => state.awayPlayer);
+
   const setPlayerCharacterAction = useGameState(
     (state) => state.setPlayerCharacter
   );
 
-  const gameTypeState = useGameState((state) => state.playerType);
-  const awayPlayerState = useGameState((state) => state.awayPlayer);
+  const showSnackbarAction = useGameState((state) => state.showSnackbar);
 
   const isSelected = player.character === character;
 
@@ -34,25 +38,30 @@ export function CharacterSelect({
         background: `linear-gradient(${backgroundGradient}, ${AppColors.Surface})`,
       }}
       onClick={async () => {
-        setPlayerCharacterAction(character, player.id);
-        if (gameTypeState !== PlayerTypeEnum.Human) {
-          const remainingCharacters: Character[] = characterDataList.filter(
-            (c) => c !== character
-          );
-          setPlayerCharacterAction(
-            remainingCharacters[
-              Math.floor(Math.random() * remainingCharacters.length)
-            ],
-            awayPlayerState?.id!
+        if (isAlreadySelected) {
+          showSnackbarAction(
+            `${character.characterName} is already selected by host!  Choose another character`
           );
         } else {
-          //TODO: This will need to be worked out for online
+          setPlayerCharacterAction(character, player.id);
+          if (gameTypeState !== PlayerTypeEnum.Human) {
+            const remainingCharacters: Character[] = characterDataList.filter(
+              (c) => c !== character
+            );
+            setPlayerCharacterAction(
+              remainingCharacters[
+                Math.floor(Math.random() * remainingCharacters.length)
+              ],
+              awayPlayerState?.id!
+            );
+          }
         }
       }}
       style={{
         background: `linear-gradient(${backgroundGradient}, ${AppColors.Surface})`,
         height: isSmall ? 128 : 160,
         width: isSmall ? 128 : 160,
+        opacity: isAlreadySelected ? 0.5 : 1,
       }}
       className=" m-2 border-onSurface border-4 shadow-xl rounded-xl flex flex-col justify-center items-center bg-surface"
     >

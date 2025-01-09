@@ -32,9 +32,9 @@ function CreateRoomPage() {
             text={"Create Game"}
             width={250}
             onPressed={async () => {
+              navigator(AppRoutes.ChooseCharacter);
               await deleteHourOldRooms();
               setHostIdAction(homePlayerState?.id!);
-              navigator(AppRoutes.ChooseCharacter);
             }}
             animationDelay={0.5}
           />
