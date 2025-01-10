@@ -61,6 +61,7 @@ interface GameState {
   startGame: () => void;
   beginFirstTurn: () => Promise<void>;
   endGame: () => Promise<void>;
+  resetGameOver: () => Promise<void>
 
   // Dice
   usableDie: DiceData | null;
@@ -98,6 +99,10 @@ const useGameState = create<GameState>((set, get) => ({
 
   async resetGameToDefault() {
     set(defaultGameState);
+  },
+
+  async resetGameOver() {
+    set({ gameHasEnded: false})
   },
 
   async startGame() {

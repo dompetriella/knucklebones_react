@@ -16,6 +16,7 @@ function PlayerWonPage() {
   const playerTypeState = useGameState((state) => state.playerType);
 
   const resetStateAction = useGameState((state) => state.resetGameToDefault);
+  const resetGameOver = useGameState((state) => state.resetGameOver)
 
   const isMultiplayer = playerTypeState === PlayerTypeEnum.Human;
 
@@ -45,6 +46,7 @@ function PlayerWonPage() {
         <MenuButton
           text={"Play Again"}
           onPressed={async () => {
+            await resetGameOver();
             if (isMultiplayer) {
               await restartMultiplayerGame({
                 homePlayerState: homePlayerState!,
