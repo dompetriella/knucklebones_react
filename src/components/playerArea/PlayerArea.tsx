@@ -1,37 +1,103 @@
+import useScreenWidth from "../../hooks/useScreenWidth";
+import { DiceData } from "../../models/DiceData";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";
-import useGameState from "../../state/gameState";
+import DiceSlot from "../dice/DiceSlot";
 import { PlayerDiceBlock } from "./PlayerDiceBlock";
 import { PlayerScore } from "./PlayerScore";
 
 export function PlayerArea({
   player,
   isHomePlayer,
+  usableDie,
 }: {
   player: Player | null;
   isHomePlayer: boolean;
+  usableDie: DiceData | null;
 }) {
-  const homePlayerState = useGameState((state) => state.homePlayer);
-  const awayPlayerState = useGameState((state) => state.awayPlayer);
+  const character = player?.character;
+
+  const screenSizeState = useScreenWidth();
 
   const playerColor: PlayerColor = player?.character?.color!;
+  const sizeFactor: number = 0.18;
+
+  const isMobile = screenSizeState <= 480;
+
+  const minImageSize = 64;
+  const maxImageSize = 240;
+
+  const imageSize = Math.min(
+    Math.max(minImageSize, screenSizeState * sizeFactor),
+    maxImageSize
+  );
 
   return (
     <div
       style={{
         backgroundColor: playerColor.primary,
       }}
-      className="flex flex-col justify-evenly items-center size-full"
+      className="size-full flex justify-evenly"
     >
-      {player === homePlayerState ? (
-        <PlayerScore player={homePlayerState!} />
-      ) : null}
+      {isHomePlayer && !isMobile ? (
+        <div className="flex flex-col justify-center items-center">
+          <img
+            src={`/${character?.characterImagePath}`}
+            alt={character?.characterImageAlt}
+            width={imageSize}
+          />
+          <div
+            style={{ background: playerColor.secondary, width: imageSize }}
+            className="flex justify-center rounded-xl py-4"
+          >
+            <DiceSlot
+              player={player!}
+              diceData={new DiceData({ id: "5", numberValue: 5 })}
+            />
+          </div>
+        </div>
+      ) : (
+        <img
+          style={{ opacity: 0 }}
+          src={`/${character?.characterImagePath}`}
+          alt={character?.characterImageAlt}
+          width={imageSize}
+        />
+      )}
 
-      <PlayerDiceBlock player={player!} isHomePlayer={isHomePlayer} />
+      <div className="flex flex-col justify-evenly items-center">
+        {isHomePlayer && isMobile ? <PlayerScore player={player!} /> : null}
 
-      {player === awayPlayerState ? (
-        <PlayerScore player={awayPlayerState!} />
-      ) : null}
+        <PlayerDiceBlock player={player!} isHomePlayer={isHomePlayer} />
+
+        {!isHomePlayer && isMobile ? <PlayerScore player={player!} /> : null}
+      </div>
+
+      {!isHomePlayer && !isMobile ? (
+        <div className="flex flex-col justify-center items-center">
+          <img
+            src={`/${character?.characterImagePath}`}
+            alt={character?.characterImageAlt}
+            width={imageSize}
+          />
+          <div
+            style={{ background: playerColor.secondary, width: imageSize }}
+            className="flex justify-center rounded-xl py-4"
+          >
+            <DiceSlot
+              player={player!}
+              diceData={new DiceData({ id: "5", numberValue: 5 })}
+            />
+          </div>
+        </div>
+      ) : (
+        <img
+          style={{ opacity: 0 }}
+          src={`/${character?.characterImagePath}`}
+          alt={character?.characterImageAlt}
+          width={imageSize}
+        />
+      )}
     </div>
   );
 }

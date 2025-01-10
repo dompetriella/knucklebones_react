@@ -23,7 +23,7 @@ import { emptyDiceArray } from "../global/utility";
 const homePlayerId = uuidv4();
 const awayPlayerId = uuidv4();
 
-const defaultGameState = {
+export const defaultGameState = {
   homePlayer: new Player({
     id: homePlayerId,
     playerName: "",
