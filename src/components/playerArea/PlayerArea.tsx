@@ -1,8 +1,11 @@
+import { color } from "framer-motion";
 import useScreenWidth from "../../hooks/useScreenWidth";
 import { DiceData } from "../../models/DiceData";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";
 import DiceSlot from "../dice/DiceSlot";
+import { DesktopAvatarArea } from "./desktop/DesktopAvatarArea";
+import { DesktopPlayerScore } from "./desktop/DesktopPlayerScore";
 import { PlayerDiceBlock } from "./PlayerDiceBlock";
 import { PlayerScore } from "./PlayerScore";
 
@@ -40,28 +43,18 @@ export function PlayerArea({
       className="size-full flex justify-evenly"
     >
       {isHomePlayer && !isMobile ? (
-        <div className="flex flex-col justify-center items-center">
-          <img
-            src={`/${character?.characterImagePath}`}
-            alt={character?.characterImageAlt}
-            width={imageSize}
-          />
-          <div
-            style={{ background: playerColor.secondary, width: imageSize }}
-            className="flex justify-center rounded-xl py-4"
-          >
-            <DiceSlot
-              player={player!}
-              diceData={new DiceData({ id: "5", numberValue: 5 })}
-            />
-          </div>
-        </div>
+        <DesktopAvatarArea
+          player={player!}
+          imageSize={imageSize}
+          playerColor={playerColor}
+          usableDie={usableDie}
+          flipX={true}
+        />
       ) : (
-        <img
-          style={{ opacity: 0 }}
-          src={`/${character?.characterImagePath}`}
-          alt={character?.characterImageAlt}
-          width={imageSize}
+        <DesktopPlayerScore
+          imageSize={imageSize}
+          player={player!}
+          playerColor={playerColor}
         />
       )}
 
@@ -74,28 +67,19 @@ export function PlayerArea({
       </div>
 
       {!isHomePlayer && !isMobile ? (
-        <div className="flex flex-col justify-center items-center">
-          <img
-            src={`/${character?.characterImagePath}`}
-            alt={character?.characterImageAlt}
-            width={imageSize}
-          />
-          <div
-            style={{ background: playerColor.secondary, width: imageSize }}
-            className="flex justify-center rounded-xl py-4"
-          >
-            <DiceSlot
-              player={player!}
-              diceData={new DiceData({ id: "5", numberValue: 5 })}
-            />
-          </div>
-        </div>
+        <DesktopAvatarArea
+          player={player!}
+          imageSize={imageSize}
+          playerColor={playerColor}
+          usableDie={usableDie}
+          
+        />
       ) : (
-        <img
-          style={{ opacity: 0 }}
-          src={`/${character?.characterImagePath}`}
-          alt={character?.characterImageAlt}
-          width={imageSize}
+        <DesktopPlayerScore
+          imageSize={imageSize}
+          player={player!}
+          playerColor={playerColor}
+         
         />
       )}
     </div>
