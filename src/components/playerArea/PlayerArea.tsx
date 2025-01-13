@@ -50,13 +50,13 @@ export function PlayerArea({
           usableDie={usableDie}
           flipX={true}
         />
-      ) : (
+      ) : !isMobile ? (
         <DesktopPlayerScore
           imageSize={imageSize}
           player={player!}
           playerColor={playerColor}
         />
-      )}
+      ) : null}
 
       <div className="flex flex-col justify-evenly items-center">
         {isHomePlayer && isMobile ? <PlayerScore player={player!} /> : null}
@@ -72,16 +72,14 @@ export function PlayerArea({
           imageSize={imageSize}
           playerColor={playerColor}
           usableDie={usableDie}
-          
         />
-      ) : (
+      ) : !isMobile ? (
         <DesktopPlayerScore
           imageSize={imageSize}
           player={player!}
           playerColor={playerColor}
-         
         />
-      )}
+      ) : null}
     </div>
   );
 }
