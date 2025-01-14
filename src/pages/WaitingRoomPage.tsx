@@ -3,7 +3,7 @@ import { AppRoutes } from "../router/AppRoutes";
 import useGameState from "../state/gameState";
 import { PageHeader } from "../components/utility/PageHeader";
 import { supabase } from "../App";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   convertDatabasePlayerToPlayer,
   setPlayerActivity,
@@ -11,6 +11,7 @@ import {
 import { Player } from "../models/Player";
 import { generateRandomInt } from "../logic/utility";
 import { CopyAll } from "@mui/icons-material";
+import LoadingDie from "../components/animation/loadingDie";
 
 function WaitingRoomPage() {
   const appNavigator = useNavigate();
@@ -27,66 +28,79 @@ function WaitingRoomPage() {
 
   const roomId = multiplayerRoomState?.id;
 
-  const [hasConnected, setHasConnected] = useState(false);
+  const [isConnected, setisConnected] = useState(false);
 
-  useEffect(() => {
-    if (awayPlayerState?.character == null) {
-      const subscription = supabase
-        .channel("room-changes") // Unique channel name
-        .on(
-          "postgres_changes",
-          { event: "INSERT", schema: "public", table: "knucklebones_players" },
-          async (payload) => {
-            const newRow = payload.new;
-            if (newRow.room_id === multiplayerRoomState?.id) {
-              console.log("New row added for the specified room:", newRow);
-            }
-            const updatedPlayer: Player = convertDatabasePlayerToPlayer(newRow);
-            setPlayerFromDatabaseData(updatedPlayer);
+  async function pollDatabaseForOtherPlayer(timer: NodeJS.Timeout) {
+    console.log("Polling for other player");
 
-            const players: string[] = [updatedPlayer.id, homePlayerState!.id];
+    try {
+      const { data, error } = await supabase
+        .from("knucklebones_players")
+        .select("*")
+        .eq("room_id", roomId);
 
-            const coinTossWinner =
-              players[generateRandomInt({ max: players.length - 1 })];
+      if (error) {
+        console.error("Error fetching players:", error);
+        return;
+      }
 
-            const winningPlayer: Player | null = await setPlayerActivity(
-              true,
-              coinTossWinner
-            );
+      if (data && data.length > 1) {
+        clearTimeout(timer);
 
-            if (winningPlayer != null) {
-              setPlayerFromDatabaseData(winningPlayer);
-              setHasConnected(() => true);
+        console.log("Fetched players:", data);
 
-              setTimeout(() => {
-                appNavigator(AppRoutes.CoinFlip);
-              }, 3000);
-            } else {
-              console.log("returned player was null, cannot start game");
-            }
-          }
-        )
-        .subscribe();
+        const players: Player[] = data.map((dbPlayer) => {
+          const statePlayer = convertDatabasePlayerToPlayer(dbPlayer);
+          return statePlayer;
+        });
+        players.forEach((player) => setPlayerFromDatabaseData(player));
 
-      // Clean up the subscription when the component unmounts
-      return () => {
-        supabase.removeChannel(subscription);
-      };
-    } else {
-      setTimeout(() => {
-        setHasConnected(() => true);
-        appNavigator(AppRoutes.CoinFlip);
-      }, 5000);
+        const coinTossWinner =
+          players[generateRandomInt({ max: players.length - 1 })];
+
+        const winningPlayer: Player | null = await setPlayerActivity(
+          true,
+          coinTossWinner.id
+        );
+
+        if (winningPlayer != null) {
+          setPlayerFromDatabaseData(winningPlayer);
+          setisConnected(() => true);
+
+          setTimeout(() => {
+            appNavigator(AppRoutes.CoinFlip);
+          }, 4000);
+        } else {
+          console.log("returned player was null, cannot start game");
+        }
+      }
+    } catch (err) {
+      console.error("Polling error:", err);
     }
-  }, [roomId]);
+  }
+
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     pollDatabaseForOtherPlayer();
+  //   } else {
+  //     setisConnected(() => true);
+  //     if (intervalId) {
+  //       clearInterval(intervalId);
+  //       console.log("Polling stopped");
+  //     }
+  //     setTimeout(() => {
+  //       appNavigator(AppRoutes.CoinFlip);
+  //     }, 5000);
+  //   }
+  // }, []);
 
   return (
     <div className="flex items-center flex-col size-full bg-surface">
       <PageHeader
-        headerText={!hasConnected ? "Connecting ..." : "Connected!"}
+        headerText={!isConnected ? "Connecting ..." : "Connected!"}
         returnRoute={AppRoutes.Start}
       />
-      {!hasConnected && homePlayerState?.id === hostPlayerIdState ? (
+      {!isConnected && homePlayerState?.id === hostPlayerIdState ? (
         <button
           onClick={() => {
             const joinUrl = `https://play-knucklebones.web.app/joiningRoom/${multiplayerRoomState?.roomCode}`;
@@ -113,7 +127,7 @@ function WaitingRoomPage() {
       <div className="flex flex-col size-full justify-evenly items-center">
         <div className="flex flex-col">
           {awayPlayerState?.character === null ? (
-            <div className="h-32 w-32 bg-amber-100 rounded-lg"></div>
+            <div className="h-32 w-32 bg-surface rounded-lg"></div>
           ) : (
             <img
               src={awayPlayerState!.character!.characterImagePath}
@@ -127,7 +141,7 @@ function WaitingRoomPage() {
             {awayPlayerState?.character?.characterName ?? "Waiting..."}
           </h2>
         </div>
-        <div className="h-32 w-32 bg-tertiary rounded-full"></div>
+        <LoadingDie isConnected={isConnected} />
         <div className="flex flex-col">
           <h2 className="text-2xl font-bold">
             {homePlayerState?.character?.characterName}

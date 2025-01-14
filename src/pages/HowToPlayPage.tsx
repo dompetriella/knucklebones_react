@@ -11,6 +11,7 @@ import { characterDataList } from "../global/characterData";
 function HowToPlayPage() {
   const playerId = uuidv4();
   const dieId = uuidv4();
+
   return (
     <>
       <div className="relative flex w-full flex-col justify-start items-center bg-surface">
