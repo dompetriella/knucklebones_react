@@ -5,6 +5,7 @@ import { AppColors } from "../AppColors";
 import useGameState from "../state/gameState";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { PageHeader } from "../components/utility/PageHeader";
+import packageJson from "../../package.json";
 
 function StartPage() {
   const navigator = useNavigate();
@@ -12,7 +13,7 @@ function StartPage() {
 
   return (
     <>
-      <div className="flex size-full flex-col justify-start items-center bg-surface">
+      <div className="flex size-full flex-col justify-start items-center bg-surface relative">
         <PageHeader headerText="KnuckleBones" heightPercentage={33} />
         <div className="flex size-full flex-col justify-center items-center">
           <MenuButton
@@ -41,6 +42,9 @@ function StartPage() {
             }}
             shouldAnimate={false}
           />
+        </div>
+        <div className="absolute left-0 bottom-0 p-2">
+          {packageJson.version}
         </div>
       </div>
     </>
