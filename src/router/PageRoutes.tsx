@@ -12,6 +12,7 @@ import CreateRoomPage from "../pages/CreateRoomPage";
 import WaitingRoomPage from "../pages/WaitingRoomPage";
 import JoiningRoomPage from "../pages/JoiningRoomPage";
 import ConnectingRoomPage from "../pages/WaitingRoomPage";
+import SettingsPage from "../pages/SettingsPage";
 
 export function PageRoutes() {
   return (
@@ -32,12 +33,15 @@ export function PageRoutes() {
       ></Route>
       <Route path={AppRoutes.CreateRoom} element={<CreateRoomPage />}></Route>
       <Route path={AppRoutes.WaitingRoom} element={<WaitingRoomPage />}></Route>
-      <Route path={'joiningRoom/:roomCode?'} element={<JoiningRoomPage />}></Route>
+      <Route
+        path={"joiningRoom/:roomCode?"}
+        element={<JoiningRoomPage />}
+      ></Route>
       <Route
         path={AppRoutes.ConnectingRoom}
         element={<ConnectingRoomPage />}
       ></Route>
-
+      <Route path={AppRoutes.Settings} element={<SettingsPage />}></Route>
     </Routes>
   );
 }

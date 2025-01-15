@@ -11,4 +11,5 @@ export class AppRoutes {
   static readonly WaitingRoom = "/waitingRoom";
   static readonly JoiningRoom = "/joiningRoom";
   static readonly ConnectingRoom = "/connecting";
+  static readonly Settings = "/settings";
 }
