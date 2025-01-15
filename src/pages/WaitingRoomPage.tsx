@@ -12,6 +12,7 @@ import { Player } from "../models/Player";
 import { generateRandomInt } from "../logic/utility";
 import { CopyAll } from "@mui/icons-material";
 import LoadingDie from "../components/animation/loadingDie";
+import { AnimatePresence, motion } from "framer-motion";
 
 function WaitingRoomPage() {
   const appNavigator = useNavigate();
@@ -30,100 +31,106 @@ function WaitingRoomPage() {
 
   const [isConnected, setisConnected] = useState(false);
 
-  async function pollDatabaseForOtherPlayer(timer: NodeJS.Timeout) {
-    console.log("Polling for other player");
+  useEffect(() => {
+    let pollingInterval: ReturnType<typeof setInterval>;
 
-    try {
-      const { data, error } = await supabase
-        .from("knucklebones_players")
-        .select("*")
-        .eq("room_id", roomId);
+    const pollDatabaseForOtherPlayer = async () => {
+      console.log("Polling for other player");
 
-      if (error) {
-        console.error("Error fetching players:", error);
-        return;
-      }
+      try {
+        const { data, error } = await supabase
+          .from("knucklebones_players")
+          .select("*")
+          .eq("room_id", roomId);
 
-      if (data && data.length > 1) {
-        clearTimeout(timer);
-
-        console.log("Fetched players:", data);
-
-        const players: Player[] = data.map((dbPlayer) => {
-          const statePlayer = convertDatabasePlayerToPlayer(dbPlayer);
-          return statePlayer;
-        });
-        players.forEach((player) => setPlayerFromDatabaseData(player));
-
-        const coinTossWinner =
-          players[generateRandomInt({ max: players.length - 1 })];
-
-        const winningPlayer: Player | null = await setPlayerActivity(
-          true,
-          coinTossWinner.id
-        );
-
-        if (winningPlayer != null) {
-          setPlayerFromDatabaseData(winningPlayer);
-          setisConnected(() => true);
-
-          setTimeout(() => {
-            appNavigator(AppRoutes.CoinFlip);
-          }, 4000);
-        } else {
-          console.log("returned player was null, cannot start game");
+        if (error) {
+          console.error("Error fetching players:", error);
+          return;
         }
-      }
-    } catch (err) {
-      console.error("Polling error:", err);
-    }
-  }
 
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     pollDatabaseForOtherPlayer();
-  //   } else {
-  //     setisConnected(() => true);
-  //     if (intervalId) {
-  //       clearInterval(intervalId);
-  //       console.log("Polling stopped");
-  //     }
-  //     setTimeout(() => {
-  //       appNavigator(AppRoutes.CoinFlip);
-  //     }, 5000);
-  //   }
-  // }, []);
+        if (data && data.length > 1) {
+          console.log("Fetched players:", data);
+
+          clearInterval(pollingInterval); // Stop polling as we found the players
+
+          const players = data.map((dbPlayer) =>
+            convertDatabasePlayerToPlayer(dbPlayer)
+          );
+
+          players.forEach((player) => setPlayerFromDatabaseData(player));
+
+          const coinTossWinner =
+            players[generateRandomInt({ max: players.length - 1 })];
+
+          const winningPlayer = await setPlayerActivity(
+            true,
+            coinTossWinner.id
+          );
+
+          if (winningPlayer != null) {
+            setPlayerFromDatabaseData(winningPlayer);
+            setisConnected(() => true);
+
+            setTimeout(() => {
+              appNavigator(AppRoutes.CoinFlip);
+            }, 4000);
+          } else {
+            console.log("Returned player was null, cannot start game");
+          }
+        }
+      } catch (err) {
+        console.error("Polling error:", err);
+      }
+    };
+
+    // Start polling when the component mounts
+    pollingInterval = setInterval(pollDatabaseForOtherPlayer, 1000);
+
+    // Cleanup on component unmount
+    return () => {
+      clearInterval(pollingInterval);
+    };
+  }, []);
 
   return (
-    <div className="flex items-center flex-col size-full bg-surface">
+    <motion.div
+      layout
+      className="flex items-center flex-col size-full bg-surface"
+    >
       <PageHeader
         headerText={!isConnected ? "Connecting ..." : "Connected!"}
         returnRoute={AppRoutes.Start}
       />
-      {!isConnected && homePlayerState?.id === hostPlayerIdState ? (
-        <button
-          onClick={() => {
-            const joinUrl = `https://play-knucklebones.web.app/joiningRoom/${multiplayerRoomState?.roomCode}`;
-            navigator.clipboard.writeText(joinUrl).then(() => {
-              console.log(`Wrote ${joinUrl} to clipboard`);
-            });
-            showSnackbarAction(
-              `Share link for game copied to clipboard. \n\n ${joinUrl}`,
-              "success"
-            );
-          }}
-          className="flex flex-col m-4 p-2 w-56 rounded-xl  justify-center items-center bg-tertiary"
-        >
-          <h1 className="text-3xl">Room Code</h1>
-          <div className="flex justify-evenly items-center my-2 p-2 w-40 rounded-xl bg-surface">
-            <h2 className="text-3xl  font-bold">
-              {multiplayerRoomState?.roomCode}
-            </h2>
-            <div className="w-2"></div>
-            <CopyAll style={{ width: 32, height: 32 }} />
-          </div>
-        </button>
-      ) : null}
+      <AnimatePresence>
+        {!isConnected && homePlayerState?.id === hostPlayerIdState ? (
+          <motion.button
+            initial={{ scale: 1 }}
+            exit={{ scale: 0 }}
+            layout
+            onClick={() => {
+              const joinUrl = `https://play-knucklebones.web.app/joiningRoom/${multiplayerRoomState?.roomCode}`;
+              navigator.clipboard.writeText(joinUrl).then(() => {
+                console.log(`Wrote ${joinUrl} to clipboard`);
+              });
+              showSnackbarAction(
+                `Share link for game copied to clipboard. \n\n ${joinUrl}`,
+                "success"
+              );
+            }}
+            className="flex flex-col m-4 p-2 w-56 rounded-xl  justify-center items-center bg-tertiary"
+          >
+            <h1 className="text-3xl">Room Code</h1>
+            <div className="flex justify-evenly items-center my-2 p-2 w-40 rounded-xl bg-surface">
+              <h2 className="text-3xl  font-bold">
+                {multiplayerRoomState?.roomCode}
+              </h2>
+              <div className="w-2"></div>
+              <CopyAll style={{ width: 32, height: 32 }} />
+            </div>
+          </motion.button>
+        ) : null}
+      </AnimatePresence>
+
       <div className="flex flex-col size-full justify-evenly items-center">
         <div className="flex flex-col">
           {awayPlayerState?.character === null ? (
@@ -154,7 +161,7 @@ function WaitingRoomPage() {
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
