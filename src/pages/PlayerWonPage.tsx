@@ -16,7 +16,7 @@ function PlayerWonPage() {
   const playerTypeState = useGameState((state) => state.playerType);
 
   const resetStateAction = useGameState((state) => state.resetGameToDefault);
-  const resetGameOver = useGameState((state) => state.resetGameOver)
+  const resetGameOver = useGameState((state) => state.resetGameOver);
 
   const isMultiplayer = playerTypeState === PlayerTypeEnum.Human;
 
@@ -51,6 +51,7 @@ function PlayerWonPage() {
               await restartMultiplayerGame({
                 homePlayerState: homePlayerState!,
                 awayPlayerState: awayPlayerState!,
+                roomId: multiplayerRoomState?.id!,
               });
               navigator({ pathname: AppRoutes.WaitingRoom });
             } else {

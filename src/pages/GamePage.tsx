@@ -8,6 +8,7 @@ import { supabase } from "../App";
 import {
   convertDatabasePlayerToPlayer,
   getDiceDataForState,
+  getPlayerUpdateFromDatabase,
 } from "../logic/multiplayer";
 import { DatabaseTableNames } from "../global/databaseNames";
 import { DiceData } from "../models/DiceData";
@@ -42,16 +43,25 @@ function GamePage() {
 
   // checking for the first rolled die
   useEffect(() => {
-    const getCurrentNetworkDie = async () => {
+    const getStartingState = async () => {
       const networkDie: DiceData | null = await getDiceDataForState(
         multiplayerRoomState?.id!
       );
       if (networkDie !== usableDieState) {
         directlySetDieValueAction(networkDie);
       }
+      if (homePlayerState !== null) {
+        const homePlayer = await getPlayerUpdateFromDatabase(homePlayerState!);
+        setPlayerFromDatabaseData(homePlayer!);
+      }
+
+      if (awayPlayerState !== null) {
+        const awayPlayer = await getPlayerUpdateFromDatabase(awayPlayerState!);
+        setPlayerFromDatabaseData(awayPlayer!);
+      }
     };
     if (isMultiplayer) {
-      getCurrentNetworkDie();
+      getStartingState();
     }
   }, []);
 

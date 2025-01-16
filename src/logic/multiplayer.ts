@@ -529,9 +529,11 @@ export async function deleteGameByRoomId(roomId: number) {
 export async function restartMultiplayerGame({
   homePlayerState,
   awayPlayerState,
+  roomId,
 }: {
   homePlayerState: Player;
   awayPlayerState: Player;
+  roomId: number;
 }) {
   const updatedHomePlayer = homePlayerState.copyWith({
     score: 0,
@@ -546,4 +548,5 @@ export async function restartMultiplayerGame({
 
   await updatePlayerFromState(updatedHomePlayer);
   await updatePlayerFromState(updatedAwayPlayer);
+  await rollMultiplayerDice({ die: null, roomId: roomId });
 }

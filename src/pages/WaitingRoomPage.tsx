@@ -3,16 +3,15 @@ import { AppRoutes } from "../router/AppRoutes";
 import useGameState from "../state/gameState";
 import { PageHeader } from "../components/utility/PageHeader";
 import { supabase } from "../App";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   convertDatabasePlayerToPlayer,
   setPlayerActivity,
 } from "../logic/multiplayer";
-import { Player } from "../models/Player";
 import { generateRandomInt } from "../logic/utility";
 import { CopyAll } from "@mui/icons-material";
-import LoadingDie from "../components/animation/loadingDie";
 import { AnimatePresence, motion } from "framer-motion";
+import LoadingDie from "../components/animation/LoadingDie";
 
 function WaitingRoomPage() {
   const appNavigator = useNavigate();
