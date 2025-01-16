@@ -11,7 +11,7 @@ export function PageHeader({
 }) {
   return (
     <div
-      style={{ height: `${heightPercentage}%` }}
+      style={{ minHeight: `${heightPercentage}%` }}
       className="flex w-full items-center relative"
     >
       {returnRoute != null ? <BackButton route={returnRoute!} /> : null}
