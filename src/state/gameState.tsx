@@ -61,7 +61,7 @@ interface GameState {
   startGame: () => void;
   beginFirstTurn: () => Promise<void>;
   endGame: () => Promise<void>;
-  resetGameOver: () => Promise<void>
+  resetGameOver: () => Promise<void>;
 
   // Dice
   usableDie: DiceData | null;
@@ -102,7 +102,7 @@ const useGameState = create<GameState>((set, get) => ({
   },
 
   async resetGameOver() {
-    set({ gameHasEnded: false})
+    set({ gameHasEnded: false });
   },
 
   async startGame() {
@@ -322,9 +322,9 @@ const useGameState = create<GameState>((set, get) => ({
       }
 
       // update the player's dice and state to DB
-      if (isMultiplayer) {
-        await updatePlayerFromState(updatedPlayer);
-      }
+      // if (isMultiplayer) {
+      //   await updatePlayerFromState(updatedPlayer);
+      // }
 
       const currentHomePlayerState = get().homePlayer;
       const currentAwayPlayerState = get().awayPlayer;
@@ -363,10 +363,8 @@ const useGameState = create<GameState>((set, get) => ({
       await get().updateGameScore();
       if (isMultiplayer) {
         const scoredHomePlayerState = get().homePlayer;
-        const scoredAwayPlayerState = get().awayPlayer;
 
         await updatePlayerFromState(scoredHomePlayerState!);
-        await updatePlayerFromState(scoredAwayPlayerState!);
       }
       // End player turn (includes swapping player)
       await get().endPlayerTurn();

@@ -59,24 +59,24 @@ function WaitingRoomPage() {
 
           players.forEach((player) => setPlayerFromDatabaseData(player));
 
-          const coinTossWinner =
-            players[generateRandomInt({ max: players.length - 1 })];
+          if (players[0].id === homePlayerState?.id) {
+            const coinTossWinner =
+              players[generateRandomInt({ max: players.length - 1 })];
 
-          const winningPlayer = await setPlayerActivity(
-            true,
-            coinTossWinner.id
-          );
-
-          if (winningPlayer != null) {
-            setPlayerFromDatabaseData(winningPlayer);
-            setisConnected(() => true);
-
-            setTimeout(() => {
-              appNavigator(AppRoutes.CoinFlip);
-            }, 4000);
+            const winningPlayer = await setPlayerActivity(
+              true,
+              coinTossWinner.id
+            );
+            if (winningPlayer != null) {
+              setPlayerFromDatabaseData(winningPlayer);
+            }
           } else {
             console.log("Returned player was null, cannot start game");
           }
+          setisConnected(() => true);
+          setTimeout(() => {
+            appNavigator(AppRoutes.CoinFlip);
+          }, 4000);
         }
       } catch (err) {
         console.error("Polling error:", err);
