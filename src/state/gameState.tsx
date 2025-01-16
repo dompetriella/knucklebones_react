@@ -19,6 +19,7 @@ import {
   updatePlayerFromState,
 } from "../logic/multiplayer";
 import { emptyDiceArray } from "../global/utility";
+import { SettingsKeys } from "../global/settingsKeys";
 
 const homePlayerId = uuidv4();
 const awayPlayerId = uuidv4();
@@ -41,6 +42,16 @@ export const defaultGameState = {
   gameHasEnded: false,
   multiplayerRoom: null,
   hostPlayerId: "",
+};
+
+interface DefaultSettingsState {
+  [key: string]: boolean;
+}
+
+const defaultSettingsState = {
+  [SettingsKeys.SoundEffects]: false,
+  [SettingsKeys.GameAudio]: false,
+  [SettingsKeys.GameMusicVersion]: false,
 };
 
 interface GameState {
@@ -92,6 +103,9 @@ interface GameState {
     severity?: "info" | "success" | "warning" | "error"
   ) => void;
   hideSnackbar: () => void;
+
+  settings: DefaultSettingsState;
+  toggleSettings: (settingsKey: string) => void;
 }
 
 const useGameState = create<GameState>((set, get) => ({
@@ -554,6 +568,14 @@ const useGameState = create<GameState>((set, get) => ({
         severity: "info",
       },
     });
+  },
+
+  settings: defaultSettingsState,
+
+  toggleSettings: (settingsKey: string) => {
+    let mutableSettings = get().settings;
+    mutableSettings[settingsKey] = !mutableSettings[settingsKey];
+    set({ settings: mutableSettings });
   },
 }));
 

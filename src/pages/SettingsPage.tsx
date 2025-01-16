@@ -1,14 +1,37 @@
-import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 import { PageHeader } from "../components/utility/PageHeader";
-import { PageRoutes } from "../router/PageRoutes";
+import { SettingsToggle } from "../components/settings/SettingsToggle";
+import { SettingsKeys } from "../global/settingsKeys";
+import useGameState from "../state/gameState";
 
 function SettingsPage() {
-  const navigator = useNavigate();
+  const hasAudio = useGameState(
+    (state) => state.settings[SettingsKeys.GameAudio]
+  );
   return (
     <>
-      <div className="flex size-full flex-col justify-start items-center bg-surface relative">
+      <div className="flex h-full flex-col justify-start">
         <PageHeader headerText="Settings" returnRoute={AppRoutes.Start} />
+        <div className="flex h-full flex-wrap justify-center bg-surface">
+          <SettingsToggle
+            title={"Game Audio"}
+            settingsKey={SettingsKeys.GameAudio}
+          />
+          {hasAudio ? (
+            <SettingsToggle
+              title={"Sound Effects"}
+              settingsKey={SettingsKeys.SoundEffects}
+            />
+          ) : null}
+          {hasAudio ? (
+            <SettingsToggle
+              title={"Game Music"}
+              settingsKey={SettingsKeys.GameMusicVersion}
+              offSubtitle={"Classic"}
+              onSubtitle={"Modern"}
+            />
+          ) : null}
+        </div>
       </div>
     </>
   );
