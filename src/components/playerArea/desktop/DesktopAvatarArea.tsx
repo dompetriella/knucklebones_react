@@ -19,7 +19,9 @@ export function DesktopAvatarArea({
   flipX?: boolean
 }) {
 
-  return <div className="flex flex-col justify-center items-center">
+  const screenWidthState = useScreenWidth();
+
+  return <div className="flex flex-col justify-start items-start">
     <img
     className={ flipX ? `transform scale-x-[-1]` : ''}
       src={`/${player.character?.characterImagePath}`}
@@ -28,7 +30,7 @@ export function DesktopAvatarArea({
     />
     <div
       style={{ background: playerColor.secondary, width: imageSize }}
-      className="flex justify-center rounded-xl py-4"
+      className="flex justify-center rounded-xl py-4 mt-[-32px]"
     >
       <DiceSlot player={player} diceData={usableDie} />
     </div>

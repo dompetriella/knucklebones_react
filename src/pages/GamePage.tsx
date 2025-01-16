@@ -250,21 +250,30 @@ function GamePage() {
     </div>
   );
 
+
   // return (
-  //   <div className="relative flex size-full flex-col justify-evenly items-center bg-surface">
-  //     {gameHasEndedState ? null : (
-  //       <PlayerArea player={awayPlayerState} isHomePlayer={false} />
-  //     )}
-  //     <div className="flex w-full flex-col justify-evenly ">
-  //       <Scoreboard
-  //         homePlayerState={homePlayerState!}
-  //         awayPlayerState={awayPlayerState!}
-  //         usableDieState={usableDieState}
-  //       />
-  //     </div>
-  //     {gameHasEndedState ? null : (
-  //       <PlayerArea player={homePlayerState} isHomePlayer={true} />
-  //     )}
+  //   <div className="relative flex size-full flex-col justify-evenly bg-surface">
+  //     <PlayerArea
+  //       player={awayPlayerState}
+  //       isHomePlayer={false}
+  //       usableDie={usableDieState}
+  //     />
+
+  //     {isMobile ? (
+  //       <div className="flex w-full flex-col justify-evenly ">
+  //         <Scoreboard
+  //           homePlayerState={homePlayerState!}
+  //           awayPlayerState={awayPlayerState!}
+  //           usableDieState={usableDieState}
+  //         />
+  //       </div>
+  //     ) : null}
+
+  //     <PlayerArea
+  //       player={homePlayerState}
+  //       isHomePlayer={true}
+  //       usableDie={usableDieState}
+  //     />
   //   </div>
   // );
 }

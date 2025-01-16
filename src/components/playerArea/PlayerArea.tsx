@@ -18,7 +18,6 @@ export function PlayerArea({
   isHomePlayer: boolean;
   usableDie: DiceData | null;
 }) {
-  const character = player?.character;
 
   const screenSizeState = useScreenWidth();
 
