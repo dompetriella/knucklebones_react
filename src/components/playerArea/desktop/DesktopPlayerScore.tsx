@@ -34,7 +34,7 @@ export function DesktopPlayerScore({
   const screenSizeState = useScreenWidth();
 
   const textSizeFactor: number = 0.0025;
-  const textSize = 16 * (screenSizeState * textSizeFactor);
+  const textSize = 14 * (screenSizeState * textSizeFactor);
 
   return (
     <div
@@ -51,7 +51,7 @@ export function DesktopPlayerScore({
         <motion.h1
           style={{
             color: playerColor.onPrimary,
-            fontSize: textSize,
+            fontSize: textSize * 2,
             scale: motionScale,
           }}
         >

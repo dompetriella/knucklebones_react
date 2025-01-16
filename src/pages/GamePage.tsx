@@ -214,68 +214,67 @@ function GamePage() {
     }
   }, []);
 
-  const testingHomePlayer = defaultGameState.homePlayer!.copyWith({
-    isActivePlayer: true,
-    character: characterDataList[0],
-  });
-  const testingAwayPlayer = defaultGameState.awayPlayer.copyWith({
-    isActivePlayer: false,
-    character: characterDataList[1],
-  });
-  const testingDiceData = new DiceData({ id: "0", numberValue: 4 });
-
-  return (
-    <div className="relative flex size-full flex-col justify-evenly bg-surface">
-      <PlayerArea
-        player={testingAwayPlayer}
-        isHomePlayer={false}
-        usableDie={testingDiceData}
-      />
-
-      {isMobile ? (
-        <div className="flex w-full flex-col justify-evenly ">
-          <Scoreboard
-            homePlayerState={testingHomePlayer}
-            awayPlayerState={testingAwayPlayer}
-            usableDieState={testingDiceData}
-          />
-        </div>
-      ) : null}
-
-      <PlayerArea
-        player={testingHomePlayer}
-        isHomePlayer={true}
-        usableDie={testingDiceData}
-      />
-    </div>
-  );
-
+  // const testingHomePlayer = defaultGameState.homePlayer!.copyWith({
+  //   isActivePlayer: true,
+  //   character: characterDataList[0],
+  // });
+  // const testingAwayPlayer = defaultGameState.awayPlayer.copyWith({
+  //   isActivePlayer: false,
+  //   character: characterDataList[1],
+  // });
+  // const testingDiceData = new DiceData({ id: "0", numberValue: 4 });
 
   // return (
   //   <div className="relative flex size-full flex-col justify-evenly bg-surface">
   //     <PlayerArea
-  //       player={awayPlayerState}
+  //       player={testingAwayPlayer}
   //       isHomePlayer={false}
-  //       usableDie={usableDieState}
+  //       usableDie={testingDiceData}
   //     />
 
   //     {isMobile ? (
   //       <div className="flex w-full flex-col justify-evenly ">
   //         <Scoreboard
-  //           homePlayerState={homePlayerState!}
-  //           awayPlayerState={awayPlayerState!}
-  //           usableDieState={usableDieState}
+  //           homePlayerState={testingHomePlayer}
+  //           awayPlayerState={testingAwayPlayer}
+  //           usableDieState={testingDiceData}
   //         />
   //       </div>
   //     ) : null}
 
   //     <PlayerArea
-  //       player={homePlayerState}
+  //       player={testingHomePlayer}
   //       isHomePlayer={true}
-  //       usableDie={usableDieState}
+  //       usableDie={testingDiceData}
   //     />
   //   </div>
   // );
+
+  return (
+    <div className="relative flex size-full flex-col justify-evenly bg-surface">
+      <PlayerArea
+        player={awayPlayerState}
+        isHomePlayer={false}
+        usableDie={usableDieState}
+      />
+
+      {isMobile ? (
+        <div className="flex w-full flex-col justify-evenly ">
+          <Scoreboard
+            homePlayerState={homePlayerState!}
+            awayPlayerState={awayPlayerState!}
+            usableDieState={usableDieState}
+          />
+        </div>
+      ) : null}
+
+      <PlayerArea
+        player={homePlayerState}
+        isHomePlayer={true}
+        usableDie={usableDieState}
+      />
+    </div>
+  );
 }
 
 export default GamePage;

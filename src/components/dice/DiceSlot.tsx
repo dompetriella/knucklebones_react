@@ -67,7 +67,7 @@ function DiceSlot({
           transition: {
             delay: diceData === null ? 0 : animationDelay,
             type: "spring",
-            stiffness: 400, // Increase for a snappier motion
+            stiffness: 400,
             damping: 28,
           },
         }}
