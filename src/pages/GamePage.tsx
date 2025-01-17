@@ -16,6 +16,9 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { characterDataList } from "../global/characterData";
 import useScreenWidth from "../hooks/useScreenWidth";
+import useSystemState from "../state/systemState";
+import { AudioFile } from "@mui/icons-material";
+import { AudioFileKeys } from "../global/soundKeys";
 
 function GamePage() {
   const navigator = useNavigate();
@@ -34,7 +37,6 @@ function GamePage() {
 
   const homePlayerState = useGameState((state) => state.homePlayer);
   const awayPlayerState = useGameState((state) => state.awayPlayer);
-  const gameHasEndedState = useGameState((state) => state.gameHasEnded);
   const playerType = useGameState((state) => state.playerType);
 
   const gameHasEnded = useGameState((state) => state.gameHasEnded);

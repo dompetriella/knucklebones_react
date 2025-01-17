@@ -14,10 +14,10 @@ function SettingsPage() {
             settingsKey={SettingsKeys.SoundEffects}
           />
 
-          <SettingsToggle
+          {/* <SettingsToggle
             title={"Background Music"}
             settingsKey={SettingsKeys.BackgroundMusic}
-          />
+          /> */}
         </div>
       </div>
     </>

@@ -20,6 +20,8 @@ import {
 } from "../logic/multiplayer";
 import { emptyDiceArray } from "../global/utility";
 import { SettingsKeys } from "../global/settingsKeys";
+import useSystemState from "./systemState";
+import { AudioFileKeys } from "../global/soundKeys";
 
 const homePlayerId = uuidv4();
 const awayPlayerId = uuidv4();
@@ -480,6 +482,12 @@ const useGameState = create<GameState>((set, get) => ({
         usableDie: stateDie,
       });
     }
+
+    const systemState = useSystemState.getState();
+    setTimeout(() => {
+      systemState.playSoundEffect(AudioFileKeys.DieRollSoundEffect)
+    }, 1000)
+
   },
 
   async setMultiplayerRoom(room: MultiplayerRoom) {
