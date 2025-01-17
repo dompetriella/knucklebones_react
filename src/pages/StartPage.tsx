@@ -6,10 +6,12 @@ import useGameState from "../state/gameState";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import packageJson from "../../package.json";
 import { Settings, SettingsApplicationsOutlined } from "@mui/icons-material";
+import useScreenWidth from "../hooks/useScreenWidth";
 
 function StartPage() {
   const navigator = useNavigate();
   const setPlayerTypeAction = useGameState((state) => state.setPlayerType);
+  const screenWidthState = useScreenWidth();
 
   return (
     <>
@@ -19,7 +21,11 @@ function StartPage() {
           className="flex w-full items-center relative"
         >
           <div className="bg-secondary w-full h-full flex justify-center border-b-4 border-onSurface items-center">
-            <img className="p-12" src="/Title.svg" />
+            <img
+              style={{ width: screenWidthState * 0.9, maxWidth: 600 }}
+              className="p-12"
+              src="/Title.svg"
+            />
           </div>
         </div>
         <div className="flex size-full flex-col justify-center items-center">
