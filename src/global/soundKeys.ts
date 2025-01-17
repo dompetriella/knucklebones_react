@@ -3,5 +3,5 @@ export class AudioFileKeys {
 }
 
 export const SoundFiles = {
-  buttonClick: "/sounds/soundEffects/snap.mp3",
+  buttonClick: "/sounds/soundEffects/tap.mp3",
 };

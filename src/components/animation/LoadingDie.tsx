@@ -28,7 +28,7 @@ export function LoadingDie({ isConnected }: { isConnected: boolean }) {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <RiveComponent style={{ width: 160, height: 160 }} />
+      <RiveComponent style={{ width: 128, height: 128 }} />
     </div>
   );
 }

@@ -93,7 +93,7 @@ function WaitingRoomPage() {
   }, []);
 
   return (
-    <motion.div layout className="flex items-center flex-col h-svh bg-surface">
+    <motion.div layout className="flex items-center flex-col h-svh bg-surface pb-16">
       <PageHeader
         headerText={!isConnected ? "Connecting ..." : "Connected!"}
         returnRoute={AppRoutes.Start}
