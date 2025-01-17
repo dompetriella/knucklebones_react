@@ -44,16 +44,6 @@ export const defaultGameState = {
   hostPlayerId: "",
 };
 
-interface DefaultSettingsState {
-  [key: string]: boolean;
-}
-
-const defaultSettingsState = {
-  [SettingsKeys.SoundEffects]: false,
-  [SettingsKeys.GameAudio]: false,
-  [SettingsKeys.GameMusicVersion]: false,
-};
-
 interface GameState {
   // Player
   homePlayer: Player | null;
@@ -91,21 +81,6 @@ interface GameState {
   setHostPlayerId: (id: string) => Promise<void>;
   setMultiplayerRoom: (room: MultiplayerRoom) => Promise<void>;
   setPlayerFromDatabaseData: (updatedPlayer: Player) => Promise<void>;
-
-  //Snackbar
-  snackbar: {
-    isOpen: boolean;
-    message: string;
-    severity: "info" | "success" | "warning" | "error";
-  };
-  showSnackbar: (
-    message: string,
-    severity?: "info" | "success" | "warning" | "error"
-  ) => void;
-  hideSnackbar: () => void;
-
-  settings: DefaultSettingsState;
-  toggleSettings: (settingsKey: string) => void;
 }
 
 const useGameState = create<GameState>((set, get) => ({
@@ -542,40 +517,6 @@ const useGameState = create<GameState>((set, get) => ({
 
   async setHostPlayerId(id: string) {
     set({ hostPlayerId: id });
-  },
-
-  snackbar: {
-    isOpen: false,
-    message: "",
-    severity: "info",
-  },
-
-  showSnackbar: (message, severity = "info") => {
-    set({
-      snackbar: {
-        isOpen: true,
-        message,
-        severity,
-      },
-    });
-  },
-
-  hideSnackbar: () => {
-    set({
-      snackbar: {
-        isOpen: false,
-        message: "",
-        severity: "info",
-      },
-    });
-  },
-
-  settings: defaultSettingsState,
-
-  toggleSettings: (settingsKey: string) => {
-    let mutableSettings = get().settings;
-    mutableSettings[settingsKey] = !mutableSettings[settingsKey];
-    set({ settings: mutableSettings });
   },
 }));
 

@@ -5,7 +5,7 @@ import { AppColors } from "../AppColors";
 import useGameState from "../state/gameState";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import packageJson from "../../package.json";
-import { Settings, SettingsApplicationsOutlined } from "@mui/icons-material";
+import { Settings } from "@mui/icons-material";
 import useScreenWidth from "../hooks/useScreenWidth";
 
 function StartPage() {
@@ -24,7 +24,7 @@ function StartPage() {
             <img
               style={{ width: screenWidthState * 0.9, maxWidth: 600 }}
               className="p-8"
-              src="/Title.svg"
+              src="/images/Title.svg"
             />
           </div>
         </div>

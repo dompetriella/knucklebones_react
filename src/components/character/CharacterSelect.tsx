@@ -6,6 +6,7 @@ import { characterDataList } from "../../global/characterData";
 import { AppColors } from "../../AppColors";
 import { motion } from "framer-motion";
 import useScreenWidth from "../../hooks/useScreenWidth";
+import useSystemState from "../../state/systemState";
 
 export function CharacterSelect({
   character,
@@ -28,7 +29,7 @@ export function CharacterSelect({
     (state) => state.setPlayerCharacter
   );
 
-  const showSnackbarAction = useGameState((state) => state.showSnackbar);
+  const showSnackbarAction = useSystemState((state) => state.showSnackbar);
 
   const isSelected = player.character === character;
 
@@ -79,7 +80,7 @@ export function CharacterSelect({
     >
       <img
         style={{ minHeight: 64, minWidth: 64, maxHeight: 160, maxWidth: 160 }}
-        src={`/${character.characterImagePath}`}
+        src={`${character.characterImagePath}`}
         alt={character.characterImageAlt}
         width={screenSizeState * sizeFactor}
         height={screenSizeState * sizeFactor}

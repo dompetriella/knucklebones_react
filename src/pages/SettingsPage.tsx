@@ -2,12 +2,8 @@ import { AppRoutes } from "../router/AppRoutes";
 import { PageHeader } from "../components/utility/PageHeader";
 import { SettingsToggle } from "../components/settings/SettingsToggle";
 import { SettingsKeys } from "../global/settingsKeys";
-import useGameState from "../state/gameState";
 
 function SettingsPage() {
-  const hasAudio = useGameState(
-    (state) => state.settings[SettingsKeys.GameAudio]
-  );
   return (
     <>
       <div className="flex h-full flex-col bg-surface justify-start">

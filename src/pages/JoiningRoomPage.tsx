@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PageHeader } from "../components/utility/PageHeader";
 import { Player } from "../models/Player";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
+import useSystemState from "../state/systemState";
 
 function JoiningRoomPage() {
   const { roomCode } = useParams();
@@ -19,7 +20,7 @@ function JoiningRoomPage() {
     (state) => state.setMultiplayerRoom
   );
 
-  const showSnackbarAction = useGameState((state) => state.showSnackbar);
+  const showSnackbarAction = useSystemState((state) => state.showSnackbar);
 
   const setPlayerTypeAction = useGameState((state) => state.setPlayerType);
   const setPlayerFromDatabaseDataAction = useGameState(

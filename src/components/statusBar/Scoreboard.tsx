@@ -15,7 +15,7 @@ export function Scoreboard({
     <div className="flex w-full items-center justify-evenly bg-surface">
       <img
         className="transform scale-x-[-1]"
-        src={`/${homePlayerState?.character?.characterImagePath}`}
+        src={`${homePlayerState?.character?.characterImagePath}`}
         alt={homePlayerState?.character?.characterImageAlt}
         width={80}
         height={80}
@@ -43,7 +43,7 @@ export function Scoreboard({
 
       <div className="flex-col items-center justify-center">
         <img
-          src={`/${awayPlayerState?.character?.characterImagePath}`}
+          src={`${awayPlayerState?.character?.characterImagePath}`}
           alt={awayPlayerState?.character?.characterImageAlt}
           width={80}
           height={80}

@@ -3,6 +3,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import useGameState from "../../state/gameState";
 import { AppColors } from "../../AppColors";
+import useSystemState from "../../state/systemState";
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -12,8 +13,8 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const GlobalSnackbar: React.FC = () => {
-  const snackbar = useGameState((state) => state.snackbar);
-  const hideSnackbar = useGameState((state) => state.hideSnackbar);
+  const snackbar = useSystemState((state) => state.snackbar);
+  const hideSnackbar = useSystemState((state) => state.hideSnackbar);
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,

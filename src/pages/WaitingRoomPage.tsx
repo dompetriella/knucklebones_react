@@ -12,11 +12,12 @@ import { generateRandomInt } from "../logic/utility";
 import { CopyAll } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import LoadingDie from "../components/animation/LoadingDie";
+import useSystemState from "../state/systemState";
 
 function WaitingRoomPage() {
   const appNavigator = useNavigate();
 
-  const showSnackbarAction = useGameState((state) => state.showSnackbar);
+  const showSnackbarAction = useSystemState((state) => state.showSnackbar);
 
   const multiplayerRoomState = useGameState((state) => state.multiplayerRoom);
   const hostPlayerIdState = useGameState((state) => state.hostPlayerId);
@@ -92,10 +93,7 @@ function WaitingRoomPage() {
   }, []);
 
   return (
-    <motion.div
-      layout
-      className="flex items-center flex-col size-full bg-surface"
-    >
+    <motion.div layout className="flex items-center flex-col h-svh bg-surface">
       <PageHeader
         headerText={!isConnected ? "Connecting ..." : "Connected!"}
         returnRoute={AppRoutes.Start}
@@ -130,7 +128,7 @@ function WaitingRoomPage() {
         ) : null}
       </AnimatePresence>
 
-      <div className="flex flex-col size-full justify-evenly items-center">
+      <div className="flex flex-col justify-evenly items-center">
         <div className="flex flex-col">
           {awayPlayerState?.character === null ? (
             <div className="h-32 w-32 bg-surface rounded-lg"></div>

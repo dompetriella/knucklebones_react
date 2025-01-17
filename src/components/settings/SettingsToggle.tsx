@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { AppColors } from "../../AppColors";
 import { motion } from "framer-motion";
-import useGameState from "../../state/gameState";
+import useSystemState from "../../state/systemState";
 
 export function SettingsToggle({
   settingsKey,
@@ -14,8 +13,8 @@ export function SettingsToggle({
   offSubtitle?: string;
   onSubtitle?: string;
 }) {
-  const settingValue = useGameState((state) => state.settings[settingsKey]);
-  const toggleSettingAction = useGameState((state) => state.toggleSettings);
+  const settingValue = useSystemState((state) => state.settings[settingsKey]);
+  const toggleSettingAction = useSystemState((state) => state.toggleSettings);
 
   const toggleWidth: number = 160;
   const toggleHeight: number = 60;

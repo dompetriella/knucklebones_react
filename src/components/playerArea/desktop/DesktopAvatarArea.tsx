@@ -21,7 +21,7 @@ export function DesktopAvatarArea({
       <img
         style={{ zIndex: 2 }}
         className={flipX ? `transform scale-x-[-1]` : ""}
-        src={`/${player.character?.characterImagePath}`}
+        src={`${player.character?.characterImagePath}`}
         alt={player.character?.characterImageAlt}
         width={imageSize}
       />

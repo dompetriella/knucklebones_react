@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 export function LoadingDie({ isConnected }: { isConnected: boolean }) {
   const { rive, RiveComponent } = useRive({
-    src: "/dice_loading.riv",
+    src: "animations/dice_loading.riv",
     stateMachines: ["state_machine"],
     autoplay: true,
   });

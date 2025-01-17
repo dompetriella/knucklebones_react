@@ -10,13 +10,14 @@ import { characterDataList } from "../global/characterData";
 import useScreenWidth from "../hooks/useScreenWidth";
 import { MenuButton } from "../components/utility/MenuButton";
 import useGameState from "../state/gameState";
+import useSystemState from "../state/systemState";
 
 function HowToPlayPage() {
   const playerId = uuidv4();
   const dieId = "1";
 
   const screenWidthState = useScreenWidth();
-  const showSnackbarAction = useGameState((state) => state.showSnackbar);
+  const showSnackbarAction = useSystemState((state) => state.showSnackbar);
 
   return (
     <>
@@ -26,7 +27,7 @@ function HowToPlayPage() {
           <h1 className="text-3xl">How To Play</h1>
           <img
             style={{ width: screenWidthState * 0.9, maxWidth: 600 }}
-            src="/Title.svg"
+            src="/images/Title.svg"
           />
         </div>
 
