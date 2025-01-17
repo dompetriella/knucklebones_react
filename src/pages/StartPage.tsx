@@ -4,7 +4,6 @@ import { MenuButton } from "../components/utility/MenuButton";
 import { AppColors } from "../AppColors";
 import useGameState from "../state/gameState";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
-import { PageHeader } from "../components/utility/PageHeader";
 import packageJson from "../../package.json";
 import { Settings, SettingsApplicationsOutlined } from "@mui/icons-material";
 
@@ -15,7 +14,14 @@ function StartPage() {
   return (
     <>
       <div className="flex size-full flex-col justify-start items-center bg-surface relative">
-        <PageHeader headerText="KnuckleBones" heightPercentage={33} />
+        <div
+          style={{ minHeight: `${33}%` }}
+          className="flex w-full items-center relative"
+        >
+          <div className="bg-secondary w-full h-full flex justify-center border-b-4 border-onSurface items-center">
+            <img className="p-12" src="/Title.svg" />
+          </div>
+        </div>
         <div className="flex size-full flex-col justify-center items-center">
           <MenuButton
             text={"How To Play"}

@@ -10,27 +10,18 @@ function SettingsPage() {
   );
   return (
     <>
-      <div className="flex h-full flex-col justify-start">
+      <div className="flex h-full flex-col bg-surface justify-start">
         <PageHeader headerText="Settings" returnRoute={AppRoutes.Start} />
-        <div className="flex h-full flex-wrap justify-center bg-surface">
+        <div className="flex flex-col justify-center bg-surface">
           <SettingsToggle
-            title={"Game Audio"}
-            settingsKey={SettingsKeys.GameAudio}
+            title={"Sound Effects"}
+            settingsKey={SettingsKeys.SoundEffects}
           />
-          {hasAudio ? (
-            <SettingsToggle
-              title={"Sound Effects"}
-              settingsKey={SettingsKeys.SoundEffects}
-            />
-          ) : null}
-          {hasAudio ? (
-            <SettingsToggle
-              title={"Game Music"}
-              settingsKey={SettingsKeys.GameMusicVersion}
-              offSubtitle={"Classic"}
-              onSubtitle={"Modern"}
-            />
-          ) : null}
+
+          <SettingsToggle
+            title={"Background Music"}
+            settingsKey={SettingsKeys.BackgroundMusic}
+          />
         </div>
       </div>
     </>

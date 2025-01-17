@@ -27,8 +27,8 @@ export function SettingsToggle({
   const rightPadding: number = toggleWidth - buttonWidth - leftPadding * 2;
 
   return (
-    <div className="flex flex-col p-8">
-      <h1 className="text-3xl">{title}</h1>
+    <div className="flex flex-col items-center p-8">
+      <h1 className="text-3xl flex justify-center">{title}</h1>
       <motion.button
         onClick={() => toggleSettingAction(settingsKey)}
         initial={{ background: AppColors.OnTertiary }}
@@ -39,7 +39,7 @@ export function SettingsToggle({
           height: toggleHeight,
           width: toggleWidth,
         }}
-        className="relative flex items-center p-2 m-4 bg-secondary w-40 h-20 rounded-full border-4 border-onSurface "
+        className="relative flex justify-center items-center p-2 m-4 bg-secondary w-40 h-20 rounded-full border-4 border-onSurface "
       >
         <motion.div
           animate={{
