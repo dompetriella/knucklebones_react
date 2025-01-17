@@ -139,7 +139,6 @@ function GamePage() {
 
     const fetchDataIfNoUpdate = async () => {
       console.log("No update received in 10 seconds, making a network call...");
-      // Replace with your network call logic
       const die: DiceData | null = await getDiceDataForState(
         multiplayerRoomState?.id!
       );

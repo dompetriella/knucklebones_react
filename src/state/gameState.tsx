@@ -264,8 +264,6 @@ const useGameState = create<GameState>((set, get) => ({
     });
   },
 
-  // this is the big boy
-  // this one matters
   async addUsableDieToPlayerColumn(player: Player, columnIndex: number) {
     const selectedPlayer: Player = player;
     const usableDie = get().usableDie;
@@ -309,11 +307,6 @@ const useGameState = create<GameState>((set, get) => ({
           awayPlayer: updatedPlayer,
         });
       }
-
-      // update the player's dice and state to DB
-      // if (isMultiplayer) {
-      //   await updatePlayerFromState(updatedPlayer);
-      // }
 
       const currentHomePlayerState = get().homePlayer;
       const currentAwayPlayerState = get().awayPlayer;

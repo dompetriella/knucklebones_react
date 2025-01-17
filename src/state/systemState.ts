@@ -20,7 +20,6 @@ const defaultSettingsState = {
 };
 
 interface SystemState {
-  //Snackbar
   snackbar: {
     isOpen: boolean;
     message: string;
