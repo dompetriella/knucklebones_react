@@ -19,7 +19,6 @@ import {
   updatePlayerFromState,
 } from "../logic/multiplayer";
 import { emptyDiceArray } from "../global/utility";
-import { SettingsKeys } from "../global/settingsKeys";
 import useSystemState from "./systemState";
 import { AudioFileKeys } from "../global/soundKeys";
 

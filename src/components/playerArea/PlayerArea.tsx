@@ -1,9 +1,8 @@
-import { color } from "framer-motion";
+
 import useScreenWidth from "../../hooks/useScreenWidth";
 import { DiceData } from "../../models/DiceData";
 import { Player } from "../../models/Player";
 import { PlayerColor } from "../../models/PlayerColor";
-import DiceSlot from "../dice/DiceSlot";
 import { DesktopAvatarArea } from "./desktop/DesktopAvatarArea";
 import { DesktopPlayerScore } from "./desktop/DesktopPlayerScore";
 import { PlayerDiceBlock } from "./PlayerDiceBlock";

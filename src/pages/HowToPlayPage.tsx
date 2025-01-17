@@ -1,7 +1,6 @@
 import { AppRoutes } from "../router/AppRoutes";
 import { BackButton } from "../components/utility/BackButton";
 import { DiceData } from "../models/DiceData";
-import { PlayerColorEnum } from "../models/PlayerColorEnum";
 import { Player } from "../models/Player";
 import { PlayerDiceBlock } from "../components/playerArea/PlayerDiceBlock";
 import { Scoreboard } from "../components/statusBar/Scoreboard";
@@ -9,7 +8,6 @@ import { v4 as uuidv4 } from "uuid";
 import { characterDataList } from "../global/characterData";
 import useScreenWidth from "../hooks/useScreenWidth";
 import { MenuButton } from "../components/utility/MenuButton";
-import useGameState from "../state/gameState";
 import useSystemState from "../state/systemState";
 
 function HowToPlayPage() {
