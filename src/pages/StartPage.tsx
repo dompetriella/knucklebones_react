@@ -23,7 +23,7 @@ function StartPage() {
           <div className="bg-secondary w-full h-full flex justify-center border-b-4 border-onSurface items-center">
             <img
               style={{ width: screenWidthState * 0.9, maxWidth: 600 }}
-              className="p-12"
+              className="p-8"
               src="/Title.svg"
             />
           </div>

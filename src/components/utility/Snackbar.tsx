@@ -12,20 +12,18 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const GlobalSnackbar: React.FC = () => {
-  // Get the full snackbar object and the hideSnackbar method individually
-  const snackbar = useGameState((state) => state.snackbar); // Avoid creating new objects
+  const snackbar = useGameState((state) => state.snackbar);
   const hideSnackbar = useGameState((state) => state.hideSnackbar);
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
   ) => {
-    if (reason === "clickaway") {
-      return; // Prevent Snackbar from closing when the user clicks away
-    }
     hideSnackbar();
 
     if (event) {
+    }
+    if (reason) {
     }
   };
 
