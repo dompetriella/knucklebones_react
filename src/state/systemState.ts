@@ -36,7 +36,11 @@ interface SystemState {
 
   soundEffects: Sounds;
   playSoundEffect: (soundName: string) => void;
-  loadSoundEffects: (soundFiles: SoundFiles) => void;
+  loadSoundEffects: (soundFiles: SoundFiles) => Promise<void>;
+
+  backgroundMusicTracks: Sounds;
+  playBackgroundMusic: (soundName: string) => void;
+  loadBackgroundMusic: (soundFiles: SoundFiles) => Promise<void>;
 }
 
 const useSystemState = create<SystemState>((set, get) => ({
@@ -90,12 +94,40 @@ const useSystemState = create<SystemState>((set, get) => ({
     }
   },
 
-  loadSoundEffects: (soundFiles: SoundFiles) => {
+  async loadSoundEffects(soundFiles: SoundFiles) {
     const loadedSounds: Sounds = {};
     for (const [key, value] of Object.entries(soundFiles)) {
       loadedSounds[key] = new Audio(value);
     }
+    console.log('loaded sounds')
+    console.log(loadedSounds);
     set({ soundEffects: loadedSounds });
+  },
+
+  backgroundMusicTracks: {},
+
+  playBackgroundMusic: (soundName: string) => {
+    console.log("attempting to play sound");
+    const sounds = get().backgroundMusicTracks;
+    console.log("recieve sound effects");
+    console.log(sounds);
+    console.log(soundName);
+    const sound = sounds[soundName];
+    if (sound) {
+      console.log("found sound");
+      sound.currentTime = 0;
+      sound.play();
+    }
+  },
+
+  async loadBackgroundMusic(soundFiles: SoundFiles) {
+    const loadedSounds: Sounds = {};
+    for (const [key, value] of Object.entries(soundFiles)) {
+      loadedSounds[key] = new Audio(value);
+    }
+    console.log('loaded sounds')
+    console.log(loadedSounds);
+    set({ backgroundMusicTracks: loadedSounds });
   },
 }));
 

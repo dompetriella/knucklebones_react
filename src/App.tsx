@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import GlobalSnackbar from "./components/utility/Snackbar";
 import { useEffect } from "react";
 import useSystemState from "./state/systemState";
-import { SoundFiles } from "./global/soundKeys";
+import { BackgroundMusic, SoundFiles } from "./global/soundKeys";
 
 export const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL.toString(),
@@ -16,9 +16,21 @@ function App() {
   const loadSoundEffectAction = useSystemState(
     (state) => state.loadSoundEffects
   );
+  const loadBackgroundMusicAction = useSystemState((state) => state.loadBackgroundMusic);
 
   useEffect(() => {
-    loadSoundEffectAction(SoundFiles);
+    const handleLoad = async () => {
+      await loadSoundEffectAction(SoundFiles);
+      await loadBackgroundMusicAction(BackgroundMusic);
+    };
+
+    // Attach the event listener for when the window has fully loaded
+    window.addEventListener("load", handleLoad);
+
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener("load", handleLoad);
+    };
   }, []);
 
   return (

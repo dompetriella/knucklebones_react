@@ -7,11 +7,16 @@ import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import packageJson from "../../package.json";
 import { Settings } from "@mui/icons-material";
 import useScreenWidth from "../hooks/useScreenWidth";
+import useSystemState from "../state/systemState";
+import { AudioFileKeys } from "../global/soundKeys";
 
 function StartPage() {
   const navigator = useNavigate();
   const setPlayerTypeAction = useGameState((state) => state.setPlayerType);
+  const playBackgroundMusicAction = useSystemState((state) => state.playBackgroundMusic)
+
   const screenWidthState = useScreenWidth();
+
 
   return (
     <>
@@ -59,6 +64,11 @@ function StartPage() {
         <div className="absolute left-0 bottom-0 p-2 text-onSurface">
           {packageJson.version}
         </div>
+        <button onClick={() => {
+          playBackgroundMusicAction(AudioFileKeys.MenuTheme)
+        }} className="absolute right-0 bottom-0 p-2 text-onSurface">
+          {packageJson.version}
+        </button>
         <button
           onClick={() => navigator(AppRoutes.Settings)}
           className="hover:brightness-125 absolute right-0 top-0 m-2 bg-primary rounded-lg "
