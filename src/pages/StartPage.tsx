@@ -113,7 +113,7 @@ function StartPage() {
             />
           )}
         </button>
-        <button
+        {/* <button
           onClick={() => navigator(AppRoutes.Settings)}
           className="hover:brightness-125 absolute right-0 top-0 m-2 bg-primary rounded-lg "
         >
@@ -121,7 +121,7 @@ function StartPage() {
             className="p-2"
             style={{ width: 48, height: 48, color: AppColors.OnPrimary }}
           />
-        </button>
+        </button> */}
       </div>
     </>
   );

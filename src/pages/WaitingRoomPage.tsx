@@ -93,7 +93,10 @@ function WaitingRoomPage() {
   }, []);
 
   return (
-    <motion.div layout className="flex items-center flex-col h-svh bg-surface pb-16">
+    <motion.div
+      layout
+      className="flex items-center justify-center flex-col h-svh bg-surface pb-16 relative"
+    >
       <PageHeader
         headerText={!isConnected ? "Connecting ..." : "Connected!"}
         returnRoute={AppRoutes.Start}
@@ -128,7 +131,7 @@ function WaitingRoomPage() {
         ) : null}
       </AnimatePresence>
 
-      <div className="flex flex-col justify-evenly items-center">
+      <div className="flex flex-col justify-evenly items-center h-full">
         <div className="flex flex-col">
           {awayPlayerState?.character === null ? (
             <div className="h-32 w-32 bg-surface rounded-lg"></div>
