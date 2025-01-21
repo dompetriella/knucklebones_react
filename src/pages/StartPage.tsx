@@ -7,9 +7,9 @@ import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import packageJson from "../../package.json";
 import {
   MusicNote,
-  MusicNoteOutlined,
+  
   MusicOff,
-  Settings,
+  
 } from "@mui/icons-material";
 import useScreenWidth from "../hooks/useScreenWidth";
 import useSystemState from "../state/systemState";
