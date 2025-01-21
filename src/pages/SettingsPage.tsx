@@ -2,8 +2,29 @@ import { AppRoutes } from "../router/AppRoutes";
 import { PageHeader } from "../components/utility/PageHeader";
 import { SettingsToggle } from "../components/settings/SettingsToggle";
 import { SettingsKeys } from "../global/settingsKeys";
+import useSystemState from "../state/systemState";
+import { AudioFileKeys } from "../global/soundKeys";
+import { useEffect } from "react";
 
 function SettingsPage() {
+  const backgroundMusicOn = useSystemState(
+    (state) => state.settings[SettingsKeys.BackgroundMusic]
+  );
+  const playBackgroundMusicAction = useSystemState(
+    (state) => state.playBackgroundMusic
+  );
+  const pauseBackgroundMusicAction = useSystemState(
+    (state) => state.pauseBackgroundMusic
+  );
+
+  useEffect(() => {
+    if (backgroundMusicOn) {
+      playBackgroundMusicAction(AudioFileKeys.MenuTheme, false);
+    } else {
+      pauseBackgroundMusicAction(AudioFileKeys.MenuTheme, false);
+    }
+  }, [backgroundMusicOn]);
+
   return (
     <>
       <div className="flex h-full flex-col bg-surface justify-start">
@@ -14,10 +35,10 @@ function SettingsPage() {
             settingsKey={SettingsKeys.SoundEffects}
           />
 
-          {/* <SettingsToggle
+          <SettingsToggle
             title={"Background Music"}
             settingsKey={SettingsKeys.BackgroundMusic}
-          /> */}
+          />
         </div>
       </div>
     </>

@@ -15,6 +15,7 @@ import { DiceData } from "../models/DiceData";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import useScreenWidth from "../hooks/useScreenWidth";
+import useSystemState from "../state/systemState";
 
 function GamePage() {
   const navigator = useNavigate();

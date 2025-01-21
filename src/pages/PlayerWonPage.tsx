@@ -7,6 +7,10 @@ import {
   restartMultiplayerGame,
 } from "../logic/multiplayer";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
+import useSystemState from "../state/systemState";
+import { SettingsKeys } from "../global/settingsKeys";
+import { useEffect } from "react";
+import { AudioFileKeys } from "../global/soundKeys";
 
 function PlayerWonPage() {
   const navigator = useNavigate();
@@ -24,6 +28,36 @@ function PlayerWonPage() {
     homePlayerState!.score >= awayPlayerState!.score
       ? homePlayerState
       : awayPlayerState;
+
+  const soundEffectsOn = useSystemState(
+    (state) => state.settings[SettingsKeys.SoundEffects]
+  );
+
+  const backgroundMusicOn = useSystemState(
+    (state) => state.settings[SettingsKeys.BackgroundMusic]
+  );
+  const pauseBackgroundMusicAction = useSystemState(
+    (state) => state.pauseBackgroundMusic
+  );
+
+  const playBackgroundMusicAction = useSystemState(
+    (state) => state.playBackgroundMusic
+  );
+
+  const playSoundEffectAction = useSystemState(
+    (state) => state.playSoundEffect
+  );
+
+  useEffect(() => {
+    if (soundEffectsOn) {
+      playSoundEffectAction(AudioFileKeys.PlayerWinSoundEffect);
+    }
+
+    if (backgroundMusicOn) {
+      pauseBackgroundMusicAction(AudioFileKeys.MenuTheme, true);
+      pauseBackgroundMusicAction(AudioFileKeys.GameTheme, true);
+    }
+  }, [backgroundMusicOn]);
 
   return (
     <div className="size-full flex flex-col justify-around bg-surface">
@@ -58,6 +92,9 @@ function PlayerWonPage() {
               resetStateAction();
               navigator({ pathname: AppRoutes.ChooseCharacter });
             }
+            if (backgroundMusicOn) {
+              playBackgroundMusicAction(AudioFileKeys.GameTheme, true);
+            }
           }}
           animationDelay={0.5}
         />
@@ -69,6 +106,9 @@ function PlayerWonPage() {
             await resetStateAction();
             if (isMultiplayer && roomId !== null) {
               await deleteGameByRoomId(roomId!);
+            }
+            if (backgroundMusicOn) {
+              playBackgroundMusicAction(AudioFileKeys.MenuTheme, true);
             }
           }}
           animationDelay={1.0}

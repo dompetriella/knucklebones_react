@@ -39,8 +39,9 @@ interface SystemState {
   loadSoundEffects: (soundFiles: SoundFiles) => Promise<void>;
 
   backgroundMusicTracks: Sounds;
-  playBackgroundMusic: (soundName: string) => void;
+  playBackgroundMusic: (soundName: string, resetMusic: boolean) => void;
   loadBackgroundMusic: (soundFiles: SoundFiles) => Promise<void>;
+  pauseBackgroundMusic: (soundName: string, resetMusic: boolean) => void;
 }
 
 const useSystemState = create<SystemState>((set, get) => ({
@@ -99,14 +100,14 @@ const useSystemState = create<SystemState>((set, get) => ({
     for (const [key, value] of Object.entries(soundFiles)) {
       loadedSounds[key] = new Audio(value);
     }
-    console.log('loaded sounds')
+    console.log("loaded sounds");
     console.log(loadedSounds);
     set({ soundEffects: loadedSounds });
   },
 
   backgroundMusicTracks: {},
 
-  playBackgroundMusic: (soundName: string) => {
+  playBackgroundMusic: (soundName: string, resetMusic: boolean) => {
     console.log("attempting to play sound");
     const sounds = get().backgroundMusicTracks;
     console.log("recieve sound effects");
@@ -115,8 +116,23 @@ const useSystemState = create<SystemState>((set, get) => ({
     const sound = sounds[soundName];
     if (sound) {
       console.log("found sound");
-      sound.currentTime = 0;
+      if (resetMusic) {
+        sound.currentTime = 0;
+      }
+
+      sound.loop = true;
       sound.play();
+    }
+  },
+
+  pauseBackgroundMusic: (soundName: string, resetMusic: boolean) => {
+    const sounds = get().backgroundMusicTracks;
+    const sound = sounds[soundName];
+    if (sound) {
+      if (resetMusic) {
+        sound.currentTime = 0;
+      }
+      sound.pause();
     }
   },
 
@@ -125,7 +141,7 @@ const useSystemState = create<SystemState>((set, get) => ({
     for (const [key, value] of Object.entries(soundFiles)) {
       loadedSounds[key] = new Audio(value);
     }
-    console.log('loaded sounds')
+    console.log("loaded sounds");
     console.log(loadedSounds);
     set({ backgroundMusicTracks: loadedSounds });
   },

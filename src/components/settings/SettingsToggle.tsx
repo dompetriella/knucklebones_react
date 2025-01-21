@@ -29,7 +29,9 @@ export function SettingsToggle({
     <div className="flex flex-col items-center p-8">
       <h1 className="text-3xl flex justify-center">{title}</h1>
       <motion.button
-        onClick={() => toggleSettingAction(settingsKey)}
+        onClick={() => {
+          toggleSettingAction(settingsKey);
+        }}
         initial={{ background: AppColors.OnTertiary }}
         animate={{
           background: settingValue ? AppColors.OnPrimary : AppColors.OnTertiary,

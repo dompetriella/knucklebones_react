@@ -21,6 +21,7 @@ import {
 import { emptyDiceArray } from "../global/utility";
 import useSystemState from "./systemState";
 import { AudioFileKeys } from "../global/soundKeys";
+import { SettingsKeys } from "../global/settingsKeys";
 
 const homePlayerId = uuidv4();
 const awayPlayerId = uuidv4();
@@ -483,10 +484,11 @@ const useGameState = create<GameState>((set, get) => ({
     }
 
     const systemState = useSystemState.getState();
-    setTimeout(() => {
-      systemState.playSoundEffect(AudioFileKeys.DieRollSoundEffect)
-    }, 1000)
-
+    if (systemState.settings[SettingsKeys.SoundEffects]) {
+      setTimeout(() => {
+        systemState.playSoundEffect(AudioFileKeys.DieRollSoundEffect);
+      }, 1000);
+    }
   },
 
   async setMultiplayerRoom(room: MultiplayerRoom) {

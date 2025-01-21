@@ -5,18 +5,47 @@ import { AppColors } from "../AppColors";
 import useGameState from "../state/gameState";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import packageJson from "../../package.json";
-import { Settings } from "@mui/icons-material";
+import {
+  MusicNote,
+  MusicNoteOutlined,
+  MusicOff,
+  Settings,
+} from "@mui/icons-material";
 import useScreenWidth from "../hooks/useScreenWidth";
 import useSystemState from "../state/systemState";
 import { AudioFileKeys } from "../global/soundKeys";
+import { SettingsKeys } from "../global/settingsKeys";
+import { useEffect } from "react";
 
 function StartPage() {
   const navigator = useNavigate();
   const setPlayerTypeAction = useGameState((state) => state.setPlayerType);
-  const playBackgroundMusicAction = useSystemState((state) => state.playBackgroundMusic)
+
+  const toggleSettingAction = useSystemState((state) => state.toggleSettings);
+
+  const backgroundMusicOn = useSystemState(
+    (state) => state.settings[SettingsKeys.BackgroundMusic]
+  );
+  const soundEffectsOn = useSystemState(
+    (state) => state.settings[SettingsKeys.SoundEffects]
+  );
+
+  const playBackgroundMusicAction = useSystemState(
+    (state) => state.playBackgroundMusic
+  );
+  const pauseBackgroundMusicAction = useSystemState(
+    (state) => state.pauseBackgroundMusic
+  );
+
+  useEffect(() => {
+    if (backgroundMusicOn) {
+      playBackgroundMusicAction(AudioFileKeys.MenuTheme, false);
+    } else {
+      pauseBackgroundMusicAction(AudioFileKeys.MenuTheme, false);
+    }
+  }, [backgroundMusicOn]);
 
   const screenWidthState = useScreenWidth();
-
 
   return (
     <>
@@ -64,10 +93,25 @@ function StartPage() {
         <div className="absolute left-0 bottom-0 p-2 text-onSurface">
           {packageJson.version}
         </div>
-        <button onClick={() => {
-          playBackgroundMusicAction(AudioFileKeys.MenuTheme)
-        }} className="absolute right-0 bottom-0 p-2 text-onSurface">
-          {packageJson.version}
+        <button
+          onClick={() => {
+            toggleSettingAction(SettingsKeys.BackgroundMusic);
+            toggleSettingAction(SettingsKeys.SoundEffects);
+          }}
+          className="absolute bottom-0 right-0"
+        >
+          {" "}
+          {backgroundMusicOn && soundEffectsOn ? (
+            <MusicNote
+              className="p-2"
+              style={{ width: 48, height: 48, color: AppColors.Primary }}
+            />
+          ) : (
+            <MusicOff
+              className="p-2"
+              style={{ width: 48, height: 48, color: AppColors.OnSurface }}
+            />
+          )}
         </button>
         <button
           onClick={() => navigator(AppRoutes.Settings)}

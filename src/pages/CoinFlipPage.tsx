@@ -6,6 +6,9 @@ import { MenuButton } from "../components/utility/MenuButton";
 import { useEffect, useState } from "react";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import { getPlayerUpdateFromDatabase } from "../logic/multiplayer";
+import useSystemState from "../state/systemState";
+import { SettingsKeys } from "../global/settingsKeys";
+import { AudioFileKeys } from "../global/soundKeys";
 
 function CoinFlipPage() {
   const navigator = useNavigate();
@@ -46,6 +49,23 @@ function CoinFlipPage() {
   const startingPlayer: Player = homePlayerState!.isActivePlayer
     ? homePlayerState!
     : awayPlayerState!;
+
+  const backgroundMusicOn = useSystemState(
+    (state) => state.settings[SettingsKeys.BackgroundMusic]
+  );
+  const playBackgroundMusicAction = useSystemState(
+    (state) => state.playBackgroundMusic
+  );
+  const pauseBackgroundMusicAction = useSystemState(
+    (state) => state.pauseBackgroundMusic
+  );
+
+  useEffect(() => {
+    if (backgroundMusicOn) {
+      pauseBackgroundMusicAction(AudioFileKeys.MenuTheme, true);
+      playBackgroundMusicAction(AudioFileKeys.GameTheme, true);
+    }
+  }, [backgroundMusicOn]);
 
   if (loading) {
     return (
