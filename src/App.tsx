@@ -24,13 +24,9 @@ function App() {
       await loadBackgroundMusicAction(BackgroundMusic);
     };
 
-    // Attach the event listener for when the window has fully loaded
-    window.addEventListener("load", handleLoad);
-
-    // Clean up the event listener
-    return () => {
-      window.removeEventListener("load", handleLoad);
-    };
+    setTimeout(() => {
+      handleLoad()
+    }, 250)
   }, []);
 
   return (
