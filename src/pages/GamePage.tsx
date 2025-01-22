@@ -15,6 +15,9 @@ import { DiceData } from "../models/DiceData";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { PlayerTypeEnum } from "../models/PlayerTypeEnum";
 import useScreenWidth from "../hooks/useScreenWidth";
+import useSystemState from "../state/systemState";
+import { SettingsKeys } from "../global/settingsKeys";
+import { AudioFileKeys } from "../global/soundKeys";
 
 function GamePage() {
   const navigator = useNavigate();
@@ -38,6 +41,8 @@ function GamePage() {
   const gameHasEnded = useGameState((state) => state.gameHasEnded);
 
   const isMultiplayer = playerType === PlayerTypeEnum.Human;
+
+  const systemState = useSystemState();
 
   // checking for the first rolled die
   useEffect(() => {
@@ -101,6 +106,12 @@ function GamePage() {
 
                 if (updatedRow.usable_dice !== undefined) {
                   directlySetDieValueAction(updatedRow.usable_dice);
+                  if (updatedRow.usable_dice !== usableDieState) {
+                    setTimeout(() => {
+                      systemState.playSoundEffect(AudioFileKeys.DieRollSoundEffect);
+                    }, 1000);
+                  }
+
                 }
               } catch (payloadError) {
                 console.error("Error processing payload:", payloadError);
@@ -152,6 +163,11 @@ function GamePage() {
             `Manually recieved ${die.id}:${die.numberValue}, setting to state`
           );
           directlySetDieValueAction(die);
+          if (systemState.settings[SettingsKeys.SoundEffects]) {
+            setTimeout(() => {
+              systemState.playSoundEffect(AudioFileKeys.DieRollSoundEffect);
+            }, 1000);
+          }
         } else {
           console.log(
             "10 seconds of inactivity, but die data is already in state"
