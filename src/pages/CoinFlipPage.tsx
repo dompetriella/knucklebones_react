@@ -9,6 +9,7 @@ import { getPlayerUpdateFromDatabase } from "../logic/multiplayer";
 import useSystemState from "../state/systemState";
 import { SettingsKeys } from "../global/settingsKeys";
 import { AudioFileKeys } from "../global/soundKeys";
+import { useRive } from "@rive-app/react-canvas";
 
 function CoinFlipPage() {
   const navigator = useNavigate();
@@ -67,6 +68,12 @@ function CoinFlipPage() {
     }
   }, [backgroundMusicOn]);
 
+  const { rive, RiveComponent } = useRive({
+    src: startingPlayer.character?.characterImagePath,
+    stateMachines: ["state_machine"],
+    autoplay: true,
+  });
+
   if (loading) {
     return (
       <div className="bg-surface flex flex-col size-full justify-center items-center">
@@ -79,12 +86,7 @@ function CoinFlipPage() {
     <>
       <div className="bg-surface flex flex-col size-full justify-evenly items-center">
         <div className="flex flex-col justify-center items-center">
-          <img
-            src={startingPlayer.character?.characterImagePath}
-            alt={startingPlayer.character?.characterImageAlt}
-            height={250}
-            width={250}
-          />
+          <RiveComponent style={{ minHeight: 250, minWidth: 250 }} />
           <h1 className="text-[3em]">
             {startingPlayer?.character?.characterName + " "}
           </h1>

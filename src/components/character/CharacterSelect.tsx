@@ -7,6 +7,7 @@ import { AppColors } from "../../AppColors";
 import { motion } from "framer-motion";
 import useScreenWidth from "../../hooks/useScreenWidth";
 import useSystemState from "../../state/systemState";
+import { useRive } from "@rive-app/react-canvas";
 
 export function CharacterSelect({
   character,
@@ -41,17 +42,38 @@ export function CharacterSelect({
   const textSizeFactor: number = 0.0025;
   const textSize = 16 * (screenSizeState * textSizeFactor);
 
+  const { rive, RiveComponent } = useRive({
+    src: character.characterImagePath,
+    stateMachines: ["state_machine"],
+    autoplay: true,
+  });
+
+  function showUserPick() {
+    const input = rive
+      ?.stateMachineInputs("state_machine")
+      ?.find((input) => input.name === "happy_trigger");
+    input?.fire();
+    console.log(input);
+    if (input) {
+      input.value = true;
+      console.log("triggered");
+    }
+  }
+
+
   return (
     <motion.button
       animate={{
         background: `linear-gradient(${backgroundGradient}, ${AppColors.Surface})`,
       }}
       onClick={async () => {
+
         if (isAlreadySelected && isMultiplayer) {
           showSnackbarAction(
             `${character.characterName} is already selected by other player!  Choose another character`
           );
         } else {
+          showUserPick();
           setPlayerCharacterAction(character, player.id);
           if (gameTypeState !== PlayerTypeEnum.Human) {
             const remainingCharacters: Character[] = characterDataList.filter(
@@ -59,7 +81,7 @@ export function CharacterSelect({
             );
             setPlayerCharacterAction(
               remainingCharacters[
-                Math.floor(Math.random() * remainingCharacters.length)
+              Math.floor(Math.random() * remainingCharacters.length)
               ],
               awayPlayerState?.id!
             );
@@ -78,13 +100,14 @@ export function CharacterSelect({
       }}
       className=" m-2 border-onSurface border-4 shadow-xl rounded-xl flex flex-col justify-center items-center bg-surface"
     >
-      <img
+      <RiveComponent style={{ minHeight: 64, minWidth: 64, maxHeight: 160, maxWidth: 160 }} />
+      {/* <img
         style={{ minHeight: 64, minWidth: 64, maxHeight: 160, maxWidth: 160 }}
         src={`${character.characterImagePath}`}
         alt={character.characterImageAlt}
         width={screenSizeState * sizeFactor}
         height={screenSizeState * sizeFactor}
-      />
+      /> */}
       <h1
         style={{ fontSize: textSize > 40 ? 40 : textSize }}
         className="text-center"

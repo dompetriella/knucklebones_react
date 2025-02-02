@@ -6,7 +6,7 @@ export const characterDataList = [
   new Character({
     index: 0,
     characterName: "Axel",
-    characterImagePath: "images/RedPlayer.svg",
+    characterImagePath: "animations/frobert.riv",
     characterImageAlt: "a red axolotl",
     color: getColorByEnum(PlayerColorEnum.Red),
   }),
@@ -14,7 +14,7 @@ export const characterDataList = [
   new Character({
     index: 1,
     characterName: "Foxanne",
-    characterImagePath: "images/OrangePlayer.svg",
+    characterImagePath: "animations/frobert.riv",
     characterImageAlt: "a orange fox",
     color: getColorByEnum(PlayerColorEnum.Orange),
   }),
@@ -22,7 +22,7 @@ export const characterDataList = [
   new Character({
     index: 2,
     characterName: "Frobert",
-    characterImagePath: "images/GreenPlayer.svg",
+    characterImagePath: "animations/frobert.riv",
     characterImageAlt: "a green frog",
     color: getColorByEnum(PlayerColorEnum.Green),
   }),
@@ -30,7 +30,7 @@ export const characterDataList = [
   new Character({
     index: 3,
     characterName: "Batrick",
-    characterImagePath: "images/PurplePlayer.svg",
+    characterImagePath: "animations/frobert.riv",
     characterImageAlt: "a purple bat",
     color: getColorByEnum(PlayerColorEnum.Purple),
   }),

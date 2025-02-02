@@ -11,6 +11,7 @@ import useSystemState from "../state/systemState";
 import { SettingsKeys } from "../global/settingsKeys";
 import { useEffect } from "react";
 import { AudioFileKeys } from "../global/soundKeys";
+import { useRive } from "@rive-app/react-canvas";
 
 function PlayerWonPage() {
   const navigator = useNavigate();
@@ -59,19 +60,37 @@ function PlayerWonPage() {
     }
   }, [backgroundMusicOn]);
 
+  const { rive, RiveComponent } = useRive({
+    src: winningPlayer?.character?.characterImagePath,
+    stateMachines: ["state_machine"],
+    autoplay: true,
+  });
+
+  function playerWon() {
+    const input = rive
+      ?.stateMachineInputs("state_machine")
+      ?.find((input) => input.name === "happy_trigger");
+    input?.fire();
+    console.log(input);
+    if (input) {
+      input.value = true;
+      console.log("triggered");
+    }
+  }
+
+  useEffect(() => {
+    playerWon()
+  }, []);
+
+
   return (
     <div className="size-full flex flex-col justify-around bg-surface">
       <div className="flex flex-col">
         <h1 className="text-[4em] font-bold">{`${winningPlayer?.character?.characterName}\n\n Won!`}</h1>
         <div className="flex flex-col justify-start">
           <div className="flex flex-col self-center">
-            <img
-              src={winningPlayer?.character?.characterImagePath}
-              alt={winningPlayer?.character?.characterImageAlt}
-              width={256}
-              height={256}
-            />
-            <h2 className="text-[5em] m-[-0.75em] font-bold">{`${winningPlayer?.score}`}</h2>
+            <RiveComponent style={{ height: 250, width: 250 }} />
+            <h2 className="text-[5em] font-bold">{`${winningPlayer?.score}`}</h2>
           </div>
         </div>
       </div>

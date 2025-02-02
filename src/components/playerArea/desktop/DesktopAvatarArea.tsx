@@ -1,7 +1,10 @@
+import { useRive } from "@rive-app/react-canvas";
 import { DiceData } from "../../../models/DiceData";
 import { Player } from "../../../models/Player";
 import { PlayerColor } from "../../../models/PlayerColor";
 import DiceSlot from "../../dice/DiceSlot";
+import { AppColors } from "../../../AppColors";
+import { image } from "framer-motion/client";
 
 export function DesktopAvatarArea({
   player,
@@ -16,14 +19,16 @@ export function DesktopAvatarArea({
   imageSize: number;
   flipX?: boolean;
 }) {
+
+  const { rive, RiveComponent } = useRive({
+    src: player.character?.characterImagePath,
+    stateMachines: ["state_machine"],
+    autoplay: true,
+  });
+
   return (
     <div className="flex flex-col justify-center items-start overflow-clip">
-      <img
-        style={{ zIndex: 2 }}
-        className={flipX ? `transform scale-x-[-1]` : ""}
-        src={`${player.character?.characterImagePath}`}
-        alt={player.character?.characterImageAlt}
-        width={imageSize}
+      <RiveComponent style={{ zIndex: 2, height: imageSize, width: imageSize, transform: flipX ? "scaleX(-1)" : "" }}
       />
       <div
         style={{
