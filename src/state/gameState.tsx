@@ -310,8 +310,6 @@ const useGameState = create<GameState>((set, get) => ({
         });
       }
 
-
-
       const currentHomePlayerState = get().homePlayer;
       const currentAwayPlayerState = get().awayPlayer;
 
@@ -432,7 +430,6 @@ const useGameState = create<GameState>((set, get) => ({
       set({ awayPlayer: updatedPlayer });
     }
 
-
     const playerType = get().playerType;
     // if we're in multiplayer mode, update the player
     if (playerType === PlayerTypeEnum.Human) {
@@ -467,7 +464,8 @@ const useGameState = create<GameState>((set, get) => ({
       const multiplayerRoomState = get().multiplayerRoom;
       if (homePlayerState?.isActivePlayer) {
         console.log(
-          `Rolling for network, player ${homePlayerState!.character?.characterName
+          `Rolling for network, player ${
+            homePlayerState!.character?.characterName
           }: ${homePlayerState!.id}`
         );
         await rollMultiplayerDice({
@@ -526,5 +524,9 @@ const useGameState = create<GameState>((set, get) => ({
     set({ hostPlayerId: id });
   },
 }));
+
+if (import.meta.hot) {
+  import.meta.hot.accept();
+}
 
 export default useGameState;
