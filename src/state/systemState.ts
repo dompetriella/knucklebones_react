@@ -82,16 +82,18 @@ const useSystemState = create<SystemState>((set, get) => ({
   soundEffects: {},
 
   playSoundEffect: (soundName: string) => {
-    console.log("attempting to play sound");
-    const sounds = get().soundEffects;
-    console.log("recieve sound effects");
-    console.log(sounds);
-    console.log(soundName);
-    const sound = sounds[soundName];
-    if (sound) {
-      console.log("found sound");
-      sound.currentTime = 0;
-      sound.play();
+    if (get().settings[SettingsKeys.SoundEffects]) {
+      console.log("attempting to play sound");
+      const sounds = get().soundEffects;
+      console.log("recieve sound effects");
+      console.log(sounds);
+      console.log(soundName);
+      const sound = sounds[soundName];
+      if (sound) {
+        console.log("found sound");
+        sound.currentTime = 0;
+        sound.play();
+      }
     }
   },
 
@@ -108,20 +110,21 @@ const useSystemState = create<SystemState>((set, get) => ({
   backgroundMusicTracks: {},
 
   playBackgroundMusic: (soundName: string, resetMusic: boolean) => {
-    console.log("attempting to play sound");
-    const sounds = get().backgroundMusicTracks;
-    console.log("recieve sound effects");
-    console.log(sounds);
-    console.log(soundName);
-    const sound = sounds[soundName];
-    if (sound) {
-      console.log("found sound");
-      if (resetMusic) {
-        sound.currentTime = 0;
+    if (get().settings[SettingsKeys.BackgroundMusic]) {
+      console.log("attempting to play sound");
+      const sounds = get().backgroundMusicTracks;
+      console.log("recieve sound effects");
+      console.log(sounds);
+      console.log(soundName);
+      const sound = sounds[soundName];
+      if (sound) {
+        console.log("found sound");
+        if (resetMusic) {
+          sound.currentTime = 0;
+        }
+        sound.loop = true;
+        sound.play();
       }
-
-      sound.loop = true;
-      sound.play();
     }
   },
 

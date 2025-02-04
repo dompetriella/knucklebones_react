@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import useSystemState from "../../state/systemState";
-import { AudioFileKeys} from "../../global/soundKeys";
+import { AudioFileKeys } from "../../global/soundKeys";
 import { SettingsKeys } from "../../global/settingsKeys";
 
 export function MenuButton({
@@ -21,9 +21,6 @@ export function MenuButton({
   animationDelay?: number;
 }) {
   const playSoundEffect = useSystemState((state) => state.playSoundEffect);
-  const isSoundEffectsOn = useSystemState(
-    (state) => state.settings[SettingsKeys.SoundEffects]
-  );
 
   return (
     <>
@@ -41,9 +38,8 @@ export function MenuButton({
         }}
         onClick={() => {
           onPressed();
-          if (isSoundEffectsOn) {
-            playSoundEffect(AudioFileKeys.ButtonClickSoundEffect);
-          }
+
+          playSoundEffect(AudioFileKeys.ButtonClickSoundEffect);
         }}
         className=" py-6 px-10 my-4 bg-primary filter hover:brightness-125 
         text-2xl shadow-xl text-onPrimary rounded-lg border-4 border-onSurface"
