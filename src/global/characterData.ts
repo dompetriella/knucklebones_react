@@ -6,7 +6,7 @@ export const characterDataList = [
   new Character({
     index: 0,
     characterName: "Axel",
-    characterImagePath: "animations/frobert.riv",
+    characterImagePath: "animations/axel.riv",
     characterImageAlt: "a red axolotl",
     color: getColorByEnum(PlayerColorEnum.Red),
   }),

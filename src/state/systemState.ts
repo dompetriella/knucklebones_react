@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { SettingsKeys } from "../global/settingsKeys";
+import { Rive, RiveFile } from "@rive-app/react-canvas";
 
 interface DefaultSettingsState {
   [key: string]: boolean;

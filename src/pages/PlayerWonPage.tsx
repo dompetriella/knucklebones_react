@@ -79,9 +79,8 @@ function PlayerWonPage() {
   }
 
   useEffect(() => {
-    playerWon()
-  }, []);
-
+    playerWon();
+  }, [rive]);
 
   return (
     <div className="size-full flex flex-col justify-around bg-surface">
