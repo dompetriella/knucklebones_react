@@ -48,16 +48,12 @@ export function CharacterSelect({
     autoplay: true,
   });
 
-  function showUserPick() {
+  function showUserPickAnimation() {
     const input = rive
       ?.stateMachineInputs("state_machine")
       ?.find((input) => input.name === "happy_trigger");
     input?.fire();
     console.log(input);
-    if (input) {
-      input.value = true;
-      console.log("triggered");
-    }
   }
 
   return (
@@ -71,7 +67,7 @@ export function CharacterSelect({
             `${character.characterName} is already selected by other player!  Choose another character`
           );
         } else {
-          showUserPick();
+          showUserPickAnimation();
           setPlayerCharacterAction(character, player.id);
           if (gameTypeState !== PlayerTypeEnum.Human) {
             const remainingCharacters: Character[] = characterDataList.filter(

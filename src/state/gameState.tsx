@@ -83,6 +83,12 @@ interface GameState {
   setHostPlayerId: (id: string) => Promise<void>;
   setMultiplayerRoom: (room: MultiplayerRoom) => Promise<void>;
   setPlayerFromDatabaseData: (updatedPlayer: Player) => Promise<void>;
+
+  //Animation
+  setPlayerCharacterAnimationState: (
+    animationState: string,
+    playerId: string
+  ) => void;
 }
 
 const useGameState = create<GameState>((set, get) => ({
@@ -165,6 +171,8 @@ const useGameState = create<GameState>((set, get) => ({
       await updatePlayerFromState(updatedHomePlayer!);
       await updatePlayerFromState(updatedAwayPlayer!);
     }
+
+    get().setPlayerCharacterAnimationState("happy", updatedHomePlayer?.id!);
   },
 
   setPlayerType(playerType: PlayerTypeEnum) {
@@ -365,7 +373,6 @@ const useGameState = create<GameState>((set, get) => ({
     columnIndex: number
   ) {
     let otherPlayer: Player | null;
-    const systemState = useSystemState.getState();
 
     if (playerOfOrigin.id == get().homePlayer!.id) {
       otherPlayer = get().awayPlayer;
@@ -522,6 +529,23 @@ const useGameState = create<GameState>((set, get) => ({
 
   async setHostPlayerId(id: string) {
     set({ hostPlayerId: id });
+  },
+
+  setPlayerCharacterAnimationState(animationState: string, playerId: string) {
+    const player: Player =
+      get().homePlayer?.id === playerId ? get().homePlayer! : get().awayPlayer!;
+    const updatedCharacterState: Character = player.character!.copyWith({
+      animationTrigger: animationState,
+    });
+    const updatedPlayer: Player = player.copyWith({
+      character: updatedCharacterState,
+    });
+
+    if (get().homePlayer!.id === playerId) {
+      set({ homePlayer: updatedPlayer });
+    } else {
+      set({ awayPlayer: updatedPlayer });
+    }
   },
 }));
 

@@ -5,6 +5,8 @@ import { PlayerColor } from "../../../models/PlayerColor";
 import DiceSlot from "../../dice/DiceSlot";
 import { AppColors } from "../../../AppColors";
 import { image } from "framer-motion/client";
+import useGameState from "../../../state/gameState";
+import { useEffect } from "react";
 
 export function DesktopAvatarArea({
   player,
@@ -19,16 +21,32 @@ export function DesktopAvatarArea({
   imageSize: number;
   flipX?: boolean;
 }) {
-
   const { rive, RiveComponent } = useRive({
     src: player.character?.characterImagePath,
     stateMachines: ["state_machine"],
     autoplay: true,
   });
 
+  const animationTriggerState = useGameState(
+    (state) => state.homePlayer?.character?.animationTrigger
+  );
+
+  useEffect(() => {
+    const input = rive
+      ?.stateMachineInputs("state_machine")
+      ?.find((input) => input.name === `${animationTriggerState}_trigger`);
+    input?.fire();
+  }, [animationTriggerState]);
+
   return (
     <div className="flex flex-col justify-center items-start overflow-clip">
-      <RiveComponent style={{ zIndex: 2, height: imageSize, width: imageSize, transform: flipX ? "scaleX(-1)" : "" }}
+      <RiveComponent
+        style={{
+          zIndex: 2,
+          height: imageSize,
+          width: imageSize,
+          transform: flipX ? "scaleX(-1)" : "",
+        }}
       />
       <div
         style={{

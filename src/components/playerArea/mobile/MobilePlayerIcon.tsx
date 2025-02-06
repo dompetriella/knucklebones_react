@@ -1,5 +1,7 @@
 import { useRive } from "@rive-app/react-canvas";
 import { Player } from "../../../models/Player";
+import useGameState from "../../../state/gameState";
+import { useEffect } from "react";
 
 export function MobilePlayerIcon({
   player,
@@ -13,6 +15,18 @@ export function MobilePlayerIcon({
     stateMachines: ["state_machine"],
     autoplay: true,
   });
+
+  const animationTriggerState = useGameState(
+    (state) => state.homePlayer?.character?.animationTrigger
+  );
+
+  useEffect(() => {
+    const input = rive
+      ?.stateMachineInputs("state_machine")
+      ?.find((input) => input.name === `${animationTriggerState}_trigger`);
+    input?.fire();
+  }, [animationTriggerState]);
+
   return (
     <>
       <div>
