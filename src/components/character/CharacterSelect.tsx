@@ -67,7 +67,7 @@ export function CharacterSelect({
             `${character.characterName} is already selected by other player!  Choose another character`
           );
         } else {
-          showUserPickAnimation();
+          // showUserPickAnimation();
           setPlayerCharacterAction(character, player.id);
           if (gameTypeState !== PlayerTypeEnum.Human) {
             const remainingCharacters: Character[] = characterDataList.filter(
