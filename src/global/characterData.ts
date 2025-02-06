@@ -14,7 +14,7 @@ export const characterDataList = [
   new Character({
     index: 1,
     characterName: "Foxanne",
-    characterImagePath: "animations/frobert.riv",
+    characterImagePath: "animations/foxanne.riv",
     characterImageAlt: "a orange fox",
     color: getColorByEnum(PlayerColorEnum.Orange),
   }),
@@ -30,7 +30,7 @@ export const characterDataList = [
   new Character({
     index: 3,
     characterName: "Batrick",
-    characterImagePath: "animations/frobert.riv",
+    characterImagePath: "animations/batrick.riv",
     characterImageAlt: "a purple bat",
     color: getColorByEnum(PlayerColorEnum.Purple),
   }),
