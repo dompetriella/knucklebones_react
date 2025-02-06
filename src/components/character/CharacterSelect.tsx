@@ -60,14 +60,12 @@ export function CharacterSelect({
     }
   }
 
-
   return (
     <motion.button
       animate={{
         background: `linear-gradient(${backgroundGradient}, ${AppColors.Surface})`,
       }}
       onClick={async () => {
-
         if (isAlreadySelected && isMultiplayer) {
           showSnackbarAction(
             `${character.characterName} is already selected by other player!  Choose another character`
@@ -81,7 +79,7 @@ export function CharacterSelect({
             );
             setPlayerCharacterAction(
               remainingCharacters[
-              Math.floor(Math.random() * remainingCharacters.length)
+                Math.floor(Math.random() * remainingCharacters.length)
               ],
               awayPlayerState?.id!
             );
@@ -100,14 +98,10 @@ export function CharacterSelect({
       }}
       className=" m-2 border-onSurface border-4 shadow-xl rounded-xl flex flex-col justify-center items-center bg-surface"
     >
-      <RiveComponent style={{ minHeight: 64, minWidth: 64, maxHeight: 160, maxWidth: 160 }} />
-      {/* <img
+      <RiveComponent
+        aria-label={character.characterImageAlt}
         style={{ minHeight: 64, minWidth: 64, maxHeight: 160, maxWidth: 160 }}
-        src={`${character.characterImagePath}`}
-        alt={character.characterImageAlt}
-        width={screenSizeState * sizeFactor}
-        height={screenSizeState * sizeFactor}
-      /> */}
+      />
       <h1
         style={{ fontSize: textSize > 40 ? 40 : textSize }}
         className="text-center"

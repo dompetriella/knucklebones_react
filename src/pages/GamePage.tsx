@@ -3,7 +3,7 @@ import { PlayerArea } from "../components/playerArea/PlayerArea";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../router/AppRoutes";
 import { useEffect } from "react";
-import { Scoreboard } from "../components/statusBar/Scoreboard";
+import { Scoreboard } from "../components/playerArea/mobile/Scoreboard";
 import { supabase } from "../App";
 import {
   convertDatabasePlayerToPlayer,
@@ -108,10 +108,11 @@ function GamePage() {
                   directlySetDieValueAction(updatedRow.usable_dice);
                   if (updatedRow.usable_dice !== usableDieState) {
                     setTimeout(() => {
-                      systemState.playSoundEffect(AudioFileKeys.DieRollSoundEffect);
+                      systemState.playSoundEffect(
+                        AudioFileKeys.DieRollSoundEffect
+                      );
                     }, 1000);
                   }
-
                 }
               } catch (payloadError) {
                 console.error("Error processing payload:", payloadError);

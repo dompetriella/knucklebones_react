@@ -1,6 +1,8 @@
-import { DiceData } from "../../models/DiceData";
-import { Player } from "../../models/Player";
-import DiceSlot from "../dice/DiceSlot";
+import { useRive } from "@rive-app/react-canvas";
+import { DiceData } from "../../../models/DiceData";
+import { Player } from "../../../models/Player";
+import DiceSlot from "../../dice/DiceSlot";
+import { MobilePlayerIcon } from "./MobilePlayerIcon";
 
 export function Scoreboard({
   homePlayerState,
@@ -13,14 +15,7 @@ export function Scoreboard({
 }) {
   return (
     <div className="flex w-full items-center justify-evenly bg-surface">
-      <img
-        className="transform scale-x-[-1]"
-        src={`${homePlayerState?.character?.characterImagePath}`}
-        alt={homePlayerState?.character?.characterImageAlt}
-        width={80}
-        height={80}
-      />
-
+      <MobilePlayerIcon player={homePlayerState} isXFlipped={true} />
       <div className="flex py-4">
         <DiceSlot
           diceData={homePlayerState?.isActivePlayer ? usableDieState : null}
@@ -42,12 +37,7 @@ export function Scoreboard({
       </div>
 
       <div className="flex-col items-center justify-center">
-        <img
-          src={`${awayPlayerState?.character?.characterImagePath}`}
-          alt={awayPlayerState?.character?.characterImageAlt}
-          width={80}
-          height={80}
-        />
+        <MobilePlayerIcon player={awayPlayerState} isXFlipped={false} />
       </div>
     </div>
   );
