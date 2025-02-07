@@ -6,7 +6,7 @@ import GlobalSnackbar from "./components/utility/Snackbar";
 import { useEffect } from "react";
 import useSystemState from "./state/systemState";
 import { BackgroundMusic, SoundFiles } from "./global/soundKeys";
-import { useRive, useRiveFile } from "@rive-app/react-canvas";
+import { useRiveFile } from "@rive-app/react-canvas";
 import { characterDataList } from "./global/characterData";
 
 export const supabase = createClient(

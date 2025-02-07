@@ -68,7 +68,7 @@ function CoinFlipPage() {
     }
   }, [backgroundMusicOn]);
 
-  const { rive, RiveComponent } = useRive({
+  const { RiveComponent } = useRive({
     src: startingPlayer.character?.characterImagePath,
     stateMachines: ["state_machine"],
     autoplay: true,

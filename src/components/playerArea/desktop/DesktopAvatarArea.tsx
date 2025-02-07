@@ -3,8 +3,6 @@ import { DiceData } from "../../../models/DiceData";
 import { Player } from "../../../models/Player";
 import { PlayerColor } from "../../../models/PlayerColor";
 import DiceSlot from "../../dice/DiceSlot";
-import { AppColors } from "../../../AppColors";
-import { image } from "framer-motion/client";
 import useGameState from "../../../state/gameState";
 import { useEffect } from "react";
 

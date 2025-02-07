@@ -3,7 +3,6 @@ import { AppRoutes } from "../../router/AppRoutes";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useSystemState from "../../state/systemState";
 import { AudioFileKeys } from "../../global/soundKeys";
-import { SettingsKeys } from "../../global/settingsKeys";
 
 export function BackButton({ route }: { route: AppRoutes }) {
   const navigator = useNavigate();

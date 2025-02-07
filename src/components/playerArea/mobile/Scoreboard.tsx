@@ -1,4 +1,3 @@
-import { useRive } from "@rive-app/react-canvas";
 import { DiceData } from "../../../models/DiceData";
 import { Player } from "../../../models/Player";
 import DiceSlot from "../../dice/DiceSlot";

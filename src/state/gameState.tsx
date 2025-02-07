@@ -152,8 +152,8 @@ const useGameState = create<GameState>((set, get) => ({
     const homePlayerState = get().homePlayer;
     const awayPlayerState = get().awayPlayer;
 
-    const oldHomePlayerScore = homePlayerState?.score!;
-    const oldAwayPlayerScore = awayPlayerState?.score!;
+    // const oldHomePlayerScore = homePlayerState?.score!;
+    // const oldAwayPlayerScore = awayPlayerState?.score!;
 
     const updatedHomePlayerScore = calculatePlayerScore(homePlayerState!);
     const updatedAwayPlayerScore = calculatePlayerScore(awayPlayerState!);
@@ -475,8 +475,7 @@ const useGameState = create<GameState>((set, get) => ({
       const multiplayerRoomState = get().multiplayerRoom;
       if (homePlayerState?.isActivePlayer) {
         console.log(
-          `Rolling for network, player ${
-            homePlayerState!.character?.characterName
+          `Rolling for network, player ${homePlayerState!.character?.characterName
           }: ${homePlayerState!.id}`
         );
         await rollMultiplayerDice({

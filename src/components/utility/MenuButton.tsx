@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import useSystemState from "../../state/systemState";
 import { AudioFileKeys } from "../../global/soundKeys";
-import { SettingsKeys } from "../../global/settingsKeys";
 
 export function MenuButton({
   text,

@@ -42,19 +42,19 @@ export function CharacterSelect({
   const textSizeFactor: number = 0.0025;
   const textSize = 16 * (screenSizeState * textSizeFactor);
 
-  const { rive, RiveComponent } = useRive({
+  const { RiveComponent } = useRive({
     src: character.characterImagePath,
     stateMachines: ["state_machine"],
     autoplay: true,
   });
 
-  function showUserPickAnimation() {
-    const input = rive
-      ?.stateMachineInputs("state_machine")
-      ?.find((input) => input.name === "happy_trigger");
-    input?.fire();
-    console.log(input);
-  }
+  // function showUserPickAnimation() {
+  //   const input = rive
+  //     ?.stateMachineInputs("state_machine")
+  //     ?.find((input) => input.name === "happy_trigger");
+  //   input?.fire();
+  //   console.log(input);
+  // }
 
   return (
     <motion.button
@@ -75,7 +75,7 @@ export function CharacterSelect({
             );
             setPlayerCharacterAction(
               remainingCharacters[
-                Math.floor(Math.random() * remainingCharacters.length)
+              Math.floor(Math.random() * remainingCharacters.length)
               ],
               awayPlayerState?.id!
             );
