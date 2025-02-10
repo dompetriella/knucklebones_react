@@ -13,6 +13,8 @@ import { CopyAll } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import LoadingDie from "../components/animation/LoadingDie";
 import useSystemState from "../state/systemState";
+import { useRive } from "@rive-app/react-canvas";
+import { IdleRiveCharacter } from "../components/animation/IdleRiveCharacter";
 
 function WaitingRoomPage() {
   const appNavigator = useNavigate();
@@ -136,9 +138,8 @@ function WaitingRoomPage() {
           {awayPlayerState?.character === null ? (
             <div className="h-32 w-32 bg-surface rounded-lg"></div>
           ) : (
-            <img
-              src={awayPlayerState!.character!.characterImagePath}
-              alt={awayPlayerState!.character!.characterImageAlt}
+            <IdleRiveCharacter
+              path={awayPlayerState?.character?.characterImagePath!}
               width={128}
               height={128}
             />
@@ -153,9 +154,8 @@ function WaitingRoomPage() {
           <h2 className="text-2xl font-bold">
             {homePlayerState?.character?.characterName}
           </h2>
-          <img
-            src={homePlayerState?.character?.characterImagePath}
-            alt={homePlayerState?.character?.characterImageAlt}
+          <IdleRiveCharacter
+            path={homePlayerState?.character?.characterImagePath!}
             width={128}
             height={128}
           />
