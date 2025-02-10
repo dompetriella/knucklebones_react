@@ -37,7 +37,6 @@ export async function rollMultiplayerDice({
   roomId: number;
 }): Promise<DiceData | null> {
   try {
-    console.log(`Sending die data number: ${die?.numberValue ?? null} to room`);
     const { data, error } = await supabase
       .from(DatabaseTableNames.KnucklebonesRooms.TableName)
       .update({
@@ -87,7 +86,6 @@ export async function createRoom(): Promise<MultiplayerRoom | null> {
       throw new Error(error.message);
     }
 
-    console.log("Inserted data:", data);
     if (data === null) {
       return data;
     }
@@ -124,12 +122,10 @@ export async function getDiceDataForState(
     }
 
     if (data === null) {
-      console.log("Data found was null");
       return data;
     }
 
     const returnedData = data[0];
-    console.log(`Die value returned: ${returnedData.usable_dice}`);
 
     if (
       returnedData.usable_dice === null ||
@@ -174,15 +170,11 @@ export async function addPlayerToGame(
       throw new Error(error.message);
     }
 
-    console.log("Inserted data:", data);
     if (data === null) {
       return data;
     }
 
     const returnedData = data[0];
-
-    console.log("Returned data");
-    console.log(returnedData);
 
     return convertDatabasePlayerToPlayer(returnedData);
   } catch (err) {
@@ -215,15 +207,11 @@ export async function updatePlayerFromState(
       throw new Error(error.message);
     }
 
-    console.log("updated player data:", data);
     if (data === null) {
       return data;
     }
 
     const returnedData = data[0];
-
-    console.log("Returned data");
-    console.log(returnedData);
 
     return convertDatabasePlayerToPlayer(returnedData);
   } catch (err) {
@@ -250,15 +238,12 @@ export async function connectPlayerToRoom(
     }
 
     if (data === null) {
-      console.log("Data found was null, so bailing");
       return data;
     }
 
     if (data.length == 0) {
       return null;
     }
-
-    console.log(`Connected successfully: RoomId ${data[0].id}`, data);
 
     const returnedData = data[0];
 
@@ -292,13 +277,8 @@ export async function getPlayerUpdateFromDatabase(
     }
 
     if (data === null) {
-      console.log("Player found was null, so bailing");
       return data;
     }
-
-    console.log(
-      `Successfully found player for local update: Player: ${data[0]}`
-    );
 
     const returnedData = data[0];
     return convertDatabasePlayerToPlayer(returnedData);
@@ -326,11 +306,8 @@ export async function findOtherPlayerInRoom(
     }
 
     if (data === null) {
-      console.log("Player found was null, so bailing");
       return data;
     }
-
-    console.log(`Successfully found player in room: Player: ${data[0]}`);
 
     const returnedData = data[0];
     return convertDatabasePlayerToPlayer(returnedData);
@@ -360,17 +337,10 @@ export async function setPlayerActivity(
     }
 
     if (data === null) {
-      console.log("Player found was null, so bailing");
       return data;
     }
 
     const returnedData = data[0];
-    console.log(
-      `Successfully found Player: ${
-        returnedData[DatabaseTableNames.KnucklebonesPlayers.PlayerId]
-      }`
-    );
-    console.log(`${isActive ? "Activating Player" : "Deactivating Player"}`);
 
     return convertDatabasePlayerToPlayer(returnedData);
   } catch (err) {
@@ -411,11 +381,8 @@ export async function swapNetworkPlayers(
     }
 
     if (!data || data.length === 0) {
-      console.log("No players were updated.");
       return null;
     }
-
-    console.log("Updated players:", data);
 
     // Find the player that was activated
     const activatedPlayer = data.find(
@@ -435,8 +402,7 @@ export async function deleteHourOldRooms() {
   const hourOld = new Date(Date.now() - 3600 * 1000);
 
   try {
-    console.log("Attempting to delete old players");
-    const { data, error } = await supabase
+    const {  error } = await supabase
       .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
       .delete()
       .lt(
@@ -445,26 +411,16 @@ export async function deleteHourOldRooms() {
       )
       .select();
 
-    if (!data) {
-      console.log("no rows found that meet that criteria, 0 rows affected");
-    }
-
     if (error) {
       console.error("Error deleting rows:", error);
-    } else {
-      if (data.length > 0) {
-        const deletedRows =
-          data !== null || data !== undefined ? data.length : 0;
-        console.log(`Deleted ${deletedRows} rows`);
-      }
-    }
+    } 
+    
   } catch (e) {
     console.log("An error occurred:", e);
   }
 
   try {
-    console.log("Now deleting the associated rooms");
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from(DatabaseTableNames.KnucklebonesRooms.TableName)
       .delete()
       .lt(
@@ -473,19 +429,9 @@ export async function deleteHourOldRooms() {
       )
       .select();
 
-    if (!data) {
-      console.log("no rows found that meet that criteria, 0 rows affected");
-    }
-
     if (error) {
       console.error("Error deleting rows:", error);
-    } else {
-      if (data.length > 0) {
-        const deletedRows =
-          data !== null || data !== undefined ? data.length : 0;
-        console.log(`Deleted ${deletedRows} rows`);
-      }
-    }
+    } 
   } catch (e) {
     console.log("An error occurred:", e);
   }
@@ -495,7 +441,7 @@ export async function deleteGameByRoomId(roomId: number) {
   const hourOld = new Date(Date.now() - 3600 * 1000);
 
   try {
-    const { data, error } = await supabase
+    const {  error } = await supabase
       .from(DatabaseTableNames.KnucklebonesPlayers.TableName)
       .delete()
       .eq(DatabaseTableNames.KnucklebonesPlayers.RoomId, roomId)
@@ -503,23 +449,19 @@ export async function deleteGameByRoomId(roomId: number) {
 
     if (error) {
       console.error("Error deleting rows:", error);
-    } else {
-      console.log("Deleted rows:", data);
     }
   } catch (e) {
     console.log("An error occurred:", e);
   }
 
   try {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from(DatabaseTableNames.KnucklebonesRooms.TableName)
       .delete()
       .lt(DatabaseTableNames.KnucklebonesPlayers.CreatedAt, hourOld);
 
     if (error) {
       console.error("Error deleting rows:", error);
-    } else {
-      console.log("Deleted rows:", data);
     }
   } catch (e) {
     console.log("An error occurred:", e);

@@ -53,7 +53,6 @@ export function CharacterSelect({
   //     ?.stateMachineInputs("state_machine")
   //     ?.find((input) => input.name === "happy_trigger");
   //   input?.fire();
-  //   console.log(input);
   // }
 
   return (

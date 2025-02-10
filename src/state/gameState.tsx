@@ -303,10 +303,6 @@ const useGameState = create<GameState>((set, get) => ({
       updatedColumn[emptySpotIndex] = newDie;
       updatedDiceGrid[columnIndex] = updatedColumn;
 
-      console.log(
-        `Added dice at index ${emptySpotIndex} in column ${columnIndex}`
-      );
-
       const updatedPlayer: Player = selectedPlayer.copyWith({
         diceGrid: updatedDiceGrid,
         score: selectedPlayer.score,
@@ -347,7 +343,6 @@ const useGameState = create<GameState>((set, get) => ({
       }
 
       // Remove matching dice from the other player
-      console.log("Started removing matching dice...");
       await get().removeMatchingDiceFromOtherPlayer(
         updatedPlayer,
         usableDie.numberValue,
@@ -355,7 +350,6 @@ const useGameState = create<GameState>((set, get) => ({
       );
 
       // Update the game score and end the player's turn
-      console.log("Updating game score and ending turn...");
       await get().updateGameScore();
       if (isMultiplayer) {
         const scoredHomePlayerState = get().homePlayer;
@@ -364,11 +358,8 @@ const useGameState = create<GameState>((set, get) => ({
       }
       // End player turn (includes swapping player)
       await get().endPlayerTurn();
-    } else {
-      console.log(
-        "No empty spots available in the column. Unable to add dice."
-      );
-    }
+    } 
+    
   },
 
   async removeMatchingDiceFromOtherPlayer(
@@ -449,7 +440,6 @@ const useGameState = create<GameState>((set, get) => ({
   },
 
   async directlySetUsableDie(die) {
-    console.log(`directly setting die in state to: ${die?.numberValue}`);
 
     if (die === undefined) {
       return;
@@ -474,10 +464,6 @@ const useGameState = create<GameState>((set, get) => ({
       const homePlayerState = get().homePlayer;
       const multiplayerRoomState = get().multiplayerRoom;
       if (homePlayerState?.isActivePlayer) {
-        console.log(
-          `Rolling for network, player ${homePlayerState!.character?.characterName
-          }: ${homePlayerState!.id}`
-        );
         await rollMultiplayerDice({
           die: new DiceData({
             id: crypto.randomUUID(),
@@ -485,8 +471,6 @@ const useGameState = create<GameState>((set, get) => ({
           }),
           roomId: multiplayerRoomState?.id!,
         });
-      } else {
-        console.log("Not active player, waiting for active player to roll");
       }
     } else {
       const newDieId = uuidv4();

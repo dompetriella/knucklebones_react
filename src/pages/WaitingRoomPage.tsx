@@ -13,7 +13,6 @@ import { CopyAll } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import LoadingDie from "../components/animation/LoadingDie";
 import useSystemState from "../state/systemState";
-import { useRive } from "@rive-app/react-canvas";
 import { IdleRiveCharacter } from "../components/animation/IdleRiveCharacter";
 
 function WaitingRoomPage() {
@@ -37,7 +36,6 @@ function WaitingRoomPage() {
     let pollingInterval: ReturnType<typeof setInterval>;
 
     const pollDatabaseForOtherPlayer = async () => {
-      console.log("Polling for other player");
 
       try {
         const { data, error } = await supabase
@@ -51,7 +49,7 @@ function WaitingRoomPage() {
         }
 
         if (data && data.length > 1) {
-          console.log("Fetched players:", data);
+  
 
           clearInterval(pollingInterval); // Stop polling as we found the players
 
@@ -72,8 +70,6 @@ function WaitingRoomPage() {
             if (winningPlayer != null) {
               setPlayerFromDatabaseData(winningPlayer);
             }
-          } else {
-            console.log("Returned player was null, cannot start game");
           }
           setisConnected(() => true);
           setTimeout(() => {

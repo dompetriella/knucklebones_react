@@ -71,10 +71,8 @@ function PlayerWonPage() {
       ?.stateMachineInputs("state_machine")
       ?.find((input) => input.name === "happy_trigger");
     input?.fire();
-    console.log(input);
     if (input) {
       input.value = true;
-      console.log("triggered");
     }
   }
 

@@ -83,14 +83,9 @@ const useSystemState = create<SystemState>((set, get) => ({
 
   playSoundEffect: (soundName: string) => {
     if (get().settings[SettingsKeys.SoundEffects]) {
-      console.log("attempting to play sound");
       const sounds = get().soundEffects;
-      console.log("recieve sound effects");
-      console.log(sounds);
-      console.log(soundName);
       const sound = sounds[soundName];
       if (sound) {
-        console.log("found sound");
         sound.currentTime = 0;
         sound.play();
       }
@@ -102,8 +97,6 @@ const useSystemState = create<SystemState>((set, get) => ({
     for (const [key, value] of Object.entries(soundFiles)) {
       loadedSounds[key] = new Audio(value);
     }
-    console.log("loaded sounds");
-    console.log(loadedSounds);
     set({ soundEffects: loadedSounds });
   },
 
@@ -111,14 +104,9 @@ const useSystemState = create<SystemState>((set, get) => ({
 
   playBackgroundMusic: (soundName: string, resetMusic: boolean) => {
     if (get().settings[SettingsKeys.BackgroundMusic]) {
-      console.log("attempting to play sound");
       const sounds = get().backgroundMusicTracks;
-      console.log("recieve sound effects");
-      console.log(sounds);
-      console.log(soundName);
       const sound = sounds[soundName];
       if (sound) {
-        console.log("found sound");
         if (resetMusic) {
           sound.currentTime = 0;
         }
@@ -144,8 +132,6 @@ const useSystemState = create<SystemState>((set, get) => ({
     for (const [key, value] of Object.entries(soundFiles)) {
       loadedSounds[key] = new Audio(value);
     }
-    console.log("loaded sounds");
-    console.log(loadedSounds);
     set({ backgroundMusicTracks: loadedSounds });
   },
 }));

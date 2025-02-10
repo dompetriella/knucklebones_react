@@ -79,10 +79,6 @@ function GamePage() {
   useEffect(() => {
     const subscribeToUsableDiceUpdates = async () => {
       try {
-        console.log(
-          "Room ID being used for subscription filter:",
-          multiplayerRoomState?.id
-        );
 
         const subscription = supabase
           .channel("usable-dice-updates") // Unique channel name
@@ -96,8 +92,6 @@ function GamePage() {
             },
             async (payload) => {
               try {
-                console.log("Payload received:", payload);
-
                 const updatedRow = payload.new;
                 if (!updatedRow) {
                   console.error("No updated row found in payload.");
@@ -121,12 +115,10 @@ function GamePage() {
           )
           .subscribe();
 
-        console.log("Subscription to usable-dice-updates created.");
-
         return () => {
           try {
             supabase.removeChannel(subscription);
-            console.log("Subscription removed.");
+          
           } catch (cleanupError) {
             console.error("Error removing subscription:", cleanupError);
           }
@@ -148,7 +140,6 @@ function GamePage() {
     let timeoutId: NodeJS.Timeout | undefined;
 
     const fetchDataIfNoUpdate = async () => {
-      console.log("No update received in 10 seconds, making a network call...");
       const die: DiceData | null = await getDiceDataForState(
         multiplayerRoomState?.id!
       );
@@ -159,21 +150,12 @@ function GamePage() {
         );
       } else {
         if (die.id != usableDieState?.id) {
-          console.log("Its been 10s and, dice update not received correctly");
-          console.log(
-            `Manually recieved ${die.id}:${die.numberValue}, setting to state`
-          );
           directlySetDieValueAction(die);
           if (systemState.settings[SettingsKeys.SoundEffects]) {
             setTimeout(() => {
               systemState.playSoundEffect(AudioFileKeys.DieRollSoundEffect);
             }, 1000);
           }
-        } else {
-          console.log(
-            "10 seconds of inactivity, but die data is already in state"
-          );
-          console.log("They thinking hard");
         }
       }
     };
@@ -200,10 +182,6 @@ function GamePage() {
             async (payload) => {
               try {
                 const updatedRow = payload.new;
-                console.log(
-                  "Updated row for the specified player:",
-                  updatedRow
-                );
 
                 const updatedPlayer = convertDatabasePlayerToPlayer(updatedRow);
                 setPlayerFromDatabaseData(updatedPlayer);

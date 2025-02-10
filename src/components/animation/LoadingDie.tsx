@@ -19,10 +19,8 @@ export function LoadingDie({ isConnected }: { isConnected: boolean }) {
     const input = rive
       ?.stateMachineInputs("state_machine")
       ?.find((input) => input.name === "connected");
-    console.log(input);
     if (input) {
       input.value = true;
-      console.log("triggered");
     }
   }
 

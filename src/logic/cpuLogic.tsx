@@ -17,7 +17,6 @@ export async function runCpuTurn({
   addDiceToColumn: (player: Player, column: number) => void;
 }) {
   if (cpuPlayerState.isActivePlayer) {
-    console.log("cpu is active turn");
 
     // cpu thinking
     await waitRandomDelay(2000, 3000);
@@ -125,7 +124,6 @@ export async function runCpuTurn({
         return addDiceToColumn(cpuPlayerState, randomColumn);
 
       default:
-        console.log("oops");
         break;
     }
   }
@@ -170,7 +168,6 @@ function getCpuAvailableColumns(cpuPlayerState: Player): number[] {
       }
     });
     if (columnIsAvailable) {
-      console.log(`pushing column to available ${i}`);
       availableColumns.push(i);
     }
   }

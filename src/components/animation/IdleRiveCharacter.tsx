@@ -9,7 +9,7 @@ export function IdleRiveCharacter({
   width: number;
   height: number;
 }) {
-  const { rive, RiveComponent } = useRive({
+  const {  RiveComponent } = useRive({
     src: path,
     stateMachines: ["state_machine"],
     autoplay: true,
